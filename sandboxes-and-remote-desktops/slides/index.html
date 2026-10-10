@@ -77,7 +77,7 @@ svg text{font-family:var(--sans)}
 .rung{display:grid;grid-template-columns:70px 470px 1fr;align-items:center;border-radius:14px;padding:14px 24px;color:#fff;font-size:28px}
 .rung .lvl{font-size:40px;font-weight:700;opacity:.9}
 .rung b{font-size:32px}
-.rung .bd{font-size:26px;opacity:.95}
+.rung .bd{font-size:29px;opacity:.95}
 /* notes & ui */
 aside.notes{display:none}
 #notesbox{position:fixed;left:0;right:0;bottom:0;max-height:38vh;overflow:auto;background:rgba(15,23,42,.96);color:#e2e8f0;font-size:18px;line-height:1.45;padding:16px 28px;display:none;z-index:10;font-family:var(--sans)}
@@ -221,12 +221,12 @@ body.render #progress,body.render #notesbox{display:none!important}
 <section class="slide" data-time="2:00">
   <header><p class="kicker">Beyond security</p><h2>Why agents want sandboxes anyway</h2></header>
   <div class="body cols c3" style="gap:28px;grid-auto-rows:1fr">
-    <div class="card"><h3>Reproducibility</h3><p class="small">Template / image → the same environment for every run, eval and RL rollout</p></div>
-    <div class="card"><h3>Parallelism</h3><p class="small">Hundreds of ephemeral environments, best-of-N, state forking. Daytona fork/pause: VM class only <span class="pill v">✅</span> · E2B fork "20 copies" <span class="pill q">❓ unverified</span></p></div>
-    <div class="card"><h3>Background agents</h3><p class="small">A remote machine per task: repo, tests, a PR as output</p></div>
-    <div class="card warm"><h3>Computer use</h3><p class="small">The agent needs a screen (Xvfb/VNC), a browser, mouse and keyboard</p></div>
-    <div class="card warm"><h3>Human in the loop</h3><p class="small">Watch live and take over via noVNC or a stream URL</p></div>
-    <div class="card warm"><h3>Resource limits</h3><p class="small">CPU, RAM and time caps per environment</p></div>
+    <div class="card"><h3>Reproducibility</h3><p style="font-size:34px">Template / image → the same environment for every run, eval and RL rollout</p></div>
+    <div class="card"><h3>Parallelism</h3><p style="font-size:34px">Hundreds of ephemeral environments, best-of-N, state forking. Daytona fork/pause: VM class only <span class="pill v">✅</span> · E2B fork "20 copies" <span class="pill q">❓ unverified</span></p></div>
+    <div class="card"><h3>Background agents</h3><p style="font-size:34px">A remote machine per task: repo, tests, a PR as output</p></div>
+    <div class="card warm"><h3>Computer use</h3><p style="font-size:34px">The agent needs a screen (Xvfb/VNC), a browser, mouse and keyboard</p></div>
+    <div class="card warm"><h3>Human in the loop</h3><p style="font-size:34px">Watch live and take over via noVNC or a stream URL</p></div>
+    <div class="card warm"><h3>Resource limits</h3><p style="font-size:34px">CPU, RAM and time caps per environment</p></div>
   </div>
   <footer><span class="src">Sources: <a href="../research.md">research.md §1</a> · <a href="https://www.daytona.io/docs/en/sandboxes/">Daytona docs: sandboxes</a></span><span class="num"></span></footer>
   <aside class="notes"><p><i>Timing: 2:00 (6:30–8:30)</i></p><p>Even if you ignore attacks, you would still want sandboxes. Reproducibility: a template or image gives every run, every eval and every RL rollout the same starting point. Parallelism: you can spin up hundreds of throwaway environments, try best-of-N, or fork a running state. Careful with the details here: Daytona supports fork and pause, but only for its VM sandboxes, not the container ones. E2B has fork too, but the "20 copies per call" figure you may have read I could not verify.</p><p>Background agents run for a long time on their own: each task gets a machine with the repo and the tests, and the output is a pull request. Computer-use agents need an actual screen, browser, mouse and keyboard. And a human can watch that screen live and take over. Plus hard limits on CPU, memory and time, so a runaway loop costs you minutes, not a weekend.</p><p><b>Sources:</b> <a href="../research.md">research.md §1</a>, <a href="https://www.daytona.io/docs/en/sandboxes/">Daytona sandboxes</a></p></aside>
@@ -309,7 +309,7 @@ body.render #progress,body.render #notesbox{display:none!important}
 <!-- 10 -->
 <section class="slide" data-time="1:30">
   <header><p class="kicker">Isolation · rungs 3–4</p><h2>gVisor and microVMs</h2></header>
-  <div class="body cols c3" style="gap:28px">
+  <div class="body"><div class="cols c3" style="gap:28px">
     <div class="card"><h3>gVisor (runsc)</h3><ul class="small tight"><li>User-space kernel intercepts syscalls</li><li>OCI-compatible</li><li>Syscall / IO overhead</li><li>Modal's default</li></ul></div>
     <div class="card ok"><h3>Firecracker <span class="pill v">✅</span></h3>
       <ul class="small tight"><li>Minimal VMM (Rust) on KVM</li><li><b>&lt; 125 ms</b> boot</li><li><b>&lt; 5 MiB</b> overhead</li><li>5 emulated devices</li><li>≤ 150 microVMs/s per host</li><li>Needs KVM: bare metal / nested virt</li></ul></div>
@@ -317,6 +317,7 @@ body.render #progress,body.render #notesbox{display:none!important}
   </div>
   <p class="small" style="margin:20px 0 6px"><b>Firecracker under:</b> E2B · Vercel Sandbox · Fly.io · AWS Lambda (+ AWS Lambda MicroVMs)</p>
   <p class="xs" style="margin:0 0 18px;color:var(--muted)"><span class="pill q">❓</span> gVisor and Kata descriptions are generic, not re-checked against primary docs in this pass.</p>
+  </div>
   <footer><span class="src">Sources: <a href="https://firecracker-microvm.github.io/">firecracker-microvm.github.io</a> · <a href="https://gvisor.dev/">gvisor.dev</a> · <a href="https://katacontainers.io/">katacontainers.io</a> · <a href="../verification-notes.md">verification-notes.md</a></span><span class="num"></span></footer>
   <aside class="notes"><p><i>Timing: 1:30 (12:45–14:15)</i></p><p>gVisor is the middle ground. It intercepts system calls with a kernel implemented in user space, and it plugs in as an OCI runtime, runsc. You pay overhead on syscalls and I/O. Modal uses it by default.</p><p>Firecracker is why microVMs became the standard for agent sandboxes. It's a tiny VMM in Rust on top of KVM. The project's own numbers: boot under 125 milliseconds, under 5 MiB of memory overhead, only five emulated devices, up to 150 microVMs per second per host. That's what E2B, Vercel Sandbox, Fly.io and AWS Lambda run on. The catch: you need KVM, so bare metal or nested virtualization.</p><p>Kata Containers gives you a VM boundary behind the normal container API, which fits Kubernetes, but it's more to operate. A small honesty note: my gVisor and Kata descriptions are general knowledge from the research, not re-checked against their docs in this pass.</p><p><b>Sources:</b> <a href="https://firecracker-microvm.github.io/">firecracker-microvm.github.io</a>, <a href="https://gvisor.dev/">gvisor.dev</a>, <a href="https://katacontainers.io/">katacontainers.io</a></p></aside>
 </section>
@@ -426,12 +427,13 @@ body.render #progress,body.render #notesbox{display:none!important}
 <!-- 14 -->
 <section class="slide" data-time="1:30">
   <header><p class="kicker">Remote desktops</p><h2>Humans in the loop, browser clouds, native APIs</h2></header>
-  <div class="body cols c3" style="gap:28px">
+  <div class="body"><div class="cols c3" style="gap:28px">
     <div class="card ok"><h3>Human in the loop</h3><p class="small">Watch and take over via noVNC or a stream URL. E2B Desktop: <code>stream.start()</code> / <code>get_url()</code></p></div>
     <div class="card"><h3>Browser clouds</h3><p class="small">Browserbase (+ Stagehand), Steel (Apache-2.0, self-host), Hyperbrowser · ~$0.08–0.12 per browser-hour <span class="pill w">⚠️ vendor</span> · CDP from Playwright, live view</p></div>
     <div class="card warm"><h3>Native computer-use APIs</h3><p class="small">Anthropic <code>computer_toolset_20260801</code> <span class="pill v">✅</span>: GA, no beta header, 17 member tools, batched actions. Claude 5.5 accepts only the toolset. OpenAI: computer use in the Responses API.</p></div>
   </div>
   <p class="small" style="margin:26px 0 20px">Native tools return structured actions in a <b>model-specific schema</b>; ex4 uses generic function tools so <b>any</b> vision + tool-calling model fits.</p>
+  </div>
   <footer><span class="src">Sources: <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic computer-use docs</a> · <a href="https://github.com/e2b-dev/desktop">e2b-dev/desktop</a> · <a href="https://docs.browserbase.com/account/billing/plans">Browserbase</a> · <a href="https://docs.steel.dev/overview/pricinglimits">Steel</a></span><span class="num"></span></footer>
   <aside class="notes"><p><i>Timing: 1:30 (18:45–20:15)</i></p><p>Because the screen is a VNC stream, a human can watch and take over at any moment. E2B Desktop gives you a stream URL from the SDK. In our container it's the noVNC page.</p><p>If the agent only needs a browser, you can skip the desktop and rent a browser: Browserbase, Steel, which is open source and self-hostable, or Hyperbrowser. Roughly 8 to 12 cents per browser-hour, but those prices are from vendor pages I couldn't fully verify. You drive them over CDP from Playwright and get a live view.</p><p>And there are native computer-use APIs. Anthropic's current one is computer_toolset_20260801: generally available, no beta header, 17 member tools, and several actions per turn. Claude 5.5 models only accept this toolset; the older computer tool versions are for older models. OpenAI has its own computer-use tool in the Responses API. These models are trained for pixel-precise clicking. Our demo deliberately uses generic tools so you can run it on free models, and you'll see what that costs.</p><p><b>Sources:</b> <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic computer-use docs</a>, <a href="https://docs.browserbase.com/account/billing/plans">Browserbase plans</a>, <a href="https://docs.steel.dev/overview/pricinglimits">Steel pricing</a></p></aside>
 </section>
@@ -465,7 +467,7 @@ body.render #progress,body.render #notesbox{display:none!important}
       <p class="small" style="margin:0">Agents mostly wait for the LLM → usage billing usually fits. Session caps: E2B Hobby ≤ 1 h, Vercel Hobby 45 min.</p>
     </div>
     <div>
-      <table style="font-size:25px">
+      <table style="font-size:28px">
         <tr><th>Cold start <span class="pill w" style="background:#fff">⚠️</span></th><th>Vendor</th><th>Independent*</th></tr>
         <tr><td><b>E2B</b></td><td>~150 ms</td><td>0.7–1.6 s</td></tr>
         <tr><td><b>Daytona</b></td><td>"90 ms"</td><td>0.27 s burst, low success</td></tr>
@@ -527,7 +529,7 @@ body.render #progress,body.render #notesbox{display:none!important}
     </div>
     <div>
       <p class="kicker" style="margin-bottom:14px">2 · Then add requirements</p>
-      <table style="font-size:24px">
+      <table style="font-size:27px">
         <tr><td><b>Computer use</b></td><td>E2B Desktop, Daytona VM, Modal VM, own Docker + noVNC</td></tr>
         <tr><td><b>Only a browser</b></td><td>Browserbase / Steel</td></tr>
         <tr><td><b>Waits on LLM</b></td><td>usage billing: Vercel, Cloudflare, Fly Sprites</td></tr>
@@ -594,7 +596,7 @@ body.render #progress,body.render #notesbox{display:none!important}
 <section class="slide" data-time="1:00">
   <header><p class="kicker">Live demo · lessons</p><h2>What free models taught us</h2></header>
   <div class="body">
-    <table style="font-size:24px">
+    <table style="font-size:27px">
       <tr><th style="width:38%">Model (OpenRouter, :free)</th><th style="width:9%"></th><th>What happened</th></tr>
       <tr><td><code>dots-studio/dots-3-note-preview</code></td><td><span class="pill v">✅</span></td><td>reliable tool calls, weak clicking → <b>default</b></td></tr>
       <tr><td><code>nvidia/nemotron-3-nano-omni-30b-a3b-reasoning</code></td><td><span class="pill" style="background:var(--bad-soft);color:var(--bad)">❌</span></td><td>0..1 coords as strings (now handled), then "ResourceExhausted", then <code>&lt;tool_call&gt;</code> as plain text</td></tr>
@@ -646,7 +648,7 @@ body.render #progress,body.render #notesbox{display:none!important}
 <section class="slide title" data-time="1:30">
   <h1>Questions?</h1>
   <div class="sub">Research, comparison, verification notes, workshop ex1–ex4, this deck and the script</div>
-  <div class="meta"><span class="mono">https://github.com/vusatui/rnd-research/tree/main/sandboxes-and-remote-desktops</span><br>Anton Vusatyi · anton@vusatui.com</div>
+  <div class="meta"><span class="mono">https://github.com/vusatui/rnd-research/tree/main/sandboxes-and-remote-desktops</span><br>Anton Vusatyi</div>
   <footer></footer>
   <aside class="notes"><p><i>Timing: 1:30 (33:00–34:30)</i></p><p>Thanks! Everything is in the repo: the research with sources, the comparison table, the verification notes listing what I could and couldn't confirm, and the four workshop exercises. Happy to take questions.</p><p>Likely questions and pointers. "Is Docker enough?" For your own code yes, for hostile multi-tenant code no; see the rule of thumb. "What does E2B fork really do?" The 20-copies figure is unverified. "How do Cursor or Devin isolate?" Not verified in this research. "How fast is cold start?" Vendor and independent numbers differ; measure it, ex1 is a good starting point.</p></aside>
 </section>

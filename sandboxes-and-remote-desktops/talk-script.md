@@ -13,26 +13,26 @@
 | 3 | Prompt injection turns your agent into someone else's shell | 1:30 | 3:30 |
 | 4 | Agent threat model | 1:30 | 5:00 |
 | 5 | The lethal trifecta | 1:30 | 6:30 |
-| 6 | Beyond security: why agents want sandboxes anyway | 2:00 | 8:30 |
-| 7 | Pattern: set up online, run offline | 1:15 | 9:45 |
+| 6 | Why agents want sandboxes anyway | 2:00 | 8:30 |
+| 7 | Set up online, run offline | 1:15 | 9:45 |
 | 8 | The isolation ladder | 1:30 | 11:15 |
-| 9 | Rungs 1-2: process sandboxes and containers | 1:30 | 12:45 |
-| 10 | Rungs 3-4: gVisor and microVMs | 1:30 | 14:15 |
-| 11 | Rung 5 and the side branch: full VMs, WASM and V8 isolates | 1:30 | 15:45 |
-| 12 | Remote desktop for an agent: the stack | 1:30 | 17:15 |
+| 9 | Process sandboxes and containers | 1:30 | 12:45 |
+| 10 | gVisor and microVMs | 1:30 | 14:15 |
+| 11 | Full VMs, WASM and V8 isolates | 1:30 | 15:45 |
+| 12 | A desktop for an agent: the stack (our ex3) | 1:30 | 17:15 |
 | 13 | The screenshot → action loop | 1:30 | 18:45 |
-| 14 | Humans in the loop, browser clouds, native computer-use APIs | 1:30 | 20:15 |
+| 14 | Humans in the loop, browser clouds, native APIs | 1:30 | 20:15 |
 | 15 | Provider landscape | 1:30 | 21:45 |
 | 16 | Billing and cold start: read the fine print | 1:30 | 23:15 |
 | 17 | Self-host vs managed, and how known agents do it | 1:15 | 24:30 |
 | 18 | How to choose | 1:30 | 26:00 |
-| 19 | Live demo: plan and fallbacks | 0:45 | 26:45 |
-| 20 | Demo 1: tool loop with a locked-down sandbox (ex2) | 1:30 | 28:15 |
-| 21 | Demo 2: computer use on our own desktop (ex4) | 1:30 | 29:45 |
+| 19 | Demo plan and fallbacks | 0:45 | 26:45 |
+| 20 | Tool loop with a locked-down sandbox (ex2) | 1:30 | 28:15 |
+| 21 | Computer use on our own desktop (ex4) | 1:30 | 29:45 |
 | 22 | What free models taught us | 1:00 | 30:45 |
 | 23 | Production checklist | 1:30 | 32:15 |
 | 24 | Takeaways | 0:45 | 33:00 |
-| 25 | Q&A | 1:30 | 34:30 |
+| 25 | Questions? | 1:30 | 34:30 |
 
 ---
 
@@ -111,7 +111,7 @@ A useful way to reason about this is the "lethal trifecta" from our outline. Dan
 
 You rarely can remove untrusted content, since reading the web and repos is the job. But a sandbox lets you cut the other two legs. Put no production secrets inside the sandbox, and allow egress only to an allowlist. With one leg missing, an injection becomes an annoyance instead of an incident.
 
-## Slide 6 — Beyond security: why agents want sandboxes anyway
+## Slide 6 — Why agents want sandboxes anyway
 **Timing:** 2:00 (6:30–8:30)
 
 **On slide:**
@@ -129,7 +129,7 @@ Background agents run for a long time on their own: each task gets a machine wit
 
 **Sources:** [research.md §1](research.md), [Daytona sandboxes](https://www.daytona.io/docs/en/sandboxes/)
 
-## Slide 7 — Pattern: set up online, run offline
+## Slide 7 — Set up online, run offline
 **Timing:** 1:15 (8:30–9:45)
 
 **On slide:**
@@ -163,7 +163,7 @@ Now the core of the talk: how you isolate. Think of a ladder. Each rung moves th
 
 At the bottom, a normal process with OS policies: seccomp, Landlock, macOS Seatbelt. It still shares the kernel and usually the file system. Then containers: namespaces and cgroups, still one shared kernel. gVisor puts a kernel written in user space between the container and the real kernel. MicroVMs, Firecracker and Kata, give each sandbox its own kernel under KVM. Full VMs give you any OS, including Windows and GUIs. On the side, WASM and V8 isolates: a different kind of sandbox, very fast, but not a Linux machine.
 
-## Slide 9 — Rungs 1-2: process sandboxes and containers
+## Slide 9 — Process sandboxes and containers
 **Timing:** 1:30 (11:15–12:45)
 
 **On slide:**
@@ -180,7 +180,7 @@ Containers are the default for most teams: fast, everything already speaks OCI. 
 
 **Sources:** [Codex agent approvals & security](https://developers.openai.com/codex/agent-approvals-security), [workshop/ex2_llm_loop/agent.py](workshop/ex2_llm_loop/agent.py)
 
-## Slide 10 — Rungs 3-4: gVisor and microVMs
+## Slide 10 — gVisor and microVMs
 **Timing:** 1:30 (12:45–14:15)
 
 **On slide:**
@@ -201,7 +201,7 @@ Kata Containers gives you a VM boundary behind the normal container API, which f
 
 **Sources:** [firecracker-microvm.github.io](https://firecracker-microvm.github.io/), [gvisor.dev](https://gvisor.dev/), [katacontainers.io](https://katacontainers.io/)
 
-## Slide 11 — Rung 5 and the side branch: full VMs, WASM and V8 isolates
+## Slide 11 — Full VMs, WASM and V8 isolates
 **Timing:** 1:30 (14:15–15:45)
 
 **On slide:**
@@ -219,7 +219,7 @@ On the side, WASM runtimes like Wasmtime or Pyodide, and V8 isolates like Cloudf
 
 If you remember one thing from this section, take the rule of thumb. Your own code and trusted users: a container is fine. Third-party or LLM-generated code with several tenants: gVisor or a microVM. Need a GUI or Windows: a VM.
 
-## Slide 12 — Remote desktop for an agent: the stack
+## Slide 12 — A desktop for an agent: the stack (our ex3)
 **Timing:** 1:30 (15:45–17:15)
 
 **On slide:**
@@ -255,7 +255,7 @@ Our ex4 uses plain function tools: click, type, key, scroll, screenshot, wait an
 
 **Sources:** [workshop/ex4_computer_use](workshop/ex4_computer_use/README.md)
 
-## Slide 14 — Humans in the loop, browser clouds, native computer-use APIs
+## Slide 14 — Humans in the loop, browser clouds, native APIs
 **Timing:** 1:30 (18:45–20:15)
 
 **On slide:**
@@ -263,7 +263,7 @@ Our ex4 uses plain function tools: click, type, key, scroll, screenshot, wait an
 - Browser clouds: Browserbase (+ Stagehand), Steel (Apache-2.0, self-host), Hyperbrowser; ~$0.08–0.12 per browser-hour ⚠️; CDP from Playwright; live view
 - Native computer-use APIs:
   - Anthropic `computer_toolset_20260801`: GA, no beta header, 17 member tools, batches of actions per turn ✅
-  - Claude 5.5 models accept only the toolset; older `computer_20251124` / `computer_20250124` for older models
+  - Claude 5.5 models accept only the toolset
   - OpenAI: computer-use tool in the Responses API
 - They return structured actions in a model-specific schema; ex4 uses generic tools so any model fits
 
@@ -305,7 +305,7 @@ At the bottom: Runloop and Morph. Their prices come only from search snippets, s
 - Wall-clock billing: E2B, Daytona, Modal: you pay while the sandbox exists
 - Active-CPU / usage billing: Vercel (active CPU; RAM provisioned), Cloudflare (active CPU; RAM provisioned), Fly.io Sprites (consumed CPU/RAM; idle ~30 s → storage only)
 - An agent mostly waits for the LLM → usage billing usually fits better
-- Session caps: E2B Hobby ≤ 1 h (Pro ≤ 24 h); Vercel Hobby 45 min (Pro 24 h)
+- Session caps: E2B Hobby ≤ 1 h; Vercel Hobby 45 min
 - Cold start, vendor vs independent (⚠️, MarkTechPost benchmark not re-checked): E2B ~150 ms vendor vs 0.7–1.6 s; Vercel 0.67–1.9 s; Modal 0.9–2.4 s; Daytona "90 ms" vendor
 - Firecracker < 125 ms boot ✅ is the VMM, not the whole product. **Measure it yourself.**
 
@@ -356,7 +356,7 @@ Then add requirements. A GUI for computer use: E2B Desktop, a Daytona or Modal V
 
 **Sources:** [comparison.md: How to choose](comparison.md)
 
-## Slide 19 — Live demo: plan and fallbacks
+## Slide 19 — Demo plan and fallbacks
 **Timing:** 0:45 (26:00–26:45)
 
 **On slide:**
@@ -375,7 +375,7 @@ Presenter prep (not shown): before the talk run `python workshop/list_free_model
 
 **Sources:** [workshop-plan.md](workshop-plan.md)
 
-## Slide 20 — Demo 1: tool loop with a locked-down sandbox (ex2)
+## Slide 20 — Tool loop with a locked-down sandbox (ex2)
 **Timing:** 1:30 (26:45–28:15)
 
 **On slide:**
@@ -393,7 +393,7 @@ Fallback: if the call fails, show this slide's recorded result and the code in a
 
 **Sources:** [workshop-plan.md: test results](workshop-plan.md), [ex2 agent.py](workshop/ex2_llm_loop/agent.py)
 
-## Slide 21 — Demo 2: computer use on our own desktop (ex4)
+## Slide 21 — Computer use on our own desktop (ex4)
 **Timing:** 1:30 (28:15–29:45)
 
 **On slide:**
@@ -461,11 +461,12 @@ Audit every command. Require human approval for destructive actions like droppin
 **Speaker notes:**
 To sum up. The prompt is not a security boundary, so put a real one around the tools. Choose how strong by asking who wrote the code and who shares the host. A remote desktop for an agent is not magic: a virtual X server, a VNC stream, and a loop. Compare providers on isolation, billing model and cold start you measured yourself. And free models are great for learning, but for production computer use you'll want a model trained for it.
 
-## Slide 25 — Q&A
+## Slide 25 — Questions?
 **Timing:** 1:30 (33:00–34:30)
 
 **On slide:**
 - Questions?
+- Research, comparison, verification notes, workshop ex1–ex4, this deck and the script
 - Repo: https://github.com/vusatui/rnd-research/tree/main/sandboxes-and-remote-desktops
 - Inside: research.md · comparison.md · verification-notes.md · workshop/ (ex1–ex4) · this deck and script
 
