@@ -28,4 +28,4 @@ Example output: `../../assets/ex3-desktop.png`.
 Notes:
 - x11vnc has no password and listens only on localhost inside the container; publish the port only on 127.0.0.1.
 - If Docker runs inside a container/VM without nested overlayfs support (error `mount source: "overlay" ... invalid argument`
-  during build), use `{"storage-driver":"vfs"}` в `/etc/docker/daemon.json`.
+  during build), use `{"storage-driver":"vfs"}` in `/etc/docker/daemon.json`.
