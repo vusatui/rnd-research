@@ -7,6 +7,7 @@ A collection of R&D research. Each topic lives in its own folder and includes an
 | Folder | Topic | Status |
 |---|---|---|
 | [`sandboxes-and-remote-desktops/`](./sandboxes-and-remote-desktops/) | Sandboxes and remote desktops for AI agents: why they matter, threat model, isolation technologies, platform comparison (E2B, Daytona, Modal, etc.), talk and workshop | Draft |
+| [`system-one-models/`](./system-one-models/) | System One / decision models: TypeSafe Jev, OpenAI Decisions API, Cloudflare Clef, Unsloth recipe; System 1 vs System 2, classifiers, rerankers, routers, guardrails; talk and workshop | Draft |
 
 ## Rules
 

@@ -1,0 +1,4 @@
+scikit-learn>=1.5
+openai>=1.40        # OpenAI-compatible client, used against OpenRouter (free models)
+python-dotenv>=1.0
+requests>=2.31

@@ -1,0 +1,40 @@
+{"id": 0, "text": "The VAT number on my invoice is wrong", "department": "billing", "urgency": "low"}
+{"id": 1, "text": "I'd like to partner on a podcast episode", "department": "other", "urgency": "low"}
+{"id": 2, "text": "API returns 429 even though we are under the limit", "department": "technical", "urgency": "medium"}
+{"id": 3, "text": "How do I add a teammate to my workspace?", "department": "account", "urgency": "low"}
+{"id": 4, "text": "Webhook payloads arrive twice", "department": "technical", "urgency": "medium"}
+{"id": 5, "text": "Export to CSV fails in Safari but works in Chrome", "department": "technical", "urgency": "medium"}
+{"id": 6, "text": "What is the price for the Pro plan in EUR?", "department": "sales", "urgency": "low"}
+{"id": 7, "text": "Change the email address on my profile", "department": "account", "urgency": "low"}
+{"id": 8, "text": "Payment page shows error 500 when I enter my card", "department": "technical", "urgency": "high"}
+{"id": 9, "text": "Dark mode text is hard to read on settings page", "department": "technical", "urgency": "low"}
+{"id": 10, "text": "The invoice PDF is blank when I open it", "department": "technical", "urgency": "medium"}
+{"id": 11, "text": "I was charged twice for my March invoice, please refund", "department": "billing", "urgency": "medium"}
+{"id": 12, "text": "Is there a nonprofit discount?", "department": "sales", "urgency": "low"}
+{"id": 13, "text": "Whole dashboard is down for our team, nobody can log in", "department": "technical", "urgency": "high"}
+{"id": 14, "text": "Do enterprise plans include priority support for outages?", "department": "sales", "urgency": "low"}
+{"id": 15, "text": "Please delete my account and all my data", "department": "account", "urgency": "medium"}
+{"id": 16, "text": "I lost access to my 2FA device", "department": "account", "urgency": "high"}
+{"id": 17, "text": "Our contract renews tomorrow and we need a quote today", "department": "sales", "urgency": "high"}
+{"id": 18, "text": "Can I get a demo for my team next week?", "department": "sales", "urgency": "low"}
+{"id": 19, "text": "Merge my two accounts into one", "department": "account", "urgency": "low"}
+{"id": 20, "text": "I forgot my password and the reset email never arrives", "department": "account", "urgency": "medium"}
+{"id": 21, "text": "Love the product, keep it up!", "department": "other", "urgency": "low"}
+{"id": 22, "text": "Why did my price go up this month?", "department": "billing", "urgency": "low"}
+{"id": 23, "text": "Do you offer an enterprise plan with SSO?", "department": "sales", "urgency": "low"}
+{"id": 24, "text": "Can't log in after changing my card details", "department": "account", "urgency": "medium"}
+{"id": 25, "text": "The sync button does nothing on Android", "department": "technical", "urgency": "medium"}
+{"id": 26, "text": "How do I download last year's invoices?", "department": "billing", "urgency": "low"}
+{"id": 27, "text": "My card was declined but the money left my account", "department": "billing", "urgency": "high"}
+{"id": 28, "text": "Are you hiring frontend engineers?", "department": "other", "urgency": "low"}
+{"id": 29, "text": "Typo on the pricing page", "department": "technical", "urgency": "low"}
+{"id": 30, "text": "We need a security questionnaire filled before buying", "department": "sales", "urgency": "medium"}
+{"id": 31, "text": "Charged twice AND the app crashes when I open the receipt", "department": "billing", "urgency": "high"}
+{"id": 32, "text": "Can I transfer ownership of the workspace?", "department": "account", "urgency": "low"}
+{"id": 33, "text": "Refund still not received after 3 weeks", "department": "billing", "urgency": "medium"}
+{"id": 34, "text": "What is the meaning of life?", "department": "other", "urgency": "low"}
+{"id": 35, "text": "You billed me after I cancelled, I want my money back now", "department": "billing", "urgency": "high"}
+{"id": 36, "text": "Can I switch from monthly to annual billing?", "department": "billing", "urgency": "low"}
+{"id": 37, "text": "We want 200 seats, can we get a volume discount?", "department": "sales", "urgency": "low"}
+{"id": 38, "text": "App crashes on startup since the last update", "department": "technical", "urgency": "high"}
+{"id": 39, "text": "Someone logged into my account from another country", "department": "account", "urgency": "high"}
