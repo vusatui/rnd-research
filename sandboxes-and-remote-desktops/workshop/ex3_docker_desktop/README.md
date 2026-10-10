@@ -20,7 +20,7 @@ docker rm -f desk
 ```
 
 `desktop_tools.py` provides screenshot/left_click/right_click/double_click/move_mouse/write/press/scroll/wait primitives
-via `docker exec` with the same interface as `e2b_desktop.Sandbox`, so the container can be plugged into ex4.
+via `docker exec` with the same interface as `e2b_desktop.Sandbox`, so the container can be plugged into ex4 (`DESKTOP_BACKEND=docker`, see `../ex4_computer_use/backends.py`).
 The user running the script needs Docker access (the `docker` group).
 
 Example output: `../../assets/ex3-desktop.png`.

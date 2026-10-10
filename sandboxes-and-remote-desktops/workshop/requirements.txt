@@ -1,6 +1,5 @@
 e2b-code-interpreter>=2
 e2b-desktop>=2
 openai>=1.50
-anthropic>=0.40
 playwright>=1.45
 python-dotenv

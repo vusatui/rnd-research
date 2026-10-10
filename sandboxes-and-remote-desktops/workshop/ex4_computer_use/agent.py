@@ -1,59 +1,88 @@
-"""Exercise 4: computer-use loop screenshot -> Claude -> action on E2B Desktop.
-Check the tool/beta version against docs.anthropic.com (computer use) - they change."""
-import base64, sys
+"""Exercise 4: generic computer-use loop: screenshot -> vision LLM -> function-tool action.
+
+No vendor computer-use API: plain OpenAI-style function tools, so any vision + tool-calling
+model works (OpenRouter free models by default). Anthropic/OpenAI native computer-use tools
+are discussed in the docs only.
+  OPENROUTER_API_KEY  - required
+  EX4_MODEL           - default google/gemma-4-31b-it:free (vision + tools)
+  DESKTOP_BACKEND     - docker (ex3 container, default) | e2b (E2B Desktop, needs E2B_API_KEY)
+"""
+import base64, json, os, sys
 from dotenv import load_dotenv
-import anthropic
-from e2b_desktop import Sandbox
+from openai import OpenAI
+sys.path.insert(0, os.path.dirname(__file__))
+from backends import make_backend, wait
 
 load_dotenv()
-MODEL = "claude-sonnet-4-5"
-TOOL_TYPE, BETA = "computer_20250124", "computer-use-2025-01-24"
-W, H = 1024, 768
-client = anthropic.Anthropic()
+MODEL = os.getenv("EX4_MODEL", "google/gemma-4-31b-it:free")
 
-def shot(d):
-    return {"type": "image", "source": {"type": "base64", "media_type": "image/png",
-            "data": base64.b64encode(d.screenshot()).decode()}}
+def _fn(name, desc, props=None, req=None):
+    return {"type": "function", "function": {"name": name, "description": desc, "parameters": {
+        "type": "object", "properties": props or {}, "required": req or []}}}
+XY = {"x": {"type": "integer"}, "y": {"type": "integer"}}
+TOOLS = [
+    _fn("screenshot", "Take a fresh screenshot of the desktop."),
+    _fn("click", "Click at pixel coordinates of the latest screenshot.",
+        {**XY, "button": {"type": "string", "enum": ["left", "right"]}, "double": {"type": "boolean"}}, ["x", "y"]),
+    _fn("type", "Type text at the current focus.", {"text": {"type": "string"}}, ["text"]),
+    _fn("key", "Press a key or combo in xdotool syntax, e.g. Return, ctrl+l, ctrl+a.",
+        {"keys": {"type": "string"}}, ["keys"]),
+    _fn("scroll", "Scroll at a point.", {**XY, "direction": {"type": "string", "enum": ["up", "down"]},
+        "amount": {"type": "integer"}}, ["direction"]),
+    _fn("wait", "Wait N seconds (max 10) for the page to load.", {"seconds": {"type": "number"}}, ["seconds"]),
+    _fn("done", "Finish the task with a final answer.", {"answer": {"type": "string"}}, ["answer"]),
+]
 
-def act(d, a):
-    t = a["action"]; xy = a.get("coordinate")
-    if t == "screenshot": pass
-    elif t == "left_click": d.left_click(*xy)
-    elif t == "double_click": d.double_click(*xy)
-    elif t == "right_click": d.right_click(*xy)
-    elif t == "mouse_move": d.move_mouse(*xy)
-    elif t == "type": d.write(a["text"])
-    elif t == "middle_click": d.middle_click(*xy)
-    elif t == "triple_click":
-        for _ in range(3): d.left_click(*xy)
-    elif t == "left_click_drag": d.drag(tuple(a["start_coordinate"]), tuple(xy))
-    elif t == "key":  # Claude sends xdotool notation: "ctrl+l" -> ["ctrl", "l"]
-        keys = a["text"].split("+"); d.press(keys if len(keys) > 1 else keys[0])
-    elif t == "scroll":
-        if xy: d.move_mouse(*xy)
-        d.scroll(a.get("scroll_direction", "down"), a.get("scroll_amount", 3))
-    elif t == "wait": d.wait(int(a.get("duration", 1) * 1000))
-    else: print("unsupported action:", t)
-    return shot(d)
+def execute(desk, name, a):
+    """Run one tool call on the backend; returns a short text result."""
+    if name == "screenshot": return "ok"
+    if name == "click": desk.click(int(a["x"]), int(a["y"]), a.get("button", "left"), bool(a.get("double")))
+    elif name == "type": desk.type(a["text"])
+    elif name == "key": desk.key(a["keys"])
+    elif name == "scroll":
+        if "x" in a and "y" in a: desk.move(int(a["x"]), int(a["y"]))
+        desk.scroll(a.get("direction", "down"), int(a.get("amount", 3)))
+    elif name == "wait": wait(a.get("seconds", 1))
+    else: return f"unknown tool {name}"
+    return "ok"
+
+def image_msg(png: bytes, note="Current screen:"):
+    # Screenshots go in a user message: many OpenAI-compatible models do not accept images in tool messages.
+    return {"role": "user", "content": [{"type": "text", "text": note}, {"type": "image_url",
+            "image_url": {"url": "data:image/png;base64," + base64.b64encode(png).decode()}}]}
 
 def main(task, max_steps=25):
-    d = Sandbox.create(resolution=(W, H), timeout=900)
-    d.stream.start()
-    print("Live view:", d.stream.get_url())
-    msgs = [{"role": "user", "content": task}]
-    tools = [{"type": TOOL_TYPE, "name": "computer", "display_width_px": W, "display_height_px": H}]
+    client = OpenAI(base_url=os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
+                    api_key=os.environ["OPENROUTER_API_KEY"])
+    desk = make_backend()
+    print("Live view:", desk.live_url)
+    msgs = [{"role": "system", "content": "You control a Linux desktop (1280x800) with a Chromium browser. "
+             "Use the tools, one action at a time; coordinates are pixels of the latest screenshot. "
+             "Call done(answer) when finished."},
+            {"role": "user", "content": task}, image_msg(desk.screenshot())]
     try:
-        for _ in range(max_steps):
-            r = client.beta.messages.create(model=MODEL, max_tokens=1024, tools=tools, messages=msgs, betas=[BETA])
-            msgs.append({"role": "assistant", "content": r.content})
-            uses = [b for b in r.content if b.type == "tool_use"]
-            for b in r.content:
-                if b.type == "text": print("🤖", b.text)
-            if not uses: break
-            msgs.append({"role": "user", "content": [
-                {"type": "tool_result", "tool_use_id": u.id, "content": [act(d, u.input)]} for u in uses]})
+        for step in range(max_steps):
+            m = client.chat.completions.create(model=MODEL, messages=msgs, tools=TOOLS).choices[0].message
+            msgs.append(m.model_dump(exclude_none=True))
+            if m.content: print("🤖", m.content)
+            if not m.tool_calls:
+                return m.content
+            for tc in m.tool_calls:
+                try: args = json.loads(tc.function.arguments or "{}")
+                except json.JSONDecodeError as e: args, res = {}, f"bad arguments: {e}"
+                print(f"[{step}] {tc.function.name} {args}")
+                if tc.function.name == "done":
+                    return args.get("answer")
+                try: res = execute(desk, tc.function.name, args)
+                except Exception as e: res = f"error: {e}"
+                msgs.append({"role": "tool", "tool_call_id": tc.id, "content": res})
+            msgs.append(image_msg(desk.screenshot()))
+            # keep context small: drop all but the last 3 screenshots
+            imgs = [i for i, x in enumerate(msgs) if x["role"] == "user" and isinstance(x["content"], list)]
+            for i in imgs[:-3]: msgs[i] = {"role": "user", "content": "(old screenshot removed)"}
+        return "max steps reached"
     finally:
-        input("Press Enter to kill the sandbox..."); d.kill()
+        desk.close()
 
 if __name__ == "__main__":
-    main(" ".join(sys.argv[1:]) or "Open Firefox, look up the weather in Istanbul and tell me the temperature.")
+    print(main(" ".join(sys.argv[1:]) or "Open https://news.ycombinator.com in the browser and tell me the title of the top story."))

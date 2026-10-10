@@ -1,12 +1,19 @@
-"""Exercise 2: LLM tool-call loop; code runs only inside the sandbox."""
-import json, sys
+"""Exercise 2: LLM tool-call loop; the model's code runs only inside an E2B sandbox.
+
+LLM: any OpenAI-compatible endpoint, OpenRouter free models by default.
+  OPENROUTER_API_KEY  - required
+  EX2_MODEL           - optional, default nvidia/nemotron-3-super-120b-a12b:free
+  LLM_BASE_URL        - optional, default https://openrouter.ai/api/v1
+"""
+import json, os, sys
 from dotenv import load_dotenv
 from openai import OpenAI
 from e2b_code_interpreter import Sandbox
 
 load_dotenv()
-client = OpenAI()
-MODEL = "gpt-4.1-mini"  # any model with tool calling
+client = OpenAI(base_url=os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
+                api_key=os.environ["OPENROUTER_API_KEY"])
+MODEL = os.getenv("EX2_MODEL", "nvidia/nemotron-3-super-120b-a12b:free")  # needs tool calling
 TOOLS = [{"type": "function", "function": {
     "name": "run_python", "description": "Execute Python in an isolated sandbox, returns stdout/stderr/result",
     "parameters": {"type": "object", "properties": {"code": {"type": "string"}}, "required": ["code"]}}}]
@@ -22,7 +29,11 @@ def run(task: str, max_steps: int = 8):
             if not m.tool_calls:
                 return m.content
             for tc in m.tool_calls:
-                code = json.loads(tc.function.arguments)["code"]
+                try:
+                    code = json.loads(tc.function.arguments or "{}")["code"]
+                except (json.JSONDecodeError, KeyError) as e:  # small free models sometimes emit bad JSON
+                    msgs.append({"role": "tool", "tool_call_id": tc.id, "content": f"bad arguments: {e}"})
+                    continue
                 print("\n--- code ---\n", code)
                 ex = sbx.run_code(code)
                 out = {"stdout": ex.logs.stdout, "stderr": ex.logs.stderr,

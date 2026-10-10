@@ -6,7 +6,7 @@
 4. **Isolation technologies (7 min).** Seccomp/Landlock → containers → gVisor → Firecracker/Kata → VMs; WASM/isolates. "Trust boundary" diagram. Why microVMs became the standard (snapshots, 125 ms boot).
 5. **Remote desktops for agents (5 min).** Xvfb + WM + x11vnc + noVNC; the screenshot→action loop; human in the loop via live view; browser clouds (CDP).
 6. **Landscape and choosing (6 min).** Table from comparison.md, billing models (wall-clock vs active CPU), self-host vs managed. How Codex/Cursor/Devin/OpenHands are built.
-7. **Live demo (4 min).** E2B code execution in a tool loop + a noVNC desktop where the agent opens a browser.
+7. **Live demo (4 min).** E2B code execution in a tool loop + a noVNC desktop where the agent opens a browser (free OpenRouter vision model, generic function tools; vendor computer-use APIs from Anthropic/OpenAI shown as the "native" alternative).
 8. **Production checklist and takeaways (3 min).** Egress allowlist, no secrets, TTL/limits, auditing, approval for destructive actions, snapshots. Q&A.
 
 ~20–25 slides.
