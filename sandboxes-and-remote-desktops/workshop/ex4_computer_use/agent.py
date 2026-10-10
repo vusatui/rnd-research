@@ -92,37 +92,40 @@ def main(task, max_steps=25):
     client = OpenAI(base_url=os.getenv("LLM_BASE_URL", "https://openrouter.ai/api/v1"),
                     api_key=os.environ["OPENROUTER_API_KEY"])
     desk = make_backend()
-    print("Live view:", desk.live_url)
+    print("Live view:", desk.live_url.split("&password=")[0] + ("&password=..." if "password=" in desk.live_url else ""))
+    try:
+        return _loop(client, desk, task, max_steps)
+    finally:
+        desk.close()
+
+def _loop(client, desk, task, max_steps):
     global SCREEN
     first = desk.screenshot(); SCREEN = png_size(first)
     msgs = [{"role": "system", "content": f"You control a Linux desktop ({SCREEN[0]}x{SCREEN[1]} pixels) with a "
-             "Chromium browser. Use the tools, one action at a time; x/y are integer pixel coordinates of the "
+             "web browser (Chromium or Firefox). Use the tools, one action at a time; x/y are integer pixel coordinates of the "
              "latest screenshot (origin top-left). To open a URL: key ctrl+l, type the URL, key Return. "
              "Call done(answer) when finished."},
             {"role": "user", "content": task}, image_msg(first)]
-    try:
-        for step in range(max_steps):
-            m = chat(client, msgs)
-            msgs.append(m.model_dump(exclude_none=True))
-            if m.content: print("🤖", m.content)
-            if not m.tool_calls:
-                return m.content
-            for tc in m.tool_calls:
-                try: args = json.loads(tc.function.arguments or "{}")
-                except json.JSONDecodeError as e: args, res = {}, f"bad arguments: {e}"
-                print(f"[{step}] {tc.function.name} {args}")
-                if tc.function.name == "done":
-                    return args.get("answer")
-                try: res = execute(desk, tc.function.name, args)
-                except Exception as e: res = f"error: {e}"
-                msgs.append({"role": "tool", "tool_call_id": tc.id, "content": res})
-            msgs.append(image_msg(desk.screenshot()))
-            # keep context small: drop all but the last 3 screenshots
-            imgs = [i for i, x in enumerate(msgs) if x["role"] == "user" and isinstance(x["content"], list)]
-            for i in imgs[:-3]: msgs[i] = {"role": "user", "content": "(old screenshot removed)"}
-        return "max steps reached"
-    finally:
-        desk.close()
+    for step in range(max_steps):
+        m = chat(client, msgs)
+        msgs.append(m.model_dump(exclude_none=True))
+        if m.content: print("🤖", m.content)
+        if not m.tool_calls:
+            return m.content
+        for tc in m.tool_calls:
+            try: args = json.loads(tc.function.arguments or "{}")
+            except json.JSONDecodeError as e: args, res = {}, f"bad arguments: {e}"
+            print(f"[{step}] {tc.function.name} {args}")
+            if tc.function.name == "done":
+                return args.get("answer")
+            try: res = execute(desk, tc.function.name, args)
+            except Exception as e: res = f"error: {e}"
+            msgs.append({"role": "tool", "tool_call_id": tc.id, "content": res})
+        msgs.append(image_msg(desk.screenshot()))
+        # keep context small: drop all but the last 3 screenshots
+        imgs = [i for i, x in enumerate(msgs) if x["role"] == "user" and isinstance(x["content"], list)]
+        for i in imgs[:-3]: msgs[i] = {"role": "user", "content": "(old screenshot removed)"}
+    return "max steps reached"
 
 if __name__ == "__main__":
     print(main(" ".join(sys.argv[1:]) or "Open https://news.ycombinator.com in the browser and tell me the title of the top story."))

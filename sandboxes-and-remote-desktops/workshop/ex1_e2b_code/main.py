@@ -9,5 +9,6 @@ with Sandbox.create(timeout=120) as sbx:  # Firecracker microVM, dies after TTL
     sbx.files.write("/home/user/data.csv", "x,y\n1,2\n3,4\n")
     ex = sbx.run_code("import pandas as pd; df=pd.read_csv('/home/user/data.csv'); df.sum()")
     print("result:", ex.text)
-    r = sbx.commands.run("rm -rf /tmp/* && echo 'break whatever we want - the host is fine'")
+    # the default user has passwordless sudo inside the microVM; trash it, the host is fine
+    r = sbx.commands.run("sudo rm -rf /usr/share/doc /home/user/data.csv && echo 'broke the sandbox - the host is fine'")
     print(r.stdout)

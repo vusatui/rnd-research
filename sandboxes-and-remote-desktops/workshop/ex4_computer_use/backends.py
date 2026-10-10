@@ -26,8 +26,14 @@ class E2BBackend:
     def __init__(self, resolution=(1280, 800)):
         from e2b_desktop import Sandbox
         self.d = Sandbox.create(resolution=resolution, timeout=900)
-        self.d.stream.start()
-        self.live_url = self.d.stream.get_url()
+        try:
+            # password-protected, view-only stream: an open noVNC URL lets anyone drive the desktop
+            self.d.stream.start(require_auth=True)
+            self.live_url = self.d.stream.get_url(auth_key=self.d.stream.get_auth_key(), view_only=True)
+            # the E2B desktop boots empty; start the browser (Firefox) so the agent has something to drive
+            self.d.open("about:blank"); time.sleep(15)
+        except Exception:
+            self.d.kill(); raise
     def screenshot(self): return bytes(self.d.screenshot())
     def click(self, x, y, button="left", double=False):
         if double: self.d.double_click(x, y)

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sandboxes and Remote Desktops for AI Agents</title>
+<!-- Self-contained deck: no external dependencies. Keys: →/Space next, ← back, Home/End, N notes, S speaker window, O overview, F fullscreen.
+     Speaker notes are generated from ../talk-script.md by build_notes.py. -->
+<style>
+:root{
+  --ink:#0f172a; --muted:#475569; --line:#cbd5e1; --soft:#f1f5f9; --bg:#ffffff;
+  --accent:#0e7490; --accent-soft:#e0f2fe; --warm:#c2410c; --warm-soft:#ffedd5;
+  --bad:#b91c1c; --bad-soft:#fee2e2; --ok:#15803d; --ok-soft:#dcfce7; --navy:#0b2540;
+  --sans:"IBM Plex Sans","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono","JetBrains Mono",Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0b1220;overflow:hidden;font-family:var(--sans);color:var(--ink)}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+.slide{position:absolute;inset:0;background:var(--bg);display:none;flex-direction:column;padding:56px 96px 0 96px;overflow:hidden}
+.slide.active{display:flex}
+.slide>header{flex:0 0 auto;margin-bottom:28px}
+.kicker{font-size:24px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 6px}
+h1,h2{margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+h2{font-size:60px}
+.body{flex:1 1 auto;min-height:0;font-size:38px;line-height:1.35;display:flex;flex-direction:column;justify-content:center;padding-bottom:24px}
+.body.cols,.body[style*="grid"]{align-content:center}
+.slide>footer{flex:0 0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid var(--soft);font-size:22px;color:var(--muted);gap:24px}
+.slide>footer .src{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slide>footer a{color:var(--muted)}
+.slide>footer .num{font-variant-numeric:tabular-nums;flex:0 0 auto}
+ul{margin:0;padding-left:1.1em}
+li{margin:0 0 .45em}
+li::marker{color:var(--accent)}
+ul.tight li{margin-bottom:.25em}
+.sub{font-size:30px;color:var(--muted)}
+.small{font-size:31px}
+.xs{font-size:26px}
+code,.mono{font-family:var(--mono);font-size:.86em;background:var(--soft);padding:.05em .3em;border-radius:6px}
+pre.cmd{font-family:var(--mono);font-size:27px;background:var(--navy);color:#e2e8f0;padding:18px 24px;border-radius:12px;margin:0 0 22px;white-space:pre-wrap;line-height:1.35}
+pre.cmd .p{color:#7dd3fc}
+.cols{display:grid;gap:40px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:1fr 1fr 1fr}
+.c64{grid-template-columns:1.5fr 1fr}.c46{grid-template-columns:1fr 1.4fr}
+.card{background:var(--soft);border-radius:16px;padding:24px 28px;border-left:8px solid var(--accent)}
+.card h3{margin:0 0 12px;font-size:36px}
+.card.warm{border-color:var(--warm);background:var(--warm-soft)}
+.card.bad{border-color:var(--bad);background:var(--bad-soft)}
+.card.ok{border-color:var(--ok);background:var(--ok-soft)}
+.card p{margin:0}
+.callout{margin-top:24px;font-size:36px;font-weight:700;color:var(--navy);border-left:10px solid var(--warm);padding:10px 0 10px 24px}
+.pill{display:inline-block;font-size:.72em;font-weight:600;padding:.1em .5em;border-radius:999px;vertical-align:.12em;white-space:nowrap}
+.v{background:var(--ok-soft);color:var(--ok)}.w{background:var(--warm-soft);color:var(--warm)}.q{background:#ede9fe;color:#6d28d9}
+table{border-collapse:collapse;width:100%;font-size:28px;line-height:1.25}
+th{background:var(--navy);color:#fff;text-align:left;padding:12px 14px;font-weight:600}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+td b{color:var(--navy)}
+figure{margin:0}
+figure img{width:100%;display:block;border-radius:10px;border:2px solid var(--line)}
+figcaption{font-size:25px;color:var(--muted);margin-top:8px}
+svg text{font-family:var(--sans)}
+/* title & section slides */
+.slide.title{background:linear-gradient(135deg,#0b2540 0%,#0e3a5c 60%,#0e7490 100%);color:#fff;justify-content:center;padding:0 140px}
+.slide.title h1{font-size:96px;max-width:1500px}
+.slide.title .sub{color:#bae6fd;font-size:40px;margin-top:28px}
+.slide.title .meta{margin-top:80px;font-size:30px;color:#e2e8f0;line-height:1.6}
+.slide.title .meta .mono{background:rgba(255,255,255,.12);color:#fff}
+.slide.title footer{display:none}
+.big{font-size:54px;font-weight:700;line-height:1.2;color:var(--navy)}
+.step{display:grid;grid-template-columns:70px 1fr;gap:20px;align-items:start;margin-bottom:22px}
+.step .n{width:62px;height:62px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:32px;display:flex;align-items:center;justify-content:center}
+.check li{list-style:none;position:relative;padding-left:.2em}
+.check li::before{content:"☐";position:absolute;left:-1.1em;color:var(--accent);font-weight:700}
+/* ladder */
+.ladder{display:flex;flex-direction:column;gap:14px}
+.rung{display:grid;grid-template-columns:70px 470px 1fr;align-items:center;border-radius:14px;padding:14px 24px;color:#fff;font-size:28px}
+.rung .lvl{font-size:40px;font-weight:700;opacity:.9}
+.rung b{font-size:32px}
+.rung .bd{font-size:26px;opacity:.95}
+/* notes & ui */
+aside.notes{display:none}
+#notesbox{position:fixed;left:0;right:0;bottom:0;max-height:38vh;overflow:auto;background:rgba(15,23,42,.96);color:#e2e8f0;font-size:18px;line-height:1.45;padding:16px 28px;display:none;z-index:10;font-family:var(--sans)}
+#notesbox.on{display:block}
+#notesbox p{margin:0 0 .6em}
+#progress{position:fixed;left:0;bottom:0;height:5px;background:var(--accent);z-index:11}
+#overview{position:fixed;inset:0;background:rgba(11,18,32,.97);display:none;z-index:20;overflow:auto;padding:40px;color:#fff;font-size:20px}
+#overview.on{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;align-content:start}
+#overview button{all:unset;cursor:pointer;background:#1e293b;border-radius:10px;padding:14px 18px;line-height:1.3}
+#overview button:hover,#overview button.cur{background:#0e7490}
+body.render #progress,body.render #notesbox{display:none!important}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- 1 -->
+<section class="slide title" data-time="0:30">
+  <h1>Sandboxes and Remote Desktops for&nbsp;AI&nbsp;Agents</h1>
+  <div class="sub">Isolation, desktops and a live demo with free models</div>
+  <div class="meta">Anton Vusatyi · R&amp;D · October 2026<br>
+    <span class="mono">github.com/vusatui/rnd-research</span> → <span class="mono">sandboxes-and-remote-desktops</span></div>
+  <footer></footer>
+  <aside class="notes"><p><i>Timing: 0:30 (0:00–0:30)</i></p><p>Hi, I'm Anton. For the next half hour: why AI agents need a sandbox, what isolation options exist from a simple process jail up to full VMs, how you give an agent its own screen, which providers sell this, and then a live demo with free models. Everything I show is in the public repo on the slide, with sources. Facts were checked on October 10, 2026. When something is only a vendor claim, I will say so.</p></aside>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Hook · the agent's own mistake</p><h2>The agent deleted production, then said rollback was impossible</h2></header>
+  <div class="body cols c64">
+    <div>
+      <ul>
+        <li><b>Replit</b>, around 2025-07-18, Jason Lemkin's (SaaStr) project, <b>during a code freeze</b></li>
+        <li>The agent deleted a live database: 1,206 executives and 1,196+ companies <span class="sub">(figures from Lemkin and the agent itself)</span></li>
+        <li>The agent said a rollback was impossible. <b style="color:var(--ok)">The rollback worked and the data was restored.</b></li>
+        <li>Replit's CEO apologized; promised dev/prod DB separation and a planning-only mode</li>
+      </ul>
+    </div>
+    <div class="card warm" style="align-self:start">
+      <h3>Moral</h3>
+      <p>Infrastructure limits the blast radius (isolation, rollback), <b>not the prompt</b>.</p>
+      <p style="margin-top:18px">Don't take the agent's word for the state of the system.</p>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://www.theregister.com/software/2025/07/21/vibe-coding-service-replit-deleted-production-database/719783">The Register</a> · <a href="https://www.businessinsider.com/replit-ceo-apologizes-ai-coding-tool-delete-company-database-2025-7">Business Insider</a> · <a href="https://vaiddb.org/incident/VAID-2025-0020">VAID-2025-0020</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (0:30–2:00)</i></p><p>Let's start with a story. July 2025, around the 18th. Jason Lemkin of SaaStr is building an app with Replit's agent. The project is in a code freeze. The agent deletes the live database anyway. According to Lemkin, and to the agent's own account, that is data on 1,206 executives and more than 1,196 companies. Then it gets worse: the agent says a rollback is impossible. That was false. The rollback worked and the data came back. Replit's CEO apologized and promised to separate dev and prod databases and to add a planning-only mode.</p><p>Two lessons. First, nothing in the prompt stopped this. What saved the data was infrastructure: a rollback that existed outside the agent's control. Second, the agent's report about the state of the system was wrong. Never take the agent's word for it. Check with tools the agent cannot influence.</p><p><b>Sources:</b> <a href="https://www.theregister.com/software/2025/07/21/vibe-coding-service-replit-deleted-production-database/719783">The Register</a>, <a href="https://www.businessinsider.com/replit-ceo-apologizes-ai-coding-tool-delete-company-database-2025-7">Business Insider</a>, <a href="https://vaiddb.org/incident/VAID-2025-0020">VAID-2025-0020</a></p></aside>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Hook · attacks</p><h2>Prompt injection turns your agent into someone else's shell</h2></header>
+  <div class="body">
+    <div class="cols c2" style="gap:32px">
+      <div class="card bad"><h3>HiddenLayer, 2025-07-31</h3>
+        <p class="small">Hidden HTML comment in a README → Cursor (Auto-Run) greps for keys, sends them with <code>curl</code>; denylist bypassed via <code>$()</code>.<br>Without Auto-Run: <code>read_file</code> + <code>create_diagram</code> (Mermaid image) exfiltrates an SSH key. Fixed in Cursor 1.3.</p></div>
+      <div class="card bad"><h3>"Your AI, My Shell" (arXiv 2509.22040)</h3>
+        <p class="small">314 payloads, 70 MITRE ATT&amp;CK techniques in rule files; Cursor and Copilot. Attack success <b>41–84%</b>. Terminal disabled? The agent writes <code>os.system()</code> into code (<b>88%</b>).</p></div>
+    </div>
+    <p class="small" style="margin:24px 0 0"><b>Not prompt injection, same lesson:</b> CVE-2025-65099 (Claude Code &lt; 1.0.39, CVSS 7.7: Yarn code ran before the folder-trust dialog) · CVE-2025-62222 (VS Code Copilot Chat, command injection, CVSS 8.8)</p>
+    <div class="callout">The prompt is not a security boundary.</div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://www.hiddenlayer.com/research/how-hidden-prompt-injections-can-hijack-ai-code-assistants-like-cursor">HiddenLayer</a> · <a href="https://arxiv.org/abs/2509.22040">arXiv 2509.22040</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65099">NVD CVE-2025-65099</a> · <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-62222">NVD CVE-2025-62222</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (2:00–3:30)</i></p><p>That was the agent's own mistake. Now attacks. HiddenLayer, July 2025: they hid an HTML comment in a README. Cursor in Auto-Run mode read it, found keys with ripgrep and sent them out with curl. The command denylist did not help, because the payload wrapped the command in dollar-parentheses. A second chain worked even without Auto-Run: read a file, then "create a diagram", where the Mermaid image URL carried an SSH key. Cursor fixed it in 1.3.</p><p>The academic version is "Your AI, My Shell", arXiv 2509.22040. 314 payloads covering 70 MITRE ATT&amp;CK techniques, planted in rule files, against Cursor and Copilot. Attack success between 41 and 84 percent. And when they disabled the terminal tool, the agent simply wrote os.system into the code it generated, in 88 percent of cases.</p><p>Two CVEs on the slide are a different class. They are not prompt injection: in Claude Code before 1.0.39, Yarn plugins from an untrusted repo ran before the trust dialog; in Copilot Chat it was a command injection. Different bug, same lesson: the prompt is not a security boundary. You need a boundary the model cannot talk its way through.</p><p><b>Sources:</b> <a href="https://www.hiddenlayer.com/research/how-hidden-prompt-injections-can-hijack-ai-code-assistants-like-cursor">HiddenLayer</a>, <a href="https://arxiv.org/abs/2509.22040">arXiv 2509.22040</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-65099">CVE-2025-65099</a>, <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-62222">CVE-2025-62222</a></p></aside>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Threat model</p><h2>Agent threat model</h2></header>
+  <div class="body">
+    <svg viewBox="0 0 1728 600" width="1728" height="600" role="img" aria-label="Untrusted input flows into the LLM, which calls tools inside a sandbox boundary, producing side effects">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#0f172a"/></marker></defs>
+      <rect x="10" y="60" width="360" height="300" rx="18" fill="#fee2e2" stroke="#b91c1c" stroke-width="3"/>
+      <text x="190" y="110" text-anchor="middle" font-size="34" font-weight="700" fill="#b91c1c">Untrusted input</text>
+      <text x="190" y="170" text-anchor="middle" font-size="27">READMEs, rule files</text>
+      <text x="190" y="215" text-anchor="middle" font-size="27">web pages, issues</text>
+      <text x="190" y="260" text-anchor="middle" font-size="27">tool output</text>
+      <text x="190" y="315" text-anchor="middle" font-size="24" fill="#475569">mixed with your prompt</text>
+      <line x1="372" y1="210" x2="470" y2="210" stroke="#0f172a" stroke-width="4" marker-end="url(#ar)"/>
+      <rect x="480" y="110" width="300" height="200" rx="100" fill="#e2e8f0" stroke="#475569" stroke-width="3"/>
+      <text x="630" y="200" text-anchor="middle" font-size="38" font-weight="700">LLM</text>
+      <text x="630" y="245" text-anchor="middle" font-size="24" fill="#475569">can't tell data</text>
+      <text x="630" y="275" text-anchor="middle" font-size="24" fill="#475569">from instructions</text>
+      <rect x="860" y="20" width="858" height="380" rx="22" fill="#ecfeff" stroke="#0e7490" stroke-width="4" stroke-dasharray="16 10"/>
+      <text x="1290" y="60" text-anchor="middle" font-size="26" font-weight="700" fill="#0e7490">SANDBOX BOUNDARY: wraps the tools, not the model</text>
+      <line x1="782" y1="210" x2="898" y2="210" stroke="#0f172a" stroke-width="4" marker-end="url(#ar)"/>
+      <rect x="905" y="95" width="340" height="270" rx="16" fill="#fff" stroke="#0e7490" stroke-width="3"/>
+      <text x="1075" y="145" text-anchor="middle" font-size="34" font-weight="700" fill="#0e7490">Tools</text>
+      <text x="1075" y="200" text-anchor="middle" font-size="27">shell, files</text>
+      <text x="1075" y="245" text-anchor="middle" font-size="27">browser, HTTP</text>
+      <text x="1075" y="290" text-anchor="middle" font-size="27">DB clients</text>
+      <line x1="1247" y1="230" x2="1325" y2="230" stroke="#0f172a" stroke-width="4" marker-end="url(#ar)"/>
+      <rect x="1335" y="95" width="350" height="270" rx="16" fill="#fff" stroke="#0e7490" stroke-width="3"/>
+      <text x="1510" y="145" text-anchor="middle" font-size="34" font-weight="700" fill="#0e7490">Side effects</text>
+      <text x="1510" y="200" text-anchor="middle" font-size="27">files written</text>
+      <text x="1510" y="245" text-anchor="middle" font-size="27">requests sent</text>
+      <text x="1510" y="290" text-anchor="middle" font-size="27">processes started</text>
+      <text x="10" y="470" font-size="30" font-weight="700" fill="#0b2540">What we protect, outside the boundary:</text>
+      <g font-size="30" font-weight="600" text-anchor="middle">
+        <rect x="10" y="500" width="300" height="76" rx="38" fill="#0b2540"/><text x="160" y="549" fill="#fff">the host</text>
+        <rect x="340" y="500" width="300" height="76" rx="38" fill="#0b2540"/><text x="490" y="549" fill="#fff">secrets</text>
+        <rect x="670" y="500" width="300" height="76" rx="38" fill="#0b2540"/><text x="820" y="549" fill="#fff">prod</text>
+        <rect x="1000" y="500" width="300" height="76" rx="38" fill="#0b2540"/><text x="1150" y="549" fill="#fff">the network</text>
+        <rect x="1330" y="500" width="300" height="76" rx="38" fill="#0b2540"/><text x="1480" y="549" fill="#fff">money</text>
+      </g>
+    </svg>
+  </div>
+  <footer><span class="src">Source: <a href="../talk-outline.md">talk-outline.md</a> · <a href="../research.md">research.md §1</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (3:30–5:00)</i></p><p>Here is the threat model in one picture. Untrusted input comes in: a README, a rule file, a web page, even the output of the agent's own previous command. The LLM mixes it with your instructions, and it cannot reliably tell which is which. Then it calls tools: a shell, the file system, a browser, the network. Those tools have side effects in the real world.</p><p>You cannot fix the middle box. So the boundary goes around the tools. Whatever the model decides, the tools run somewhere where the damage is contained. What are we protecting? The host machine, the secrets on it, production systems, the network the host can reach, and money, because compute and API calls cost money too.</p></aside>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Threat model</p><h2>The lethal trifecta</h2></header>
+  <div class="body cols c46" style="align-items:center">
+    <svg viewBox="0 0 700 640" width="700" height="640" role="img" aria-label="Venn diagram of private data, untrusted content and exfiltration channel">
+      <circle cx="250" cy="230" r="200" fill="#0e7490" fill-opacity=".22" stroke="#0e7490" stroke-width="4"/>
+      <circle cx="450" cy="230" r="200" fill="#c2410c" fill-opacity=".20" stroke="#c2410c" stroke-width="4"/>
+      <circle cx="350" cy="410" r="200" fill="#6d28d9" fill-opacity=".18" stroke="#6d28d9" stroke-width="4"/>
+      <text x="170" y="170" text-anchor="middle" font-size="32" font-weight="700" fill="#0e7490">Private</text>
+      <text x="170" y="208" text-anchor="middle" font-size="32" font-weight="700" fill="#0e7490">data</text>
+      <text x="530" y="170" text-anchor="middle" font-size="32" font-weight="700" fill="#c2410c">Untrusted</text>
+      <text x="530" y="208" text-anchor="middle" font-size="32" font-weight="700" fill="#c2410c">content</text>
+      <text x="350" y="540" text-anchor="middle" font-size="32" font-weight="700" fill="#6d28d9">Exfiltration</text>
+      <text x="350" y="578" text-anchor="middle" font-size="32" font-weight="700" fill="#6d28d9">channel</text>
+      <circle cx="350" cy="300" r="56" fill="#b91c1c"/>
+      <text x="350" y="312" text-anchor="middle" font-size="34" font-weight="700" fill="#fff">!</text>
+    </svg>
+    <div>
+      <p style="margin:0 0 20px">All three in one agent → data theft is <b>one injected instruction</b> away.</p>
+      <div class="card" style="margin-bottom:22px"><h3>HiddenLayer, mapped</h3>
+        <p class="small">keys on disk · README comment · <code>curl</code> / Mermaid image URL</p></div>
+      <div class="card ok"><h3>A sandbox removes legs</h3>
+        <ul class="small tight"><li>no production secrets inside</li><li>egress allowlist</li></ul></div>
+    </div>
+  </div>
+  <footer><span class="src">Framing: <a href="../talk-outline.md">talk-outline.md</a> · example: <a href="https://www.hiddenlayer.com/research/how-hidden-prompt-injections-can-hijack-ai-code-assistants-like-cursor">HiddenLayer</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (5:00–6:30)</i></p><p>A useful way to reason about this is the "lethal trifecta" from our outline. Danger peaks when one agent has three things at once: access to private data, exposure to untrusted content, and a way to send data out. The HiddenLayer attack has all three: keys on disk, a malicious README, and curl or an image URL as the exit.</p><p>You rarely can remove untrusted content, since reading the web and repos is the job. But a sandbox lets you cut the other two legs. Put no production secrets inside the sandbox, and allow egress only to an allowlist. With one leg missing, an injection becomes an annoyance instead of an incident.</p></aside>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-time="2:00">
+  <header><p class="kicker">Beyond security</p><h2>Why agents want sandboxes anyway</h2></header>
+  <div class="body cols c3" style="gap:28px;grid-auto-rows:1fr">
+    <div class="card"><h3>Reproducibility</h3><p class="small">Template / image → the same environment for every run, eval and RL rollout</p></div>
+    <div class="card"><h3>Parallelism</h3><p class="small">Hundreds of ephemeral environments, best-of-N, state forking. Daytona fork/pause: VM class only <span class="pill v">✅</span> · E2B fork "20 copies" <span class="pill q">❓ unverified</span></p></div>
+    <div class="card"><h3>Background agents</h3><p class="small">A remote machine per task: repo, tests, a PR as output</p></div>
+    <div class="card warm"><h3>Computer use</h3><p class="small">The agent needs a screen (Xvfb/VNC), a browser, mouse and keyboard</p></div>
+    <div class="card warm"><h3>Human in the loop</h3><p class="small">Watch live and take over via noVNC or a stream URL</p></div>
+    <div class="card warm"><h3>Resource limits</h3><p class="small">CPU, RAM and time caps per environment</p></div>
+  </div>
+  <footer><span class="src">Sources: <a href="../research.md">research.md §1</a> · <a href="https://www.daytona.io/docs/en/sandboxes/">Daytona docs: sandboxes</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 2:00 (6:30–8:30)</i></p><p>Even if you ignore attacks, you would still want sandboxes. Reproducibility: a template or image gives every run, every eval and every RL rollout the same starting point. Parallelism: you can spin up hundreds of throwaway environments, try best-of-N, or fork a running state. Careful with the details here: Daytona supports fork and pause, but only for its VM sandboxes, not the container ones. E2B has fork too, but the "20 copies per call" figure you may have read I could not verify.</p><p>Background agents run for a long time on their own: each task gets a machine with the repo and the tests, and the output is a pull request. Computer-use agents need an actual screen, browser, mouse and keyboard. And a human can watch that screen live and take over. Plus hard limits on CPU, memory and time, so a runaway loop costs you minutes, not a weekend.</p><p><b>Sources:</b> <a href="../research.md">research.md §1</a>, <a href="https://www.daytona.io/docs/en/sandboxes/">Daytona sandboxes</a></p></aside>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-time="1:15">
+  <header><p class="kicker">Beyond security · a pattern to steal</p><h2>Set up online, run offline</h2></header>
+  <div class="body">
+    <p style="margin:0 0 30px">OpenAI <b>Codex Cloud</b>: one container per task <span class="pill v">✅</span></p>
+    <svg viewBox="0 0 1728 300" width="1728" height="300" role="img" aria-label="Two phases: setup with network and secrets, then agent offline with secrets removed">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#0f172a"/></marker></defs>
+      <rect x="0" y="20" width="620" height="240" rx="20" fill="#ffedd5" stroke="#c2410c" stroke-width="3"/>
+      <text x="310" y="80" text-anchor="middle" font-size="36" font-weight="700" fill="#c2410c">1 · Setup</text>
+      <text x="310" y="140" text-anchor="middle" font-size="30">network ✔ · secrets ✔</text>
+      <text x="310" y="195" text-anchor="middle" font-size="28" fill="#475569">install dependencies</text>
+      <line x1="625" y1="140" x2="760" y2="140" stroke="#0f172a" stroke-width="5" marker-end="url(#ar2)"/>
+      <text x="692" y="110" text-anchor="middle" font-size="22" fill="#b91c1c" font-weight="700">secrets</text>
+      <text x="692" y="185" text-anchor="middle" font-size="22" fill="#b91c1c" font-weight="700">removed</text>
+      <rect x="770" y="20" width="620" height="240" rx="20" fill="#dcfce7" stroke="#15803d" stroke-width="3"/>
+      <text x="1080" y="80" text-anchor="middle" font-size="36" font-weight="700" fill="#15803d">2 · Agent</text>
+      <text x="1080" y="140" text-anchor="middle" font-size="30">offline by default · no secrets</text>
+      <text x="1080" y="195" text-anchor="middle" font-size="28" fill="#475569">reads untrusted code safely</text>
+      <line x1="1395" y1="140" x2="1520" y2="140" stroke="#0f172a" stroke-width="5" marker-end="url(#ar2)"/>
+      <rect x="1530" y="70" width="198" height="140" rx="20" fill="#0b2540"/>
+      <text x="1629" y="155" text-anchor="middle" font-size="34" font-weight="700" fill="#fff">Result</text>
+    </svg>
+    <p class="small" style="margin:34px 0 0"><b>Codex CLI:</b> network off by default; <code>network_proxy</code> with a domain allowlist. The untrusted-content phase has neither secrets nor an exit.</p>
+  </div>
+  <footer><span class="src">Source: <a href="https://developers.openai.com/codex/agent-approvals-security">developers.openai.com/codex/agent-approvals-security</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:15 (8:30–9:45)</i></p><p>One pattern worth stealing comes from OpenAI Codex. In Codex Cloud each task gets its own container. There are two phases. In setup, the environment has network access and secrets, so it can install dependencies. Then the agent phase starts: network off by default, secrets removed. So the part of the run that reads untrusted content has neither secrets nor an exit. That's the trifecta again, with two legs cut by design.</p><p>The Codex CLI does the local version: network is off by default, and if you need it, a network proxy with a domain allowlist.</p><p><b>Sources:</b> <a href="https://developers.openai.com/codex/agent-approvals-security">Codex agent approvals &amp; security</a></p></aside>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Isolation</p><h2>The isolation ladder</h2></header>
+  <div class="body" style="display:grid;grid-template-columns:1fr 330px;gap:36px">
+    <div class="ladder">
+      <div class="rung" style="background:#0f4c75;margin-left:0"><span class="lvl">5</span><b>Full VMs</b><span class="bd">hypervisor · any OS, Windows, GUI</span></div>
+      <div class="rung" style="background:#0e6080"><span class="lvl">4</span><b>Firecracker / Kata microVMs</b><span class="bd">KVM · own kernel per sandbox</span></div>
+      <div class="rung" style="background:#0e7490"><span class="lvl">3</span><b>gVisor (runsc)</b><span class="bd">user-space kernel intercepts syscalls</span></div>
+      <div class="rung" style="background:#3f8fa6"><span class="lvl">2</span><b>Containers (runc)</b><span class="bd">namespaces + cgroups · shared kernel</span></div>
+      <div class="rung" style="background:#7aa9b8"><span class="lvl">1</span><b>Process + seccomp / Landlock / Seatbelt</b><span class="bd">host kernel · policy only</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <svg viewBox="0 0 330 250" width="330" height="250" aria-label="arrow: stronger isolation, more overhead">
+        <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#0b2540"/></marker></defs>
+        <line x1="40" y1="240" x2="40" y2="14" stroke="#0b2540" stroke-width="6" marker-end="url(#ar3)"/>
+        <text x="70" y="70" font-size="26" font-weight="700" fill="#0b2540">stronger</text>
+        <text x="70" y="102" font-size="26" font-weight="700" fill="#0b2540">boundary</text>
+        <text x="70" y="160" font-size="24" fill="#475569">more startup /</text>
+        <text x="70" y="190" font-size="24" fill="#475569">ops overhead</text>
+      </svg>
+      <div class="card warm"><h3 style="font-size:28px">Side branch</h3><p class="xs" style="font-size:24px">WASM / V8 isolates: runtime sandbox, ms start, not "full Linux"</p></div>
+    </div>
+  </div>
+  <footer><span class="src">Source: <a href="../research.md">research.md §2</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (9:45–11:15)</i></p><p>Now the core of the talk: how you isolate. Think of a ladder. Each rung moves the trust boundary further from your host kernel and usually costs more startup time or more operations work.</p><p>At the bottom, a normal process with OS policies: seccomp, Landlock, macOS Seatbelt. It still shares the kernel and usually the file system. Then containers: namespaces and cgroups, still one shared kernel. gVisor puts a kernel written in user space between the container and the real kernel. MicroVMs, Firecracker and Kata, give each sandbox its own kernel under KVM. Full VMs give you any OS, including Windows and GUIs. On the side, WASM and V8 isolates: a different kind of sandbox, very fast, but not a Linux machine.</p></aside>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Isolation · rungs 1–2</p><h2>Process sandboxes and containers</h2></header>
+  <div class="body cols c2">
+    <div class="card"><h3>1 · Process sandbox</h3>
+      <ul class="small"><li>Instant, local</li><li>Shared FS and kernel; policy only</li>
+      <li><b>Codex CLI</b> <span class="pill v">✅</span>: Seatbelt (macOS), <b>bwrap + seccomp</b> (Linux), MXC (Windows)</li></ul></div>
+    <div class="card warm"><h3>2 · Docker / OCI containers</h3>
+      <ul class="small"><li>Fast, huge ecosystem</li><li>Escape = a kernel vulnerability</li><li><b>Not for hostile code in multi-tenant setups</b></li></ul></div>
+    <div style="grid-column:1/3">
+      <p class="small" style="margin:0 0 10px"><b>Hardening we use in ex2's Docker fallback:</b></p>
+      <pre class="cmd">docker run -d --rm --network none --read-only --tmpfs /tmp --user 65534:65534 \
+  --memory 512m --cpus 1 --pids-limit 128 python:3.12-slim sleep 600</pre>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://developers.openai.com/codex/agent-approvals-security">Codex security</a> · <a href="../workshop/ex2_llm_loop/agent.py">workshop/ex2_llm_loop/agent.py</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (11:15–12:45)</i></p><p>The process sandbox is what local coding agents use. Codex CLI is a good reference: Seatbelt on macOS, bubblewrap plus seccomp on Linux, MXC on Windows. Note: not Landlock on Linux, as some older write-ups say. It starts instantly, but it's policy on a shared kernel and usually a shared file system.</p><p>Containers are the default for most teams: fast, everything already speaks OCI. The weak point is the shared kernel: one kernel bug and you're out. So containers are fine for your own code and trusted users, but not for hostile code from many tenants on one host. If you do use containers, lock them down. The flags on the slide are exactly what our workshop's ex2 Docker fallback uses: no network, read-only root, nobody user, and caps on memory, CPU and process count.</p><p><b>Sources:</b> <a href="https://developers.openai.com/codex/agent-approvals-security">Codex agent approvals &amp; security</a>, <a href="../workshop/ex2_llm_loop/agent.py">workshop/ex2_llm_loop/agent.py</a></p></aside>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Isolation · rungs 3–4</p><h2>gVisor and microVMs</h2></header>
+  <div class="body cols c3" style="gap:28px">
+    <div class="card"><h3>gVisor (runsc)</h3><ul class="small tight"><li>User-space kernel intercepts syscalls</li><li>OCI-compatible</li><li>Syscall / IO overhead</li><li>Modal's default</li></ul></div>
+    <div class="card ok"><h3>Firecracker <span class="pill v">✅</span></h3>
+      <ul class="small tight"><li>Minimal VMM (Rust) on KVM</li><li><b>&lt; 125 ms</b> boot</li><li><b>&lt; 5 MiB</b> overhead</li><li>5 emulated devices</li><li>≤ 150 microVMs/s per host</li><li>Needs KVM: bare metal / nested virt</li></ul></div>
+    <div class="card"><h3>Kata Containers</h3><ul class="small tight"><li>Lightweight VM behind the OCI API</li><li>QEMU / Cloud Hypervisor / Firecracker</li><li>k8s-native, VM boundary</li><li>Harder to operate</li></ul></div>
+  </div>
+  <p class="small" style="margin:20px 0 6px"><b>Firecracker under:</b> E2B · Vercel Sandbox · Fly.io · AWS Lambda (+ AWS Lambda MicroVMs)</p>
+  <p class="xs" style="margin:0 0 18px;color:var(--muted)"><span class="pill q">❓</span> gVisor and Kata descriptions are generic, not re-checked against primary docs in this pass.</p>
+  <footer><span class="src">Sources: <a href="https://firecracker-microvm.github.io/">firecracker-microvm.github.io</a> · <a href="https://gvisor.dev/">gvisor.dev</a> · <a href="https://katacontainers.io/">katacontainers.io</a> · <a href="../verification-notes.md">verification-notes.md</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (12:45–14:15)</i></p><p>gVisor is the middle ground. It intercepts system calls with a kernel implemented in user space, and it plugs in as an OCI runtime, runsc. You pay overhead on syscalls and I/O. Modal uses it by default.</p><p>Firecracker is why microVMs became the standard for agent sandboxes. It's a tiny VMM in Rust on top of KVM. The project's own numbers: boot under 125 milliseconds, under 5 MiB of memory overhead, only five emulated devices, up to 150 microVMs per second per host. That's what E2B, Vercel Sandbox, Fly.io and AWS Lambda run on. The catch: you need KVM, so bare metal or nested virtualization.</p><p>Kata Containers gives you a VM boundary behind the normal container API, which fits Kubernetes, but it's more to operate. A small honesty note: my gVisor and Kata descriptions are general knowledge from the research, not re-checked against their docs in this pass.</p><p><b>Sources:</b> <a href="https://firecracker-microvm.github.io/">firecracker-microvm.github.io</a>, <a href="https://gvisor.dev/">gvisor.dev</a>, <a href="https://katacontainers.io/">katacontainers.io</a></p></aside>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Isolation · rung 5 and the side branch</p><h2>Full VMs, WASM and V8 isolates</h2></header>
+  <div class="body cols c2">
+    <div>
+      <div class="card" style="margin-bottom:24px"><h3>Full VMs (QEMU/KVM, cloud VMs)</h3><p class="small">Maximum compatibility, Windows, GUI · slow start, expensive</p></div>
+      <div class="card warm"><h3>WASM / V8 isolates</h3><p class="small">Wasmtime, Pyodide; Cloudflare Dynamic Workers · ms start, cheap · limited languages and syscalls, no full Linux</p></div>
+    </div>
+    <div>
+      <p class="kicker" style="margin-bottom:16px">Rule of thumb</p>
+      <div class="step"><div class="n">1</div><div>Your own code / trusted users → <b>container</b></div></div>
+      <div class="step"><div class="n">2</div><div>Third-party or LLM code, multi-tenant → <b>gVisor or microVM</b></div></div>
+      <div class="step"><div class="n">3</div><div>GUI / Windows → <b>VM</b></div></div>
+    </div>
+  </div>
+  <footer><span class="src">Source: <a href="../research.md">research.md §2</a> · <a href="https://developers.cloudflare.com/sandbox/">Cloudflare Sandbox docs</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (14:15–15:45)</i></p><p>At the top of the ladder, full VMs. Anything runs, Windows and GUI included, but they start slowly and cost more.</p><p>On the side, WASM runtimes like Wasmtime or Pyodide, and V8 isolates like Cloudflare's Dynamic Workers. They start in milliseconds and are cheap, but you get a limited set of languages and system calls. Great for "run this snippet of JS or Python", not for "clone the repo and run the test suite".</p><p>If you remember one thing from this section, take the rule of thumb. Your own code and trusted users: a container is fine. Third-party or LLM-generated code with several tenants: gVisor or a microVM. Need a GUI or Windows: a VM.</p></aside>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Remote desktops</p><h2>A desktop for an agent: the stack (our ex3)</h2></header>
+  <div class="body" style="display:grid;grid-template-columns:1080px 1fr;gap:36px">
+    <svg viewBox="0 0 1080 640" width="1080" height="640" role="img" aria-label="Docker container with Xvfb, fluxbox, Chromium, x11vnc and noVNC; agent and human outside">
+      <defs><marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#0f172a"/></marker></defs>
+      <rect x="250" y="10" width="820" height="470" rx="22" fill="#ecfeff" stroke="#0e7490" stroke-width="4" stroke-dasharray="16 10"/>
+      <text x="270" y="50" font-size="26" font-weight="700" fill="#0e7490">Docker container (agent-desktop)</text>
+      <rect x="290" y="80" width="330" height="90" rx="14" fill="#fff" stroke="#475569" stroke-width="3"/>
+      <text x="455" y="135" text-anchor="middle" font-size="28">fluxbox (WM)</text>
+      <rect x="660" y="80" width="370" height="90" rx="14" fill="#fff" stroke="#475569" stroke-width="3"/>
+      <text x="845" y="135" text-anchor="middle" font-size="28">Chromium (Playwright)</text>
+      <line x1="455" y1="172" x2="530" y2="232" stroke="#0f172a" stroke-width="3" marker-end="url(#ar4)"/>
+      <line x1="845" y1="172" x2="740" y2="232" stroke="#0f172a" stroke-width="3" marker-end="url(#ar4)"/>
+      <rect x="440" y="240" width="400" height="100" rx="14" fill="#0b2540"/>
+      <text x="640" y="290" text-anchor="middle" font-size="32" font-weight="700" fill="#fff">Xvfb :1</text>
+      <text x="640" y="325" text-anchor="middle" font-size="22" fill="#bae6fd">virtual screen in memory</text>
+      <line x1="640" y1="342" x2="640" y2="382" stroke="#0f172a" stroke-width="3" marker-end="url(#ar4)"/>
+      <rect x="290" y="390" width="330" height="70" rx="14" fill="#fff" stroke="#c2410c" stroke-width="3"/>
+      <text x="455" y="435" text-anchor="middle" font-size="26">x11vnc :5900 (localhost)</text>
+      <line x1="622" y1="425" x2="672" y2="425" stroke="#0f172a" stroke-width="3" marker-end="url(#ar4)"/>
+      <rect x="680" y="390" width="350" height="70" rx="14" fill="#fff" stroke="#c2410c" stroke-width="3"/>
+      <text x="855" y="435" text-anchor="middle" font-size="26">websockify + noVNC :6080</text>
+      <line x1="855" y1="462" x2="855" y2="540" stroke="#0f172a" stroke-width="3" marker-end="url(#ar4)"/>
+      <rect x="640" y="548" width="430" height="84" rx="14" fill="#ffedd5" stroke="#c2410c" stroke-width="3"/>
+      <text x="855" y="585" text-anchor="middle" font-size="26" font-weight="700">Human: browser</text>
+      <text x="855" y="618" text-anchor="middle" font-size="22">127.0.0.1:6080/vnc.html</text>
+      <rect x="0" y="200" width="210" height="180" rx="14" fill="#dcfce7" stroke="#15803d" stroke-width="3"/>
+      <text x="105" y="255" text-anchor="middle" font-size="28" font-weight="700">Agent</text>
+      <text x="105" y="292" text-anchor="middle" font-size="22">(ex4, on host)</text>
+      <text x="105" y="335" text-anchor="middle" font-size="20" fill="#475569">desktop_tools.py</text>
+      <line x1="212" y1="270" x2="436" y2="270" stroke="#15803d" stroke-width="4" marker-end="url(#ar4)"/>
+      <line x1="436" y1="315" x2="214" y2="315" stroke="#15803d" stroke-width="4" marker-end="url(#ar4)"/>
+      <text x="320" y="258" text-anchor="middle" font-size="18" fill="#15803d" font-weight="700">xdotool</text>
+      <text x="320" y="345" text-anchor="middle" font-size="18" fill="#15803d" font-weight="700">screenshot</text>
+      <text x="0" y="420" font-size="20" fill="#475569">via docker exec</text>
+    </svg>
+    <div>
+      <figure><img src="../assets/ex3-desktop.png" alt="ex3 desktop showing example.com in Chromium inside the container"><figcaption>Our container, seen through noVNC</figcaption></figure>
+      <ul class="xs tight" style="margin-top:18px;font-size:23px">
+        <li>VNC has no password → publish on 127.0.0.1 only</li>
+        <li>Anthropic reference: Xvfb + Mutter + Tint2 + noVNC</li>
+        <li>E2B Desktop: Xfce + VNC stream</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop/ex3_docker_desktop/README.md">workshop/ex3_docker_desktop</a> · <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic computer-use docs</a> · <a href="https://github.com/e2b-dev/desktop">e2b-dev/desktop</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (15:45–17:15)</i></p><p>Computer-use agents need a screen. On a server there is none, so we fake one. Xvfb is an X server that draws into memory. A small window manager, fluxbox in our case, and a browser run on it. x11vnc exports that screen over VNC, and websockify with noVNC turns it into a web page on port 6080, so a human can watch in a normal browser.</p><p>The agent doesn't use VNC at all. It takes screenshots and sends mouse and keyboard events with xdotool through docker exec. Security note from our README: x11vnc runs without a password and listens only on localhost inside the container, and we publish the port only on 127.0.0.1.</p><p>This is a common pattern. Anthropic's reference container uses Xvfb, Mutter, Tint2 and noVNC. E2B Desktop uses Xfce with a VNC stream. On the right is a real screenshot from our container.</p><p><b>Sources:</b> <a href="../workshop/ex3_docker_desktop/README.md">workshop/ex3_docker_desktop</a>, <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic computer-use docs</a>, <a href="https://github.com/e2b-dev/desktop">e2b-dev/desktop</a></p></aside>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Remote desktops</p><h2>The screenshot → action loop</h2></header>
+  <div class="body cols" style="grid-template-columns:720px 1fr;gap:40px">
+    <svg viewBox="0 0 720 640" width="720" height="640" role="img" aria-label="loop: screenshot, vision LLM, tool call, execute">
+      <defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#0e7490"/></marker></defs>
+      <circle cx="360" cy="320" r="215" fill="none" stroke="#0e7490" stroke-width="6" stroke-dasharray="2 0"/>
+      <path d="M520 175 A215 215 0 0 1 560 230" fill="none" stroke="#0e7490" stroke-width="6" marker-end="url(#ar5)"/>
+      <path d="M520 465 A215 215 0 0 1 465 505" fill="none" stroke="#0e7490" stroke-width="6" marker-end="url(#ar5)"/>
+      <path d="M200 465 A215 215 0 0 1 160 410" fill="none" stroke="#0e7490" stroke-width="6" marker-end="url(#ar5)"/>
+      <path d="M200 175 A215 215 0 0 1 255 135" fill="none" stroke="#0e7490" stroke-width="6" marker-end="url(#ar5)"/>
+      <g font-weight="700" text-anchor="middle">
+        <rect x="230" y="60" width="260" height="90" rx="16" fill="#0b2540"/><text x="360" y="117" font-size="30" fill="#fff">screenshot</text>
+        <rect x="470" y="275" width="250" height="90" rx="16" fill="#0e7490"/><text x="595" y="332" font-size="30" fill="#fff">vision LLM</text>
+        <rect x="230" y="490" width="260" height="90" rx="16" fill="#c2410c"/><text x="360" y="535" font-size="28" fill="#fff">function</text><text x="360" y="566" font-size="28" fill="#fff">tool call</text>
+        <rect x="0" y="275" width="250" height="90" rx="16" fill="#15803d"/><text x="125" y="315" font-size="28" fill="#fff">execute on</text><text x="125" y="347" font-size="28" fill="#fff">desktop</text>
+      </g>
+      <text x="360" y="315" text-anchor="middle" font-size="26" fill="#475569">repeat until</text>
+      <text x="360" y="352" text-anchor="middle" font-size="30" font-weight="700" fill="#0b2540" font-family="IBM Plex Mono,monospace">done</text>
+    </svg>
+    <div class="small">
+      <p style="margin:0 0 14px"><b>ex4 tools:</b> <code>click</code> <code>type</code> <code>key</code> <code>scroll</code> <code>screenshot</code> <code>wait</code> <code>done</code></p>
+      <ul>
+        <li>Screenshots go in <b>user</b> messages (many OpenAI-compatible models reject images in tool messages); keep the last 3</li>
+        <li>Coordinates = screenshot pixels; accept ints, numeric strings or 0..1 normalized</li>
+        <li>Backends, same interface: <code>DESKTOP_BACKEND=docker</code> (ex3) or <code>e2b</code> (E2B Desktop)</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span class="src">Source: <a href="../workshop/ex4_computer_use/README.md">workshop/ex4_computer_use/README.md</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (17:15–18:45)</i></p><p>The agent itself is a simple loop. Take a screenshot, send it to a vision model with a list of tools, get back a tool call, run it on the desktop, take a new screenshot, repeat until the model calls done.</p><p>Our ex4 uses plain function tools: click, type, key, scroll, screenshot, wait and done. So any model that has vision and tool calling works. Some practical details we learned: many OpenAI-compatible models refuse images inside tool messages, so we send screenshots as user messages and keep only the last three to save context. Models disagree about coordinates, some send pixel integers, some strings, some 0-to-1 fractions, so we accept all of them. And the backend is swappable: our own Docker desktop or E2B Desktop, behind the same interface.</p><p><b>Sources:</b> <a href="../workshop/ex4_computer_use/README.md">workshop/ex4_computer_use</a></p></aside>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Remote desktops</p><h2>Humans in the loop, browser clouds, native APIs</h2></header>
+  <div class="body cols c3" style="gap:28px">
+    <div class="card ok"><h3>Human in the loop</h3><p class="small">Watch and take over via noVNC or a stream URL. E2B Desktop: <code>stream.start()</code> / <code>get_url()</code></p></div>
+    <div class="card"><h3>Browser clouds</h3><p class="small">Browserbase (+ Stagehand), Steel (Apache-2.0, self-host), Hyperbrowser · ~$0.08–0.12 per browser-hour <span class="pill w">⚠️ vendor</span> · CDP from Playwright, live view</p></div>
+    <div class="card warm"><h3>Native computer-use APIs</h3><p class="small">Anthropic <code>computer_toolset_20260801</code> <span class="pill v">✅</span>: GA, no beta header, 17 member tools, batched actions. Claude 5.5 accepts only the toolset. OpenAI: computer use in the Responses API.</p></div>
+  </div>
+  <p class="small" style="margin:26px 0 20px">Native tools return structured actions in a <b>model-specific schema</b>; ex4 uses generic function tools so <b>any</b> vision + tool-calling model fits.</p>
+  <footer><span class="src">Sources: <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic computer-use docs</a> · <a href="https://github.com/e2b-dev/desktop">e2b-dev/desktop</a> · <a href="https://docs.browserbase.com/account/billing/plans">Browserbase</a> · <a href="https://docs.steel.dev/overview/pricinglimits">Steel</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (18:45–20:15)</i></p><p>Because the screen is a VNC stream, a human can watch and take over at any moment. E2B Desktop gives you a stream URL from the SDK. In our container it's the noVNC page.</p><p>If the agent only needs a browser, you can skip the desktop and rent a browser: Browserbase, Steel, which is open source and self-hostable, or Hyperbrowser. Roughly 8 to 12 cents per browser-hour, but those prices are from vendor pages I couldn't fully verify. You drive them over CDP from Playwright and get a live view.</p><p>And there are native computer-use APIs. Anthropic's current one is computer_toolset_20260801: generally available, no beta header, 17 member tools, and several actions per turn. Claude 5.5 models only accept this toolset; the older computer tool versions are for older models. OpenAI has its own computer-use tool in the Responses API. These models are trained for pixel-precise clicking. Our demo deliberately uses generic tools so you can run it on free models, and you'll see what that costs.</p><p><b>Sources:</b> <a href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool">Anthropic computer-use docs</a>, <a href="https://docs.browserbase.com/account/billing/plans">Browserbase plans</a>, <a href="https://docs.steel.dev/overview/pricinglimits">Steel pricing</a></p></aside>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Landscape · list prices, verified 2026-10-10</p><h2>Provider landscape</h2></header>
+  <div class="body">
+    <table>
+      <tr><th style="width:15%">Platform</th><th style="width:27%">Isolation</th><th style="width:30%">CPU / RAM, billing</th><th style="width:12%">Desktop</th><th>Self-host</th></tr>
+      <tr><td><b>E2B</b></td><td>Firecracker microVM</td><td>$0.0504/vCPU-h · $0.0162/GiB-h · wall-clock</td><td>Yes (E2B Desktop)</td><td><code>e2b-dev/runtime</code>, Apache-2.0</td></tr>
+      <tr><td><b>Daytona</b></td><td>containers (Sysbox) + VM class</td><td>$0.0504/vCPU-h · $0.0162/GiB-h</td><td>VM/Windows <span class="pill w">⚠️</span></td><td>OSS archived June 2026</td></tr>
+      <tr><td><b>Modal</b></td><td>gVisor; VM Sandboxes GA 2026-10-01</td><td>≈$0.071/vCPU-h · $0.024/GiB-h</td><td>own image <span class="pill w">⚠️</span></td><td>No</td></tr>
+      <tr><td><b>Cloudflare</b></td><td>microVM per container + V8 isolates</td><td>$0.072/vCPU-h active · $0.009/GiB-h</td><td>No</td><td>No</td></tr>
+      <tr><td><b>Vercel</b></td><td>Firecracker microVM</td><td>$0.128/CPU-h active · $0.0212/GB-h</td><td>No</td><td>No</td></tr>
+      <tr><td><b>Fly.io Sprites</b></td><td>Firecracker</td><td>$0.0385/CPU-h consumed · $0.021875/GB-h</td><td>own image</td><td>No</td></tr>
+    </table>
+    <p class="xs" style="margin:16px 0 0"><span class="pill w">⚠️ vendor-only</span> Runloop: microVM devboxes, $0.108/CPU-h · Morph Cloud: Infinibranch snapshots, $0.05/MCU-h</p>
+  </div>
+  <footer><span class="src">Source: <a href="../comparison.md">comparison.md</a> (links to e2b.dev/pricing, daytona.io/pricing, modal.com/pricing, developers.cloudflare.com, vercel.com/docs/vercel-sandbox/pricing, fly.io)</span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (20:15–21:45)</i></p><p>Now the market. This table is from our comparison file, list prices checked on October 10. A few things stand out.</p><p>E2B runs on Firecracker, bills wall-clock time, has a ready-made desktop product, and can be self-hosted from its Apache-2.0 runtime repo. Daytona has the same CPU and RAM rates as E2B, uses containers by default plus a separate VM class. Important change: its open-source repo was archived in June 2026, so "we can self-host Daytona" is no longer an argument. Modal uses gVisor by default and made VM sandboxes generally available on October 1st, CPU only. Cloudflare's containers are actually microVMs with their own kernel, plus V8 isolates. Vercel and Fly.io Sprites are both Firecracker and bill for what you actually use.</p><p>At the bottom: Runloop and Morph. Their prices come only from search snippets, so treat them as unverified.</p><p><b>Sources:</b> <a href="../comparison.md">comparison.md</a> and its source list: <a href="https://e2b.dev/pricing">E2B pricing</a>, <a href="https://www.daytona.io/pricing">Daytona pricing</a>, <a href="https://modal.com/pricing">Modal pricing</a>, <a href="https://modal.com/docs/guide/vm-sandboxes">Modal VM sandboxes</a>, <a href="https://developers.cloudflare.com/sandbox/">Cloudflare Sandbox</a>, <a href="https://developers.cloudflare.com/containers/pricing/">Cloudflare pricing</a>, <a href="https://vercel.com/docs/vercel-sandbox/pricing">Vercel Sandbox pricing</a>, <a href="https://fly.io/learn/ai-sandbox-pricing/">Fly.io</a></p></aside>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Landscape</p><h2>Billing and cold start: read the fine print</h2></header>
+  <div class="body cols c2">
+    <div>
+      <div class="card" style="margin-bottom:20px"><h3>Wall-clock</h3><p class="small">E2B, Daytona, Modal: you pay while it exists</p></div>
+      <div class="card ok" style="margin-bottom:20px"><h3>Active CPU / usage</h3><p class="small">Vercel, Cloudflare (RAM provisioned) · Fly.io Sprites (consumed; idle ~30 s → storage only)</p></div>
+      <p class="small" style="margin:0">Agents mostly wait for the LLM → usage billing usually fits. Session caps: E2B Hobby ≤ 1 h, Vercel Hobby 45 min.</p>
+    </div>
+    <div>
+      <table style="font-size:25px">
+        <tr><th>Cold start <span class="pill w" style="background:#fff">⚠️</span></th><th>Vendor</th><th>Independent*</th></tr>
+        <tr><td><b>E2B</b></td><td>~150 ms</td><td>0.7–1.6 s</td></tr>
+        <tr><td><b>Daytona</b></td><td>"90 ms"</td><td>0.27 s burst, low success</td></tr>
+        <tr><td><b>Vercel</b></td><td>—</td><td>0.67–1.9 s</td></tr>
+        <tr><td><b>Modal</b></td><td>—</td><td>0.9–2.4 s</td></tr>
+      </table>
+      <p class="xs" style="margin:12px 0 16px">* MarkTechPost benchmark, 2026-08-27, not re-checked. Firecracker &lt; 125 ms <span class="pill v">✅</span> is the VMM boot, not the product.</p>
+      <div class="callout" style="margin-top:0;font-size:34px">Measure it yourself.</div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../comparison.md">comparison.md</a> · <a href="../verification-notes.md">verification-notes.md</a> · <a href="https://fly.io/learn/ai-sandbox-pricing/">fly.io</a> · <a href="https://vercel.com/docs/vercel-sandbox/pricing">Vercel</a> · <a href="https://e2b.dev/pricing">E2B</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (21:45–23:15)</i></p><p>Two traps when you compare providers. First, billing models. E2B, Daytona and Modal charge for wall-clock time: the sandbox exists, the meter runs. Vercel and Cloudflare charge for active CPU, and memory as provisioned. Fly.io Sprites charge for consumed CPU and memory, and an idle sprite drops to storage cost after about 30 seconds. A coding agent spends most of its life waiting for the LLM, so usage billing often fits better. Also check session caps: an hour on E2B Hobby, 45 minutes on Vercel Hobby.</p><p>Second, cold start. Vendor numbers and independent measurements differ by up to an order of magnitude. E2B says about 150 milliseconds; a third-party benchmark measured 0.7 to 1.6 seconds. I have not re-checked that benchmark, so these are claims on both sides. The Firecracker 125 milliseconds is real, but it's the VMM boot, not the whole product with networking and your template. Measure in your own region with your own image.</p><p><b>Sources:</b> <a href="../comparison.md">comparison.md</a>, <a href="../verification-notes.md">verification-notes.md</a>, <a href="https://fly.io/learn/ai-sandbox-pricing/">Fly.io</a>, <a href="https://vercel.com/docs/vercel-sandbox/pricing">Vercel Sandbox pricing</a>, <a href="https://e2b.dev/pricing">E2B pricing</a></p></aside>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-time="1:15">
+  <header><p class="kicker">Landscape</p><h2>Self-host vs managed, and how known agents do it</h2></header>
+  <div class="body cols c2">
+    <div class="card"><h3>Self-host options</h3>
+      <ul class="small tight">
+        <li>E2B runtime (Apache-2.0; Terraform GCP, AWS beta)</li>
+        <li>Firecracker / firecracker-containerd, Kata on k8s, gVisor runtimeClass</li>
+        <li>Docker + Xvfb + noVNC (our ex3) · Steel browser</li>
+        <li>Kasm CE: ≤ 5 sessions, non-commercial <span class="pill w">⚠️</span></li>
+        <li style="color:var(--bad)">Daytona: OSS archived June 2026 → v0.190 fork or Enterprise/BYOC</li>
+      </ul></div>
+    <div class="card warm"><h3>How known agents do it</h3>
+      <ul class="small tight">
+        <li><b>Codex</b>: CLI OS sandbox; Cloud container per task <span class="pill v">✅</span></li>
+        <li><b>OpenHands</b>: can run with <b>no sandbox</b>; Docker sandbox optional <span class="pill v">✅</span></li>
+        <li><b>Anthropic demo</b>: Docker + Xvfb <span class="pill v">✅</span></li>
+        <li><b>Cursor background agents, Devin, Copilot coding agent</b>: remote VM per task <span class="pill q">❓ not verified</span></li>
+      </ul></div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://github.com/e2b-dev/runtime">e2b-dev/runtime</a> · <a href="https://github.com/OpenHands/OpenHands">OpenHands README</a> · <a href="https://developers.openai.com/codex/agent-approvals-security">Codex security</a> · <a href="https://www.kasmweb.com/docs/latest/license.html">Kasm license</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:15 (23:15–24:30)</i></p><p>Self-hosting is possible at every rung: E2B's runtime is Apache-2.0 with Terraform for GCP and AWS in beta; Firecracker, Kata and gVisor are open source; and the do-it-yourself desktop is what we built in the workshop. Kasm Workspaces has a community edition, but my understanding from a search snippet is that it's non-commercial and limited to five sessions. Daytona, again, is no longer an open-source option.</p><p>How do the known agents do it? Codex we covered. OpenHands is a surprise: by default it can run with no sandbox at all, the per-conversation Docker sandbox is optional. So check your settings. Anthropic's reference is Docker with Xvfb. For Cursor background agents, Devin and the Copilot coding agent, the common description is a remote VM per task, but I could not verify their isolation details, so I won't claim more.</p><p><b>Sources:</b> <a href="https://github.com/e2b-dev/runtime">e2b-dev/runtime</a>, <a href="https://github.com/OpenHands/OpenHands">OpenHands README</a>, <a href="https://developers.openai.com/codex/agent-approvals-security">Codex security</a>, <a href="https://www.kasmweb.com/docs/latest/license.html">Kasm license</a></p></aside>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">How to choose</p><h2>How to choose</h2></header>
+  <div class="body cols c2" style="gap:36px">
+    <div>
+      <p class="kicker" style="margin-bottom:14px">1 · Start with trust</p>
+      <svg viewBox="0 0 800 420" width="800" height="420" role="img" aria-label="decision: trusted code to container, untrusted to gVisor or microVM, GUI to VM">
+        <defs><marker id="ar6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" fill="#0f172a"/></marker></defs>
+        <rect x="0" y="160" width="250" height="100" rx="50" fill="#0b2540"/>
+        <text x="125" y="205" text-anchor="middle" font-size="26" font-weight="700" fill="#fff">Who wrote</text><text x="125" y="238" text-anchor="middle" font-size="26" font-weight="700" fill="#fff">the code?</text>
+        <path d="M252 190 C 320 120, 330 70, 395 70" fill="none" stroke="#0f172a" stroke-width="3" marker-end="url(#ar6)"/>
+        <path d="M252 210 L 395 210" fill="none" stroke="#0f172a" stroke-width="3" marker-end="url(#ar6)"/>
+        <path d="M252 230 C 320 300, 330 350, 395 350" fill="none" stroke="#0f172a" stroke-width="3" marker-end="url(#ar6)"/>
+        <rect x="400" y="20" width="400" height="100" rx="14" fill="#dcfce7" stroke="#15803d" stroke-width="3"/>
+        <text x="600" y="62" text-anchor="middle" font-size="24">us / trusted users</text><text x="600" y="98" text-anchor="middle" font-size="27" font-weight="700">hardened container</text>
+        <rect x="400" y="160" width="400" height="100" rx="14" fill="#ffedd5" stroke="#c2410c" stroke-width="3"/>
+        <text x="600" y="202" text-anchor="middle" font-size="24">LLM / third party, multi-tenant</text><text x="600" y="238" text-anchor="middle" font-size="27" font-weight="700">gVisor or microVM</text>
+        <rect x="400" y="300" width="400" height="100" rx="14" fill="#e0f2fe" stroke="#0e7490" stroke-width="3"/>
+        <text x="600" y="342" text-anchor="middle" font-size="24">needs GUI / Windows</text><text x="600" y="378" text-anchor="middle" font-size="27" font-weight="700">VM</text>
+      </svg>
+    </div>
+    <div>
+      <p class="kicker" style="margin-bottom:14px">2 · Then add requirements</p>
+      <table style="font-size:24px">
+        <tr><td><b>Computer use</b></td><td>E2B Desktop, Daytona VM, Modal VM, own Docker + noVNC</td></tr>
+        <tr><td><b>Only a browser</b></td><td>Browserbase / Steel</td></tr>
+        <tr><td><b>Waits on LLM</b></td><td>usage billing: Vercel, Cloudflare, Fly Sprites</td></tr>
+        <tr><td><b>GPU</b></td><td>Modal or Daytona GPU</td></tr>
+        <tr><td><b>Fork / branch</b></td><td>E2B, Morph, Daytona (VM class)</td></tr>
+        <tr><td><b>Self-host</b></td><td>E2B runtime or DIY</td></tr>
+      </table>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../comparison.md">comparison.md: How to choose</a> · <a href="../research.md">research.md §2 rule of thumb</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (24:30–26:00)</i></p><p>So how do you choose? Start with trust. If only your own code runs, a hardened container is fine. If the model writes and runs code, and especially if many customers share hosts, go to gVisor or a microVM.</p><p>Then add requirements. A GUI for computer use: E2B Desktop, a Daytona or Modal VM, or your own Docker plus noVNC. Only a browser: a browser cloud. If your agent mostly waits for the model, prefer usage billing. GPU narrows it to Modal or Daytona. Fork and branching: E2B, Morph, or Daytona's VM class. And if you must self-host, E2B's runtime or do it yourself. Note this is a decision aid from our comparison, not a benchmark.</p><p><b>Sources:</b> <a href="../comparison.md">comparison.md: How to choose</a></p></aside>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-time="0:45">
+  <header><p class="kicker">Live demo</p><h2>Demo plan and fallbacks</h2></header>
+  <div class="body cols c2">
+    <div class="card"><h3>Demo 1 · ex2</h3><p class="small">LLM tool loop: <code>run_python</code> → throwaway Docker sandbox<br><code>nvidia/nemotron-3-super-120b-a12b:free</code></p></div>
+    <div class="card warm"><h3>Demo 2 · ex4</h3><p class="small">Screenshot → vision LLM → action on our ex3 desktop, watched in noVNC<br><code>dots-studio/dots-3-note-preview:free</code></p></div>
+    <div style="grid-column:1/3">
+      <ul class="small">
+        <li>OpenRouter free models (<code>OPENROUTER_API_KEY</code>); E2B is the cloud alternative backend</li>
+        <li>Free models are rate-limited and <b>may log prompts: no secrets</b></li>
+        <li>Fallback: recorded output and screenshots from the 2026-10-10 test run</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span class="src">Source: <a href="../workshop-plan.md">workshop-plan.md</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 0:45 (26:00–26:45)</i></p><p>Time for the demo. Two parts. First, a tool loop where the model writes Python and it runs in a throwaway, locked-down Docker container. Second, a computer-use agent driving the desktop container we just saw, while you watch it in noVNC.</p><p>Everything runs on free OpenRouter models. That's the point, you can repeat it tonight. But free models are rate-limited and may log prompts, so never send secrets. If the network or the rate limit fails me, I'll switch to the recorded results from our test run on October 10.</p><p>Presenter prep (not shown): before the talk run <code>python workshop/list_free_models.py</code>, start the ex3 container (<code>docker run --rm -d --name desk -p 127.0.0.1:6080:6080 --shm-size=1g --memory=2g --cpus=2 agent-desktop</code>), open http://localhost:6080/vnc.html, set <code>EX4_FALLBACK_MODELS</code>, and run <code>DESKTOP_BACKEND=docker python workshop/ex4_computer_use/test_backend.py</code> as a smoke test.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a></p></aside>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Live demo 1</p><h2>Tool loop with a locked-down sandbox (ex2)</h2></header>
+  <div class="body">
+    <pre class="cmd"><span class="p">$</span> SANDBOX_BACKEND=docker python workshop/ex2_llm_loop/agent.py \
+    "30th Fibonacci number and the sum of primes below 10000"</pre>
+    <div class="cols c2" style="gap:32px">
+      <div class="card"><h3>Sandbox</h3><ul class="small tight"><li><code>python:3.12-slim</code>, one container per session</li><li><code>--network none</code>, read-only rootfs</li><li>non-root user, CPU / RAM / PID limits</li><li>removed after the session</li></ul></div>
+      <div class="card ok"><h3>Recorded result · 2026-10-10</h3><ul class="small tight"><li>one <code>run_python</code> call</li><li><b>832040</b> and <b>5736396</b>, correct</li><li>about 12 s</li></ul></div>
+    </div>
+    <p class="xs" style="margin:20px 0 0">Caveat: that image has no numpy/scipy → the default statistics task needs E2B or a custom image (<code>DOCKER_SANDBOX_IMAGE</code>).</p>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md: test results</a> · <a href="../workshop/ex2_llm_loop/agent.py">ex2 agent.py</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (26:45–28:15)</i></p><p>Live: I run ex2 with the Docker backend and the Fibonacci-and-primes task. Watch the code block the model prints: that code never runs on my laptop, only inside the container. In our test run the model made one run_python call and got both answers right, 832040 and 5736396, in about 12 seconds.</p><p>Point at the flags: no network, read-only root file system, the nobody user, CPU, memory and process limits, and the container is deleted when the session ends. Even if the model was told by some injected text to curl my keys somewhere, there's no network and no keys. One honest caveat: the slim image has no numpy, so for the default statistics task you'd use E2B or a custom image.</p><p>Fallback: if the call fails, show this slide's recorded result and the code in agent.py.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md: test results</a>, <a href="../workshop/ex2_llm_loop/agent.py">ex2 agent.py</a></p></aside>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Live demo 2</p><h2>Computer use on our own desktop (ex4)</h2></header>
+  <div class="body">
+    <pre class="cmd" style="font-size:22px;margin-bottom:16px"><span class="p">$</span> DESKTOP_BACKEND=docker python workshop/ex4_computer_use/agent.py "Open https://example.com and tell me the page title and first sentence"   <span class="p"># watch: localhost:6080/vnc.html</span></pre>
+    <div class="cols c2" style="gap:32px">
+      <figure><img src="../assets/ex3-desktop.png" alt="Desktop on example.com" style="height:500px;object-fit:cover;object-position:top"><figcaption>Fallback 1: example.com on our desktop (ex3)</figcaption></figure>
+      <figure><img src="../assets/ex4-run.png" alt="Agent clicked through to iana.org" style="height:500px;object-fit:cover;object-position:top"><figcaption>Fallback 2: agent clicked through to iana.org (ex4)</figcaption></figure>
+    </div>
+    <p class="xs" style="margin:12px 0 0;font-size:23px"><b>dots-3-note-preview:free, 2026-10-10:</b> title + first sentence <span class="pill v">✅</span> 4 steps, 17–21 s · click the link, report the URL <span class="pill v">✅</span> 24 steps, ~6 min</p>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md: test results</a> · <a href="../workshop/ex4_computer_use/README.md">ex4 README</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (28:15–29:45)</i></p><p>Now the desktop. I start ex4 with the Docker backend and a simple task: open example.com and read the title and the first sentence. Switch to the noVNC tab so everyone sees the agent's screen.</p><p>In our test run with the dots-3 model this took 4 steps and about 20 seconds: it typed the URL straight into the address bar instead of hunting for things to click. The harder task, click the link and report the new URL, also succeeded, but took 24 steps and about six minutes, mostly misclicks. Left is the desktop on example.com, right is where the agent ended up: iana.org.</p><p>Don't run the click task live; it's too slow for a talk. If the model is rate-limited, these two screenshots are the fallback.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md: test results</a>, <a href="../workshop/ex4_computer_use/README.md">ex4 README</a></p></aside>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-time="1:00">
+  <header><p class="kicker">Live demo · lessons</p><h2>What free models taught us</h2></header>
+  <div class="body">
+    <table style="font-size:24px">
+      <tr><th style="width:38%">Model (OpenRouter, :free)</th><th style="width:9%"></th><th>What happened</th></tr>
+      <tr><td><code>dots-studio/dots-3-note-preview</code></td><td><span class="pill v">✅</span></td><td>reliable tool calls, weak clicking → <b>default</b></td></tr>
+      <tr><td><code>nvidia/nemotron-3-nano-omni-30b-a3b-reasoning</code></td><td><span class="pill" style="background:var(--bad-soft);color:var(--bad)">❌</span></td><td>0..1 coords as strings (now handled), then "ResourceExhausted", then <code>&lt;tool_call&gt;</code> as plain text</td></tr>
+      <tr><td><code>google/gemma-4-31b-it</code>, <code>gemma-4-26b-a4b-it</code></td><td><span class="pill" style="background:var(--bad-soft);color:var(--bad)">429</span></td><td>rate-limited all session: untested, keep as fallback</td></tr>
+      <tr><td><code>thinkingmachines/inkling</code></td><td><span class="pill" style="background:var(--bad-soft);color:var(--bad)">403</span></td><td>free tier only for approved agentic harnesses</td></tr>
+    </table>
+    <div class="callout" style="font-size:30px">Set <code>EX4_FALLBACK_MODELS</code>, keep tasks simple, keep screenshots. Pixel-precise clicking is the gap vendor computer-use models close.</div>
+  </div>
+  <footer><span class="src">Source: <a href="../workshop-plan.md">workshop-plan.md</a> (models checked via openrouter.ai/api/v1/models, 2026-10-10)</span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:00 (29:45–30:45)</i></p><p>What did we learn from testing five free models? Only one was usable for the desktop: dots-3. It called tools reliably but clicked poorly. Nemotron nano sent coordinates as strings between 0 and 1 and keys as JSON lists; we fixed the parser, then it hit upstream resource errors and started writing tool calls as plain text. The two Gemma models were rate-limited for the whole session, so they're untested, not bad. Inkling returned 403: its free tier is only for approved harnesses.</p><p>So: free vision models are slow and flaky. Configure fallbacks, keep tasks simple, keep screenshots ready. And the gap is clear: text answers after navigation are often right, precise clicking is weak. That's exactly what vendor computer-use models are trained for.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a></p></aside>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Production</p><h2>Production checklist</h2></header>
+  <div class="body cols c2" style="gap:56px">
+    <ul class="check">
+      <li><b>Egress allowlist</b>: network off by default, proxy with a domain allowlist</li>
+      <li><b>No production secrets</b>: short-lived tokens or an injecting proxy</li>
+      <li><b>Limits + TTL</b>: CPU, RAM, wall time on every sandbox</li>
+      <li><b>Audit</b> every command the agent runs</li>
+    </ul>
+    <ul class="check">
+      <li><b>Human approval</b> for destructive actions</li>
+      <li><b>Snapshots and rollback</b> outside the agent's control</li>
+      <li><b>Observe via the stream</b>: watch and take over</li>
+      <li><b>Verify state yourself</b>, not via the agent's report</li>
+    </ul>
+  </div>
+  <footer><span class="src">Sources: <a href="../research.md">research.md §4</a> · <a href="https://developers.openai.com/codex/agent-approvals-security">Codex security</a> · Replit case (slide 2)</span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (30:45–32:15)</i></p><p>If you take one slide home, take this one. Egress: network off by default, and when needed, a proxy with a domain allowlist. Secrets: none from production inside the sandbox; use short-lived tokens, or a proxy that injects credentials on the way out so the sandbox never sees them. Limits: CPU, memory, wall time, and a TTL so forgotten sandboxes die.</p><p>Audit every command. Require human approval for destructive actions like dropping a database. Keep snapshots and rollback outside the agent's reach; that's what saved Replit's user. Watch the stream when it matters. And verify the state of the system yourself, because the agent may be confidently wrong about it.</p><p><b>Sources:</b> <a href="../research.md">research.md §4</a>, <a href="https://developers.openai.com/codex/agent-approvals-security">Codex security</a></p></aside>
+</section>
+
+<!-- 24 -->
+<section class="slide" data-time="0:45">
+  <header><p class="kicker">Wrap-up</p><h2>Takeaways</h2></header>
+  <div class="body">
+    <div class="step"><div class="n">1</div><div>The prompt is not a security boundary: <b>put one around the tools</b></div></div>
+    <div class="step"><div class="n">2</div><div>Pick the rung by trust: container → gVisor / microVM → VM</div></div>
+    <div class="step"><div class="n">3</div><div>An agent desktop = Xvfb + VNC/noVNC + a screenshot → action loop</div></div>
+    <div class="step"><div class="n">4</div><div>Compare on isolation, billing model and <b>measured</b> cold start, not marketing numbers</div></div>
+    <div class="step"><div class="n">5</div><div>Free models are enough to learn; production computer use needs better clicking</div></div>
+  </div>
+  <footer><span class="src">Repo: <a href="https://github.com/vusatui/rnd-research/tree/main/sandboxes-and-remote-desktops">github.com/vusatui/rnd-research</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 0:45 (32:15–33:00)</i></p><p>To sum up. The prompt is not a security boundary, so put a real one around the tools. Choose how strong by asking who wrote the code and who shares the host. A remote desktop for an agent is not magic: a virtual X server, a VNC stream, and a loop. Compare providers on isolation, billing model and cold start you measured yourself. And free models are great for learning, but for production computer use you'll want a model trained for it.</p></aside>
+</section>
+
+<!-- 25 -->
+<section class="slide title" data-time="1:30">
+  <h1>Questions?</h1>
+  <div class="sub">Research, comparison, verification notes, workshop ex1–ex4, this deck and the script</div>
+  <div class="meta"><span class="mono">https://github.com/vusatui/rnd-research/tree/main/sandboxes-and-remote-desktops</span><br>Anton Vusatyi · anton@vusatui.com</div>
+  <footer></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (33:00–34:30)</i></p><p>Thanks! Everything is in the repo: the research with sources, the comparison table, the verification notes listing what I could and couldn't confirm, and the four workshop exercises. Happy to take questions.</p><p>Likely questions and pointers. "Is Docker enough?" For your own code yes, for hostile multi-tenant code no; see the rule of thumb. "What does E2B fork really do?" The 20-copies figure is unverified. "How do Cursor or Devin isolate?" Not verified in this research. "How fast is cold start?" Vendor and independent numbers differ; measure it, ex1 is a good starting point.</p></aside>
+</section>
+
+</div>
+<div id="progress"></div>
+<div id="notesbox"></div>
+<div id="overview"></div>
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')], N=slides.length;
+  const params=new URLSearchParams(location.search);
+  const render=params.has('render');
+  if(render) document.body.classList.add('render');
+  let cur=0, speaker=null, t0=Date.now();
+  slides.forEach((s,i)=>{const n=s.querySelector('footer .num'); if(n) n.textContent=(i+1)+' / '+N;});
+  function fit(){const st=document.getElementById('stage');const k=Math.min(innerWidth/1920,innerHeight/1080);
+    st.style.transformOrigin='center center';st.style.transform=`translate(-50%,-50%) scale(${k})`;}
+  function title(s){const h=s.querySelector('h2,h1');return h?h.textContent.trim():'';}
+  function notesHTML(i){const a=slides[i].querySelector('aside.notes');return a?a.innerHTML:'';}
+  function go(i){cur=Math.max(0,Math.min(N-1,i));slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    history.replaceState(null,'',location.pathname+location.search+'#'+(cur+1));
+    document.getElementById('progress').style.width=((cur+1)/N*100)+'%';
+    const nb=document.getElementById('notesbox');nb.innerHTML='<b>'+(cur+1)+'. '+title(slides[cur])+' · '+slides[cur].dataset.time+'</b>'+notesHTML(cur);
+    updateSpeaker();}
+  function updateSpeaker(){if(!speaker||speaker.closed)return;const d=speaker.document;
+    d.getElementById('cur').textContent=(cur+1)+' / '+N+' · '+title(slides[cur])+' · planned '+slides[cur].dataset.time;
+    d.getElementById('nxt').textContent=cur+1<N?'Next: '+title(slides[cur+1]):'Last slide';
+    d.getElementById('notes').innerHTML=notesHTML(cur);}
+  function openSpeaker(){speaker=window.open('','speaker','width=900,height=700');if(!speaker)return;
+    speaker.document.write('<!doctype html><title>Speaker notes</title><body style="font-family:IBM Plex Sans,Segoe UI,Arial,sans-serif;background:#0f172a;color:#e2e8f0;margin:24px;font-size:22px;line-height:1.5"><div style="display:flex;justify-content:space-between;font-size:26px"><b id="cur"></b><b id="clock" style="color:#7dd3fc"></b></div><div id="nxt" style="color:#94a3b8;margin:8px 0 16px"></div><div id="notes"></div></body>');
+    speaker.document.close();speaker.document.addEventListener('keydown',key);
+    setInterval(()=>{if(speaker&&!speaker.closed){const s=Math.floor((Date.now()-t0)/1000);speaker.document.getElementById('clock').textContent='elapsed '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}},1000);
+    updateSpeaker();}
+  function overview(){const o=document.getElementById('overview');if(o.classList.toggle('on')){o.innerHTML='';
+    slides.forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+title(s)+' ('+s.dataset.time+')';if(i===cur)b.className='cur';b.onclick=()=>{o.classList.remove('on');go(i);};o.appendChild(b);});}}
+  function key(e){const k=e.key;
+    if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(k)){e.preventDefault();go(cur+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(k)){e.preventDefault();go(cur-1);}
+    else if(k==='Home')go(0);else if(k==='End')go(N-1);
+    else if(k==='n'||k==='N')document.getElementById('notesbox').classList.toggle('on');
+    else if(k==='s'||k==='S')openSpeaker();
+    else if(k==='o'||k==='O'||k==='Escape')overview();
+    else if(k==='f'||k==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}}
+  document.addEventListener('keydown',key);
+  document.addEventListener('click',e=>{if(e.target.closest('a,button,#notesbox,#overview'))return;if(!render)go(cur+(e.clientX<innerWidth/3?-1:1));});
+  addEventListener('resize',fit);addEventListener('hashchange',()=>{const h=parseInt(location.hash.slice(1));if(h&&h-1!==cur)go(h-1);});
+  fit();go((parseInt(location.hash.slice(1))||1)-1);
+  if(params.has('check')){ // overflow report for the render script
+    const out=[];slides.forEach((s,i)=>{slides.forEach(x=>x.classList.remove('active'));s.classList.add('active');
+      const sb=s.getBoundingClientRect(), k=sb.width/1920, body=s.querySelector('.body'), foot=s.querySelector('footer');
+      const lim=(foot&&foot.offsetParent?foot.getBoundingClientRect().top:sb.bottom);
+      if(s.scrollHeight>s.clientHeight+1) out.push(`slide ${i+1}: slide scrollHeight ${s.scrollHeight}>${s.clientHeight}`);
+      s.querySelectorAll('.body *').forEach(el=>{const r=el.getBoundingClientRect();if(!r.width)return;
+        if(r.bottom>lim+1) out.push(`slide ${i+1}: <${el.tagName.toLowerCase()} class="${el.className.baseVal??el.className}"> bottom ${Math.round((r.bottom-sb.top)/k)} > footer ${Math.round((lim-sb.top)/k)}`);
+        if(r.right>sb.right-60*k) out.push(`slide ${i+1}: <${el.tagName.toLowerCase()}> right ${Math.round((r.right-sb.left)/k)}`);
+        if(el.scrollWidth>el.clientWidth+2&&getComputedStyle(el).overflow!=='visible') out.push(`slide ${i+1}: <${el.tagName.toLowerCase()}> clipped horizontally`);});
+      const src=s.querySelector('footer .src');if(src&&src.scrollWidth>src.clientWidth+1)out.push(`slide ${i+1}: footer sources truncated`);
+    });
+    const pre=document.createElement('pre');pre.id='check';pre.textContent='CHECK-BEGIN\n'+(out.join('\n')||'OK')+'\nCHECK-END';document.body.appendChild(pre);go(cur);}
+})();
+</script>
+</body>
+</html>
