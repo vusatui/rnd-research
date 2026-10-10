@@ -2,7 +2,7 @@
 
 25 slides, 34:30 of planned speaking time including Q&A. The HTML deck is in [`slides/index.html`](slides/index.html). Its speaker notes are built from this file, so edit the notes here first.
 
-**Facts policy.** Every fact comes from [`research.md`](research.md), [`comparison.md`](comparison.md), [`verification-notes.md`](verification-notes.md) (it wins when it disagrees with older text) and [`workshop-plan.md`](workshop-plan.md). Markers follow comparison.md: ✅ verified against a primary source on 2026-10-10, ⚠️ vendor or secondary source only, ❓ not verified. Say ⚠️/❓ items out loud as claims, not as facts.
+**Facts policy.** Every fact comes from [`research.md`](research.md), [`comparison.md`](comparison.md), [`verification-notes.md`](verification-notes.md) (it wins when it disagrees with older text) and [`workshop-plan.md`](workshop-plan.md), plus our own measurements in [`benchmarks.md`](benchmarks.md). Markers follow comparison.md: ✅ verified against a primary source on 2026-10-10, ⚠️ vendor or secondary source only, ❓ not verified. Say ⚠️/❓ items out loud as claims, not as facts.
 
 **Presenter keys (deck):** → / Space / PageDown next, ← / PageUp back, Home / End, `N` notes overlay, `S` speaker window (notes, next slide, timer), `O` overview, `F` fullscreen.
 
@@ -307,14 +307,17 @@ At the bottom: Runloop and Morph. Their prices come only from search snippets, s
 - An agent mostly waits for the LLM → usage billing usually fits better
 - Session caps: E2B Hobby ≤ 1 h; Vercel Hobby 45 min
 - Cold start, vendor vs independent (⚠️, MarkTechPost benchmark not re-checked): E2B ~150 ms vendor vs 0.7–1.6 s; Vercel 0.67–1.9 s; Modal 0.9–2.4 s; Daytona "90 ms" vendor
-- Firecracker < 125 ms boot ✅ is the VMM, not the whole product. **Measure it yourself.**
+- Firecracker < 125 ms boot ✅ is the VMM, not the whole product
+- We measured it ([benchmarks.md](benchmarks.md), 2026-10-10, 5 runs, median time until the first real command): E2B code sandbox 1.30 s · local Docker `python:3.12-slim` 1.16 s · E2B Desktop 5.98 s · our ex3 desktop 7.22 s
 
 **Speaker notes:**
 Two traps when you compare providers. First, billing models. E2B, Daytona and Modal charge for wall-clock time: the sandbox exists, the meter runs. Vercel and Cloudflare charge for active CPU, and memory as provisioned. Fly.io Sprites charge for consumed CPU and memory, and an idle sprite drops to storage cost after about 30 seconds. A coding agent spends most of its life waiting for the LLM, so usage billing often fits better. Also check session caps: an hour on E2B Hobby, 45 minutes on Vercel Hobby.
 
 Second, cold start. Vendor numbers and independent measurements differ by up to an order of magnitude. E2B says about 150 milliseconds; a third-party benchmark measured 0.7 to 1.6 seconds. I have not re-checked that benchmark, so these are claims on both sides. The Firecracker 125 milliseconds is real, but it's the VMM boot, not the whole product with networking and your template. Measure in your own region with your own image.
 
-**Sources:** [comparison.md](comparison.md), [verification-notes.md](verification-notes.md), [Fly.io](https://fly.io/learn/ai-sandbox-pricing/), [Vercel Sandbox pricing](https://vercel.com/docs/vercel-sandbox/pricing), [E2B pricing](https://e2b.dev/pricing)
+So we did, from our box in Istanbul, five runs each, timing until the sandbox did real work. E2B's code sandbox, over the network, median 1.3 seconds. A local Docker container: 1.16 seconds. So a remote microVM is about as fast as a local container. Desktops cost five to seven seconds either way: E2B Desktop about 6, our ex3 container about 7. And the first run in each series was the slow outlier, so pre-warm before a demo.
+
+**Sources:** [comparison.md](comparison.md), [verification-notes.md](verification-notes.md), [benchmarks.md](benchmarks.md), [Fly.io](https://fly.io/learn/ai-sandbox-pricing/), [Vercel Sandbox pricing](https://vercel.com/docs/vercel-sandbox/pricing), [E2B pricing](https://e2b.dev/pricing)
 
 ## Slide 17 — Self-host vs managed, and how known agents do it
 **Timing:** 1:15 (23:15–24:30)
