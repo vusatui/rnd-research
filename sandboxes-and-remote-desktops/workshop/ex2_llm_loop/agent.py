@@ -18,7 +18,7 @@ def run(task: str, max_steps: int = 8):
         for _ in range(max_steps):
             resp = client.chat.completions.create(model=MODEL, messages=msgs, tools=TOOLS)
             m = resp.choices[0].message
-            msgs.append(m)
+            msgs.append(m.model_dump(exclude_none=True))  # dict, а не pydantic-объект
             if not m.tool_calls:
                 return m.content
             for tc in m.tool_calls:

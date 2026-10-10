@@ -23,11 +23,17 @@ def act(d, a):
     elif t == "right_click": d.right_click(*xy)
     elif t == "mouse_move": d.move_mouse(*xy)
     elif t == "type": d.write(a["text"])
-    elif t == "key": d.press(a["text"])
+    elif t == "middle_click": d.middle_click(*xy)
+    elif t == "triple_click":
+        for _ in range(3): d.left_click(*xy)
+    elif t == "left_click_drag": d.drag(tuple(a["start_coordinate"]), tuple(xy))
+    elif t == "key":  # Claude шлёт xdotool-нотацию: "ctrl+l" -> ["ctrl", "l"]
+        keys = a["text"].split("+"); d.press(keys if len(keys) > 1 else keys[0])
     elif t == "scroll":
         if xy: d.move_mouse(*xy)
         d.scroll(a.get("scroll_direction", "down"), a.get("scroll_amount", 3))
-    elif t == "wait": d.wait(1000)
+    elif t == "wait": d.wait(int(a.get("duration", 1) * 1000))
+    else: print("неподдержанное действие:", t)
     return shot(d)
 
 def main(task, max_steps=25):
