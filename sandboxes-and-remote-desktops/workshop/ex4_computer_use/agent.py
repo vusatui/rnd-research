@@ -1,5 +1,5 @@
-"""Упр. 4: computer-use цикл screenshot -> Claude -> action на E2B Desktop.
-Версию tool/beta сверить с docs.anthropic.com (computer use) — они обновляются."""
+"""Exercise 4: computer-use loop screenshot -> Claude -> action on E2B Desktop.
+Check the tool/beta version against docs.anthropic.com (computer use) - they change."""
 import base64, sys
 from dotenv import load_dotenv
 import anthropic
@@ -27,13 +27,13 @@ def act(d, a):
     elif t == "triple_click":
         for _ in range(3): d.left_click(*xy)
     elif t == "left_click_drag": d.drag(tuple(a["start_coordinate"]), tuple(xy))
-    elif t == "key":  # Claude шлёт xdotool-нотацию: "ctrl+l" -> ["ctrl", "l"]
+    elif t == "key":  # Claude sends xdotool notation: "ctrl+l" -> ["ctrl", "l"]
         keys = a["text"].split("+"); d.press(keys if len(keys) > 1 else keys[0])
     elif t == "scroll":
         if xy: d.move_mouse(*xy)
         d.scroll(a.get("scroll_direction", "down"), a.get("scroll_amount", 3))
     elif t == "wait": d.wait(int(a.get("duration", 1) * 1000))
-    else: print("неподдержанное действие:", t)
+    else: print("unsupported action:", t)
     return shot(d)
 
 def main(task, max_steps=25):
@@ -53,7 +53,7 @@ def main(task, max_steps=25):
             msgs.append({"role": "user", "content": [
                 {"type": "tool_result", "tool_use_id": u.id, "content": [act(d, u.input)]} for u in uses]})
     finally:
-        input("Enter чтобы убить песочницу..."); d.kill()
+        input("Press Enter to kill the sandbox..."); d.kill()
 
 if __name__ == "__main__":
-    main(" ".join(sys.argv[1:]) or "Открой Firefox, найди погоду в Стамбуле и скажи температуру.")
+    main(" ".join(sys.argv[1:]) or "Open Firefox, look up the weather in Istanbul and tell me the temperature.")

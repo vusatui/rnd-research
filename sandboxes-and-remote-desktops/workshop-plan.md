@@ -1,12 +1,12 @@
-# Воркшоп (2–2.5 ч)
+# Workshop (2–2.5 h)
 
-**Пререквизиты:** Python 3.10+, Docker, ключ E2B (Hobby, бесплатно), ключ LLM (OpenAI или Anthropic; можно любой OpenAI-совместимый). `pip install -r workshop/requirements.txt`.
+**Prerequisites:** Python 3.10+, Docker, an E2B key (Hobby, free), an LLM key (OpenAI or Anthropic; any OpenAI-compatible provider works). `pip install -r workshop/requirements.txt`.
 
-| # | Упражнение | Время | Результат |
+| # | Exercise | Time | Outcome |
 |---|---|---|---|
-| 1 | `ex1_e2b_code` — создать песочницу, выполнить код, файлы, лимиты, убить | 20 мин | понимание жизненного цикла sandbox |
-| 2 | `ex2_llm_loop` — tool `run_python` → E2B, агент решает задачу анализа данных | 35 мин | агентный цикл с изоляцией |
-| 3 | `ex3_docker_desktop` — свой desktop: Docker+Xvfb+noVNC+Chromium, Playwright внутри, смотрим в браузере на :6080 | 35 мин | self-host remote desktop |
-| 4 | `ex4_computer_use` — screenshot→LLM→action loop на E2B Desktop (или на контейнере из ex3) | 40 мин | computer-use агент с live view |
+| 1 | `ex1_e2b_code` — create a sandbox, run code, files, limits, kill it | 20 min | understanding of the sandbox lifecycle |
+| 2 | `ex2_llm_loop` — `run_python` tool → E2B, the agent solves a data-analysis task | 35 min | an agent loop with isolation |
+| 3 | `ex3_docker_desktop` — your own desktop: Docker+Xvfb+noVNC+Chromium, Playwright inside, watch it in the browser on :6080 | 35 min | a self-hosted remote desktop |
+| 4 | `ex4_computer_use` — screenshot→LLM→action loop on E2B Desktop (or on the ex3 container) | 40 min | a computer-use agent with live view |
 
-Бонусы: запустить ex3 с `--runtime=runsc` (gVisor); ограничить egress (`--network none` / allowlist-прокси); prompt-injection демо: файл с «инструкцией» внутри песочницы — показать, что ущерб локализован.
+Bonus tasks: run ex3 with `--runtime=runsc` (gVisor); restrict egress (`--network none` / allowlist proxy); prompt-injection demo: a file with an "instruction" inside the sandbox — show that the damage stays contained.

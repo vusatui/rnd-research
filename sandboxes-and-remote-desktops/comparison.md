@@ -1,44 +1,44 @@
-# Сравнение платформ (проверено 10.10.2026)
+# Platform comparison (verified 2026-10-10)
 
-Легенда: ✅ проверено по первоисточнику (дата 2026-10-10, если не указано иное); ⚠️ только вендор/вторичный источник; ❓ не удалось проверить. Цены — публичные list prices, без скидок.
+Legend: ✅ verified against a primary source (dated 2026-10-10 unless stated otherwise); ⚠️ vendor/secondary source only; ❓ could not verify. Prices are public list prices, no discounts.
 
-| Платформа | Изоляция | Цена (CPU / RAM / план) | Cold start | Desktop/GUI | Self-host |
+| Platform | Isolation | Price (CPU / RAM / plan) | Cold start | Desktop/GUI | Self-host |
 |---|---|---|---|---|---|
-| **E2B** | Firecracker microVM ✅[f] | $0.000014/vCPU-с (=$0.0504/ч), $0.0000045/GiB-с (=$0.0162/ч), wall-clock; Hobby $0 + разовые $100 кредитов, 20 параллельных, сессия ≤1 ч; Pro $150/мес, 100 параллельных, ≤24 ч; без GPU ✅[e2b] | ~150 мс ⚠️ вендор; независимые замеры 0.7–1.6 с ⚠️[mtp] | Да — E2B Desktop (Xfce, VNC-стрим, SDK `e2b-desktop` 2.6.1) ✅[e2bd] | Да: `e2b-dev/runtime` (бывш. `infra`), Apache-2.0, Terraform GCP / AWS beta ✅[gh][fly] |
-| **Daytona** | по умолчанию контейнер (Sysbox, namespaces); отдельный класс **VM-sandbox** (Linux VM/Windows) со своим ядром ✅[dti] | $0.0504/vCPU-ч, $0.0162/GiB-ч, диск $0.000108/GiB-ч после 5 GiB; Windows $0.0858/vCPU-ч; GPU от $0.57/ч; $200 кредитов ✅[dtp] | вендор «90 мс» ⚠️[dts]; burst-тест 0.27 с с низким % успеха ⚠️[mtp] | Да (VM/Windows, computer-use) ⚠️ | ⚠️ **OSS-репо архивирован** (июнь 2026: разработка ушла в приватный код), self-host только форк v0.190 или Enterprise/BYOC ✅[gh] |
-| **Modal Sandboxes** | gVisor по умолчанию; **VM Sandboxes GA (окт. 2026)** на Cloud Hypervisor, `runtime="vm"`, только CPU ✅[mvm] | $0.00003942/физ.ядро-с (=$0.142/ядро-ч ≈ $0.071/vCPU-ч), $0.00000667/GiB-с (=$0.024/ч); Starter $0 + $30/мес, Team $250 + $100/мес ✅[mp] | 0.9–2.4 с ⚠️[mtp] | своим образом (VM-runtime позволяет X/Docker) ⚠️ | Нет |
-| **Cloudflare Sandbox** | Containers: **каждый инстанс — microVM со своим ядром** ✅[cf]; + Dynamic Workers (V8-изоляты) для JS/Python/WASM | CPU $0.000020/vCPU-с (=$0.072/ч) только активный; RAM $0.0000025/GiB-с (=$0.009/ч) за provisioned; Workers Paid $5/мес вкл. 375 vCPU-мин, 25 GiB-ч ✅[cfp] | ❓ (изоляты — мс; контейнер — секунды ⚠️[mtp]) | Нет из коробки | Нет |
-| **Vercel Sandbox** | Firecracker microVM ✅[vs] | Active CPU $0.128/ч, RAM $0.0212/GB-ч (provisioned, мин. 1 мин), $0.60/1M созданий; Hobby: 5 ч CPU, 45 мин сессия, 10 параллельных; Pro: 24 ч, 10 000 параллельных, до 8 vCPU ✅[vs] | 0.67–1.9 с ⚠️[mtp] | Нет | Нет |
-| **Fly.io Sprites / Machines** | Firecracker ✅[f] | Sprites: $0.0385/CPU-ч реально потреблённого, $0.021875/GB-ч фактической RAM; idle ~30 с → только storage ✅[fly] | ❓ | своим образом | Нет |
-| **Runloop** | microVM с отдельным ядром ⚠️[rl] | $0.108/CPU-ч, $0.0252/GB-ч; suspended — не тарифицируется ⚠️[rl] | ❓ (раньше заявляли ~0.9 с) | ограниченно ❓ | Нет |
-| **Morph Cloud** | VM + Infinibranch (snapshot/branch) ⚠️ | $0.05/MCU-ч; Team $40/мес (1000 MCU) ⚠️[mo] | ❓ «мс-ветвление» — вендор | Да (VM) ⚠️ | Нет |
-| **Browserbase** | изолированный Chrome в облаке | Free 1 браузер-ч; Developer $20 (100 ч, далее $0.12/ч); Startup $99 (500 ч) ⚠️[bb] | ❓ | браузер (CDP, live view) | Нет |
-| **Steel** | Chrome-sandbox | Launch $0.10/браузер-ч (+$30 разово); Scale $250/мес + $0.08/ч ⚠️[st] | ❓ | браузер | Да: `steel-browser` Apache-2.0 ✅[gh] |
-| **Hyperbrowser** | облачный Chrome | ~$0.10/браузер-ч (100 кредитов/ч), прокси $10/GB ⚠️[hb] (источник — блог самого Hyperbrowser) | ❓ | браузер | Нет |
-| **Anthropic computer-use demo** | Docker | бесплатно | секунды | Да (Xvfb+Mutter+Tint2+noVNC) ✅[cu] | Да; репо переименован в `anthropics/claude-quickstarts` ✅[gh] |
-| **OpenAI Codex** | CLI: macOS Seatbelt, **Linux bwrap+seccomp** (не Landlock), Windows MXC; Cloud: контейнер на задачу, setup с сетью → агент офлайн по умолчанию ✅[cx] | в подписке | — | Нет (Computer Use — отдельная фича) | CLI локально |
-| **Kasm Workspaces** | контейнеры, desktop в браузере | Community Edition бесплатна, ≤5 сессий, только некоммерческое использование ⚠️[ks] | 1–3 с ❓ | Да | Да |
-| **Docker + Xvfb + noVNC (DIY)** | контейнер (можно `runsc`) | своё железо | 1–3 с (замерим в воркшопе) | Да | Да |
-| **Firecracker / Kata / gVisor DIY** | microVM / VM-runtime / user-space ядро | своё железо, Apache-2.0 ✅[gh] | Firecracker <125 мс boot, <5 MiB overhead, 150 VM/с/хост ✅[f] | своими силами | Да |
-| **OpenHands** | агент-сервер локально; **опционально** Docker-sandbox на разговор, VM, облако ✅[oh] | OSS (MIT) ✅[gh] | секунды | браузер | Да |
+| **E2B** | Firecracker microVM ✅[f] | $0.000014/vCPU-s (=$0.0504/h), $0.0000045/GiB-s (=$0.0162/h), wall-clock; Hobby $0 + one-time $100 in credits, 20 concurrent, session ≤1 h; Pro $150/mo, 100 concurrent, ≤24 h; no GPU ✅[e2b] | ~150 ms ⚠️ vendor; independent measurements 0.7–1.6 s ⚠️[mtp] | Yes — E2B Desktop (Xfce, VNC stream, SDK `e2b-desktop` 2.6.1) ✅[e2bd] | Yes: `e2b-dev/runtime` (formerly `infra`), Apache-2.0, Terraform GCP / AWS beta ✅[gh][fly] |
+| **Daytona** | container by default (Sysbox, namespaces); separate **VM-sandbox** class (Linux VM/Windows) with its own kernel ✅[dti] | $0.0504/vCPU-h, $0.0162/GiB-h, disk $0.000108/GiB-h beyond 5 GiB; Windows $0.0858/vCPU-h; GPU from $0.57/h; $200 in credits ✅[dtp] | vendor "90 ms" ⚠️[dts]; burst test 0.27 s with a low success rate ⚠️[mtp] | Yes (VM/Windows, computer use) ⚠️ | ⚠️ **OSS repo archived** (June 2026: development moved to private code), self-host only via a v0.190 fork or Enterprise/BYOC ✅[gh] |
+| **Modal Sandboxes** | gVisor by default; **VM Sandboxes GA (Oct 2026)** on Cloud Hypervisor, `runtime="vm"`, CPU only ✅[mvm] | $0.00003942/physical core-s (=$0.142/core-h ≈ $0.071/vCPU-h), $0.00000667/GiB-s (=$0.024/h); Starter $0 + $30/mo, Team $250 + $100/mo ✅[mp] | 0.9–2.4 s ⚠️[mtp] | via your own image (VM runtime allows X/Docker) ⚠️ | No |
+| **Cloudflare Sandbox** | Containers: **each instance is a microVM with its own kernel** ✅[cf]; + Dynamic Workers (V8 isolates) for JS/Python/WASM | CPU $0.000020/vCPU-s (=$0.072/h) active only; RAM $0.0000025/GiB-s (=$0.009/h) provisioned; Workers Paid $5/mo incl. 375 vCPU-min, 25 GiB-h ✅[cfp] | ❓ (isolates — ms; container — seconds ⚠️[mtp]) | Not out of the box | No |
+| **Vercel Sandbox** | Firecracker microVM ✅[vs] | Active CPU $0.128/h, RAM $0.0212/GB-h (provisioned, 1 min minimum), $0.60/1M creations; Hobby: 5 CPU-h, 45 min session, 10 concurrent; Pro: 24 h, 10,000 concurrent, up to 8 vCPU ✅[vs] | 0.67–1.9 s ⚠️[mtp] | No | No |
+| **Fly.io Sprites / Machines** | Firecracker ✅[f] | Sprites: $0.0385/CPU-h actually consumed, $0.021875/GB-h actual RAM; idle ~30 s → storage only ✅[fly] | ❓ | via your own image | No |
+| **Runloop** | microVM with a separate kernel ⚠️[rl] | $0.108/CPU-h, $0.0252/GB-h; suspended — not billed ⚠️[rl] | ❓ (previously claimed ~0.9 s) | limited ❓ | No |
+| **Morph Cloud** | VM + Infinibranch (snapshot/branch) ⚠️ | $0.05/MCU-h; Team $40/mo (1000 MCU) ⚠️[mo] | ❓ "ms branching" — vendor claim | Yes (VM) ⚠️ | No |
+| **Browserbase** | isolated cloud Chrome | Free 1 browser-h; Developer $20 (100 h, then $0.12/h); Startup $99 (500 h) ⚠️[bb] | ❓ | browser (CDP, live view) | No |
+| **Steel** | Chrome sandbox | Launch $0.10/browser-h (+$30 one-time); Scale $250/mo + $0.08/h ⚠️[st] | ❓ | browser | Yes: `steel-browser` Apache-2.0 ✅[gh] |
+| **Hyperbrowser** | cloud Chrome | ~$0.10/browser-h (100 credits/h), proxy $10/GB ⚠️[hb] (source: Hyperbrowser's own blog) | ❓ | browser | No |
+| **Anthropic computer-use demo** | Docker | free | seconds | Yes (Xvfb+Mutter+Tint2+noVNC) ✅[cu] | Yes; repo renamed to `anthropics/claude-quickstarts` ✅[gh] |
+| **OpenAI Codex** | CLI: macOS Seatbelt, **Linux bwrap+seccomp** (not Landlock), Windows MXC; Cloud: one container per task, setup with network → agent offline by default ✅[cx] | included in subscription | — | No (Computer Use is a separate feature) | CLI runs locally |
+| **Kasm Workspaces** | containers, desktop in the browser | Community Edition free, ≤5 sessions, non-commercial use only ⚠️[ks] | 1–3 s ❓ | Yes | Yes |
+| **Docker + Xvfb + noVNC (DIY)** | container (`runsc` possible) | your own hardware | 1–3 s (to be measured in the workshop) | Yes | Yes |
+| **Firecracker / Kata / gVisor DIY** | microVM / VM runtime / user-space kernel | your own hardware, Apache-2.0 ✅[gh] | Firecracker <125 ms boot, <5 MiB overhead, 150 VMs/s/host ✅[f] | DIY | Yes |
+| **OpenHands** | agent server locally; **optional** per-conversation Docker sandbox, VM, cloud ✅[oh] | OSS (MIT) ✅[gh] | seconds | browser | Yes |
 
-Как выбирать (не изменилось по сути): GUI/computer-use → E2B Desktop, Daytona VM, Modal VM или свой Docker+noVNC; агент ждёт LLM → active-CPU/usage биллинг (Vercel, Cloudflare, Fly Sprites); GPU → Modal или Daytona GPU; fork/ветвление → E2B, Morph, Daytona (только VM-класс); браузер → Browserbase/Steel; self-host → E2B runtime или DIY (Daytona OSS больше не развивается).
+How to choose (essentially unchanged): GUI/computer use → E2B Desktop, Daytona VM, Modal VM or your own Docker+noVNC; agent mostly waits on the LLM → active-CPU/usage billing (Vercel, Cloudflare, Fly Sprites); GPU → Modal or Daytona GPU; fork/branching → E2B, Morph, Daytona (VM class only); browser → Browserbase/Steel; self-host → E2B runtime or DIY (Daytona OSS is no longer developed).
 
-## Источники (все открыты 2026-10-10)
+## Sources (all opened 2026-10-10)
 - [e2b] https://e2b.dev/pricing
-- [e2bd] https://github.com/e2b-dev/desktop (README) + исходник `e2b_desktop` 2.6.1 с PyPI
+- [e2bd] https://github.com/e2b-dev/desktop (README) + `e2b_desktop` 2.6.1 source from PyPI
 - [dtp] https://www.daytona.io/pricing ; [dti] https://www.daytona.io/docs/en/isolation/ ; [dts] https://www.daytona.io/docs/en/sandboxes/
-- [mp] https://modal.com/pricing ; [mvm] https://modal.com/blog/vm-sandboxes-agent-computers , https://modal.com/docs/guide/vm-sandboxes , https://modal.com/blog/runtime-product-update-sandbox-endpoints (01.10.2026)
+- [mp] https://modal.com/pricing ; [mvm] https://modal.com/blog/vm-sandboxes-agent-computers , https://modal.com/docs/guide/vm-sandboxes , https://modal.com/blog/runtime-product-update-sandbox-endpoints (2026-10-01)
 - [cf] https://developers.cloudflare.com/sandbox/ ; [cfp] https://developers.cloudflare.com/containers/pricing/
 - [vs] https://vercel.com/docs/vercel-sandbox/pricing
-- [fly] https://fly.io/learn/ai-sandbox-pricing/ (Fly.io, 09.09.2026 — конкурент, но со ссылками на прайсы)
+- [fly] https://fly.io/learn/ai-sandbox-pricing/ (Fly.io, 2026-09-09 — a competitor, but links to pricing pages)
 - [f] https://firecracker-microvm.github.io/
-- [rl] https://runloop.ai/pricing , https://docs.runloop.ai/docs/devboxes/overview (через поиск)
-- [mo] https://cloud.morph.so/web/subscribe (через поиск)
-- [bb] https://docs.browserbase.com/account/billing/plans ; [st] https://docs.steel.dev/overview/pricinglimits ; [hb] https://tech.hyperbrowser.ai/hyperbrowser-vs-browserbase-2026-cloud-browser-platform (через поиск)
+- [rl] https://runloop.ai/pricing , https://docs.runloop.ai/docs/devboxes/overview (via search)
+- [mo] https://cloud.morph.so/web/subscribe (via search)
+- [bb] https://docs.browserbase.com/account/billing/plans ; [st] https://docs.steel.dev/overview/pricinglimits ; [hb] https://tech.hyperbrowser.ai/hyperbrowser-vs-browserbase-2026-cloud-browser-platform (via search)
 - [cu] https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/computer-use-tool
 - [cx] https://developers.openai.com/codex/agent-approvals-security
-- [ks] https://www.kasmweb.com/docs/latest/license.html (через поиск)
+- [ks] https://www.kasmweb.com/docs/latest/license.html (via search)
 - [oh] https://github.com/OpenHands/OpenHands (README)
-- [mtp] MarkTechPost 27.08.2026 (бенчмарк, не перепроверялся)
-- [gh] GitHub API, состояние репозиториев на 2026-10-10
+- [mtp] MarkTechPost 2026-08-27 (benchmark, not re-checked)
+- [gh] GitHub API, repository state as of 2026-10-10

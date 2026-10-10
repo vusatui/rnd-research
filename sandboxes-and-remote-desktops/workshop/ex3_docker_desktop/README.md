@@ -1,16 +1,16 @@
-# Упр. 3: свой рабочий стол для агента (Docker + Xvfb + fluxbox + x11vnc + noVNC + Chromium)
+# Exercise 3: your own desktop for an agent (Docker + Xvfb + fluxbox + x11vnc + noVNC + Chromium)
 
-Проверено 10.10.2026 на Debian 13, Docker 29.9 (образ ubuntu:24.04, Playwright Chromium 153).
+Verified 2026-10-10 on Debian 13, Docker 29.9 (image ubuntu:24.04, Playwright Chromium 153).
 
 ```bash
 docker build -t agent-desktop .
 docker run --rm -d --name desk -p 127.0.0.1:6080:6080 --shm-size=1g --memory=2g --cpus=2 agent-desktop
-# опционально: --runtime=runsc (gVisor), --cap-drop=ALL
-# если порт 6080 занят, публикуйте другой: -p 127.0.0.1:16080:6080
+# optional: --runtime=runsc (gVisor), --cap-drop=ALL
+# if port 6080 is taken, publish a different one: -p 127.0.0.1:16080:6080
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost:6080/vnc.html   # 200
-# открыть в браузере: http://localhost:6080/vnc.html -> Connect (без пароля)
+# open in a browser: http://localhost:6080/vnc.html -> Connect (no password)
 docker exec desk ps -eo comm | sort -u          # Xvfb, fluxbox, x11vnc, websockify, chrome
-docker exec desk python3 /home/agent/browse.py  # headed Playwright, видно в noVNC; печатает 5 заголовков HN
+docker exec desk python3 /home/agent/browse.py  # headed Playwright, visible in noVNC; prints 5 HN headlines
 python3 -c "
 from desktop_tools import DockerDesktop as D
 import time
@@ -19,13 +19,13 @@ time.sleep(5); open('desk.png','wb').write(d.screenshot())"
 docker rm -f desk
 ```
 
-`desktop_tools.py` — примитивы screenshot/left_click/right_click/double_click/move_mouse/write/press/scroll/wait
-через `docker exec` с тем же интерфейсом, что у `e2b_desktop.Sandbox`, чтобы подключить контейнер к ex4.
-Пользователь, запускающий скрипт, должен иметь доступ к docker (группа `docker`).
+`desktop_tools.py` provides screenshot/left_click/right_click/double_click/move_mouse/write/press/scroll/wait primitives
+via `docker exec` with the same interface as `e2b_desktop.Sandbox`, so the container can be plugged into ex4.
+The user running the script needs Docker access (the `docker` group).
 
-Пример результата: `../../assets/ex3-desktop.png`.
+Example output: `../../assets/ex3-desktop.png`.
 
-Заметки:
-- x11vnc без пароля и слушает только localhost внутри контейнера; наружу публикуйте порт только на 127.0.0.1.
-- Если Docker запущен внутри контейнера/VM без поддержки вложенного overlayfs (ошибка `mount source: "overlay" ... invalid argument`
-  при сборке), используйте `{"storage-driver":"vfs"}` в `/etc/docker/daemon.json`.
+Notes:
+- x11vnc has no password and listens only on localhost inside the container; publish the port only on 127.0.0.1.
+- If Docker runs inside a container/VM without nested overlayfs support (error `mount source: "overlay" ... invalid argument`
+  during build), use `{"storage-driver":"vfs"}` в `/etc/docker/daemon.json`.

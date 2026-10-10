@@ -1,14 +1,14 @@
 # R&D Research
 
-Коллекция исследований R&D: каждая тема лежит в отдельной папке и включает обзор, сравнения, материалы для доклада/презентации и, где нужно, воркшоп с готовым кодом.
+A collection of R&D research. Each topic lives in its own folder and includes an overview, comparisons, talk/presentation materials and, where relevant, a workshop with ready-to-run code.
 
-## Темы
+## Topics
 
-| Папка | Тема | Статус |
+| Folder | Topic | Status |
 |---|---|---|
-| [`sandboxes-and-remote-desktops/`](./sandboxes-and-remote-desktops/) | Песочницы и удалённые рабочие столы для AI-агентов: зачем нужны, модель угроз, технологии изоляции, сравнение платформ (E2B, Daytona, Modal и др.), доклад и воркшоп | Черновик |
+| [`sandboxes-and-remote-desktops/`](./sandboxes-and-remote-desktops/) | Sandboxes and remote desktops for AI agents: why they matter, threat model, isolation technologies, platform comparison (E2B, Daytona, Modal, etc.), talk and workshop | Draft |
 
-## Правила
+## Rules
 
-- Одна тема — одна папка верхнего уровня со своим `README.md`.
-- Секреты не коммитим: используйте `.env` (он в `.gitignore`) и `.env.example` как шаблон.
+- One topic = one top-level folder with its own `README.md`.
+- Never commit secrets: use `.env` (it is in `.gitignore`) with `.env.example` as a template.

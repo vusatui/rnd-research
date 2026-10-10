@@ -1,4 +1,4 @@
-"""Адаптер: интерфейс computer-use поверх self-hosted контейнера."""
+"""Adapter: computer-use interface on top of a self-hosted container."""
 import subprocess
 
 class DockerDesktop:

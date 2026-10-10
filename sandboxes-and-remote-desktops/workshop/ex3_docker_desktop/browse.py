@@ -1,4 +1,4 @@
-"""Headful Playwright внутри desktop-контейнера: видно в noVNC."""
+"""Headful Playwright inside the desktop container: visible in noVNC."""
 from playwright.sync_api import sync_playwright
 with sync_playwright() as p:
     b = p.chromium.launch(headless=False)

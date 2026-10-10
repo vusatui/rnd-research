@@ -1,12 +1,12 @@
-# Доклад: «Песочницы и удалённые рабочие столы для AI-агентов» (~35 мин)
+# Talk: "Sandboxes and Remote Desktops for AI Agents" (~35 min)
 
-1. **Хук (3 мин).** Replit удалил прод-БД; README с prompt injection крадёт ключи через Cursor. «Промпт — не граница безопасности».
-2. **Модель угроз агента (5 мин).** Недоверенный вход → LLM → tools → побочные эффекты. Lethal trifecta: приватные данные + недоверенный контент + выход наружу. Что защищаем: хост, секреты, прод, сеть, деньги.
-3. **Зачем ещё, кроме безопасности (4 мин).** Воспроизводимость, параллелизм/fork, долгие фоновые агенты, eval/RL, GUI для computer-use.
-4. **Технологии изоляции (7 мин).** Seccomp/Landlock → контейнеры → gVisor → Firecracker/Kata → VM; WASM/изоляты. Диаграмма «граница доверия». Почему microVM стали стандартом (снапшоты, 125 мс boot).
-5. **Remote desktop для агентов (5 мин).** Xvfb + WM + x11vnc + noVNC; screenshot→action loop; человек в контуре через live view; браузерные облака (CDP).
-6. **Ландшафт и выбор (6 мин).** Таблица из comparison.md, модели биллинга (wall-clock vs active CPU), self-host vs managed. Как устроены Codex/Cursor/Devin/OpenHands.
-7. **Live demo (4 мин).** E2B code exec в tool loop + noVNC desktop, где агент открывает браузер.
-8. **Чек-лист прода и выводы (3 мин).** Egress allowlist, без секретов, TTL/лимиты, аудит, approve деструктива, снапшоты. Q&A.
+1. **Hook (3 min).** Replit's agent deleted a production DB; a README with a prompt injection steals keys via Cursor. "The prompt is not a security boundary."
+2. **Agent threat model (5 min).** Untrusted input → LLM → tools → side effects. The lethal trifecta: private data + untrusted content + external exfiltration channel. What we protect: the host, secrets, prod, the network, money.
+3. **Why else, beyond security (4 min).** Reproducibility, parallelism/fork, long-running background agents, evals/RL, a GUI for computer use.
+4. **Isolation technologies (7 min).** Seccomp/Landlock → containers → gVisor → Firecracker/Kata → VMs; WASM/isolates. "Trust boundary" diagram. Why microVMs became the standard (snapshots, 125 ms boot).
+5. **Remote desktops for agents (5 min).** Xvfb + WM + x11vnc + noVNC; the screenshot→action loop; human in the loop via live view; browser clouds (CDP).
+6. **Landscape and choosing (6 min).** Table from comparison.md, billing models (wall-clock vs active CPU), self-host vs managed. How Codex/Cursor/Devin/OpenHands are built.
+7. **Live demo (4 min).** E2B code execution in a tool loop + a noVNC desktop where the agent opens a browser.
+8. **Production checklist and takeaways (3 min).** Egress allowlist, no secrets, TTL/limits, auditing, approval for destructive actions, snapshots. Q&A.
 
-Слайдов ~20–25.
+~20–25 slides.
