@@ -9,6 +9,7 @@ A collection of R&D research. Each topic lives in its own folder and includes an
 | [`sandboxes-and-remote-desktops/`](./sandboxes-and-remote-desktops/) | Sandboxes and remote desktops for AI agents: why they matter, threat model, isolation technologies, platform comparison (E2B, Daytona, Modal, etc.), talk script, HTML slides and workshop | Draft |
 | [`system-one-models/`](./system-one-models/) | System One / decision models: TypeSafe Jev, OpenAI Decisions API, Cloudflare Clef, Unsloth recipe; System 1 vs System 2, classifiers, rerankers, routers, guardrails; talk script, HTML slides and workshop | Draft |
 | [`legacy-modernization/`](./legacy-modernization/) | AI-assisted legacy modernization (COBOL, mainframe, old Java/.NET): client demand, AWS Transform / IBM Bob for Z / Google MAT + Dual Run / Microsoft / Mechanical Orchard / deterministic converters, why verification (the "diamond") is the product; workshop on AWS CardDemo with GnuCOBOL + free LLMs | Done |
+| [`agents-pilot-to-prod/`](./agents-pilot-to-prod/) | AI agents from pilot to production: why pilots stall, governance by autonomy level, OpenTelemetry GenAI tracing, evals with a regression gate, LLM-as-judge pitfalls, guardrails at the tool boundary, cost/latency budgets, EU AI Act hooks; tool comparison (Langfuse, Phoenix, LangSmith, Braintrust, Promptfoo, Inspect, NeMo Guardrails, AgentCore...); workshop with tracing, evals, red team and budgets on free models | In progress |
 
 ## Rules
 

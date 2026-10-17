@@ -1,0 +1,11 @@
+label                      runs  pass  p50 s  p95 s steps tok/run     $/run   $/month
+v1-guards                    24  0.92    5.4   35.1   2.7    2576  0.000251        25
+v1                           24  0.92    3.6   42.6   2.7    2535  0.000246        25
+v2-guards                    24  0.96    4.8   36.9   2.7    2247  0.000225        22
+v2                           24  0.58    3.7   46.6   2.7    2250  0.000222        22
+
+What-if for the v1 workload (2417 input + 118 output tokens per conversation, same tokens assumed):
+  anthropic/claude-sonnet-4.6              $0.00902/conversation  $      902/month
+  google/gemini-3.5-flash-lite             $0.00102/conversation  $      102/month
+
+$/month = shadow cost per conversation x 100,000 (paid-twin list price on OpenRouter; excludes retries on 429s, guard-model calls, infra and people).

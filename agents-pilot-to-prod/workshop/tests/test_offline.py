@@ -46,6 +46,14 @@ def test_policy_authz_and_limits():
     assert G.tool_policy("issue_refund", {"order_id": "A-1003", "amount": 249}, s).reason == "refund:needs_human_approval"
 
 
+def test_split_refund_is_cumulative():
+    refunds = []
+    s = G.Session("C1", ["refund A-1003 in two parts"], refunds)
+    assert G.tool_policy("issue_refund", {"order_id": "A-1003", "amount": 150}, s).allowed
+    refunds.append({"order_id": "A-1003", "amount": 150.0})
+    assert G.tool_policy("issue_refund", {"order_id": "A-1003", "amount": 99}, s).reason == "refund:needs_human_approval"
+
+
 def test_intent_binding_blocks_injection():
     s = G.Session("C1", ["Any community tips about late parcels?"])
     assert G.tool_policy("issue_refund", {"order_id": "A-1002", "amount": 1299}, s).reason == "refund:intent_not_bound_to_user"

@@ -27,6 +27,7 @@ class Decision:
 class Session:
     customer_id: str
     user_messages: list = field(default_factory=list)
+    refunds: list = field(default_factory=list)   # refunds already executed (shared with RunResult.refunds)
 
 
 def _norm(oid: str) -> str:
@@ -57,9 +58,12 @@ def tool_policy(name: str, args: dict, s: Session) -> Decision:
             return Decision(False, "refund:outside_window",
                             {"error": f"refund not allowed: delivered {age} days ago (window {REFUND_WINDOW_DAYS})"})
         amount = float(args.get("amount") or 0)
-        if amount <= 0 or amount > o["total"]:
-            return Decision(False, "refund:bad_amount", {"error": f"refund amount must be in (0, {o['total']}]"})
-        if amount > APPROVAL_THRESHOLD_USD:
+        # Limits are cumulative per order: the red team split a $249 refund into $150 + $99 to dodge approval.
+        already = sum(r["amount"] for r in s.refunds if _norm(r["order_id"]) == oid)
+        if amount <= 0 or already + amount > o["total"]:
+            return Decision(False, "refund:bad_amount",
+                            {"error": f"refund amount must be in (0, {o['total'] - already}] (already refunded {already})"})
+        if already + amount > APPROVAL_THRESHOLD_USD:
             return Decision(False, "refund:needs_human_approval",
                             {"status": "pending_human_approval",
                              "message": f"Refunds above ${APPROVAL_THRESHOLD_USD:.0f} need a human agent. "

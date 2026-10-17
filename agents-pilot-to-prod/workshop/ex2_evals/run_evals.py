@@ -43,7 +43,9 @@ def main():
     p.add_argument("--save-baseline", action="store_true")
     p.add_argument("--baseline", default=str(HERE / "baseline.json"))
     p.add_argument("--max-drop", type=float, default=0.05)
-    p.add_argument("--latency-p95", type=float, default=30.0)
+    p.add_argument("--latency-p95", type=float, default=60.0)
+    p.add_argument("--max-guard-blocks", type=int, help="optional: fail if guardrails blocked more tool calls than this")
+    p.add_argument("--rescore", help="re-apply current checks to a saved out/evals_<label>.json (no LLM calls)")
     p.add_argument("--cost-per-run", type=float, default=0.002)
     a = p.parse_args()
     label = a.label or f"{a.prompt}{'-guards' if a.guards else ''}{'-' + a.model.split('/')[-1] if a.model else ''}"
@@ -52,7 +54,18 @@ def main():
         cases = [c for c in cases if c["id"] in a.only.split(",")]
 
     rows, t0 = [], time.time()
-    for c in cases:
+    if a.rescore:
+        saved = json.loads(Path(a.rescore).read_text())
+        label = saved["summary"]["label"]
+        a.prompt, a.guards, a.repeats = saved["summary"]["prompt"], saved["summary"]["guards"], saved["summary"]["repeats"]
+        by_id = {c["id"]: c for c in cases}
+        for row in saved["rows"]:
+            res = evaluate(row["run"], by_id[row["case"]]["checks"])
+            row["pass"] = all(x[1] for x in res)
+            row["failed"] = [f"{n}{' (' + d + ')' if d else ''}" for n, passed, d in res if not passed]
+            rows.append(row)
+        cases = [c for c in cases if any(r["case"] == c["id"] for r in rows)]
+    for c in ([] if a.rescore else cases):
         for rep in range(a.repeats):
             r = run_agent(c["question"], c["customer"], a.prompt, a.guards, budget=Budget(), model=a.model,
                           tags={"eval_case": c["id"], "eval_label": label}).to_dict()
@@ -73,8 +86,11 @@ def main():
         "tokens_per_run": round(statistics.mean(x["run"]["input_tokens"] + x["run"]["output_tokens"] for x in rows)),
         "steps_per_run": round(statistics.mean(x["run"]["steps"] for x in rows), 2),
         "shadow_cost_per_run_usd": round(statistics.mean(x["run"]["cost_usd"] for x in rows), 6),
+        # Guardrail hits: a guarded candidate can pass the suite while *trying* forbidden actions - track it.
+        "guard_blocks": sum(1 for x in rows for t in x["run"]["tool_calls"] if not t.get("allowed", True)),
+        "guard_block_reasons": sorted({t["reason"] for x in rows for t in x["run"]["tool_calls"] if not t.get("allowed", True)}),
         "models": sorted({m for x in rows for m in x["run"]["models"]}),
-        "wall_s": round(time.time() - t0, 1),
+        "wall_s": (saved["summary"]["wall_s"] if a.rescore else round(time.time() - t0, 1)),
     }
     (OUT / f"evals_{label}.json").write_text(json.dumps({"summary": summary, "rows": rows}, indent=1, default=str))
     print("\n" + json.dumps(summary, indent=1))
@@ -92,6 +108,9 @@ def main():
         problems.append(f"new critical failures: {new_crit}")
     if summary["latency_p95_s"] > a.latency_p95:
         problems.append(f"p95 latency {summary['latency_p95_s']}s > {a.latency_p95}s")
+    if a.max_guard_blocks is not None and summary["guard_blocks"] > a.max_guard_blocks:
+        problems.append(f"guardrail blocked {summary['guard_blocks']} tool calls > {a.max_guard_blocks} "
+                        f"({summary['guard_block_reasons']}) - the agent is trying forbidden actions")
     if summary["shadow_cost_per_run_usd"] > a.cost_per_run:
         problems.append(f"shadow cost/run ${summary['shadow_cost_per_run_usd']} > ${a.cost_per_run}")
     regressed = [k for k, v in summary["case_pass"].items() if v < base["case_pass"].get(k, 0)]

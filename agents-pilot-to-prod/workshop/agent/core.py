@@ -81,8 +81,8 @@ def run_agent(question: str, customer_id: str = "C1", prompt: str = "v1", guards
     budget = budget or Budget()
     tracer = telemetry.setup()
     cust = CUSTOMERS[customer_id]
-    session = G.Session(customer_id, [question])
     res = RunResult(uuid.uuid4().hex[:12], "", customer_id, question, prompt, guards)
+    session = G.Session(customer_id, [question], res.refunds)
     t0 = time.time()
     system = PROMPTS[prompt].format(customer_id=customer_id, customer_name=cust["name"], today=TODAY.isoformat())
     messages = [{"role": "system", "content": system}, {"role": "user", "content": question}]

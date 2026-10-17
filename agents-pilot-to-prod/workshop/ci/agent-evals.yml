@@ -18,7 +18,7 @@ jobs:
       - name: Eval suite + gate (fails the PR on regression)
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python ex2_evals/run_evals.py --prompt v1 --guards --repeats 2 --baseline ex2_evals/baseline.json
+        run: python ex2_evals/run_evals.py --prompt v1 --guards --repeats 2 --baseline ex2_evals/baseline.json  # baseline committed from a reviewed run
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: eval-results, path: agents-pilot-to-prod/workshop/out/ }
