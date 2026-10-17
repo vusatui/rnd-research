@@ -18,6 +18,8 @@ DEFAULT_MODELS = [
     "google/gemma-4-31b-it:free",
     "poolside/laguna-s-2.1:free",
     "cohere/north-mini-code:free",
+    "nvidia/nemotron-3.5-lightning:free",
+    "thinkingmachines/inkling:free",
 ]
 
 
@@ -43,14 +45,18 @@ def chat(messages: list[dict], temperature: float = 0.0, max_tokens: int = 8000,
         for attempt in range(2):
             try:
                 t0 = time.time()
-                r = c.chat.completions.create(model=model, messages=messages,
-                                              temperature=temperature, max_tokens=max_tokens)
+                # Free "thinking" models can burn the whole max_tokens budget on hidden reasoning and return
+                # an empty answer (finish=length). Ask OpenRouter for low reasoning effort (ignored by others).
+                effort = os.environ.get("OPENROUTER_REASONING_EFFORT", "low")
+                extra = {"reasoning": {"effort": effort}} if effort != "default" else {}
+                r = c.chat.completions.create(model=model, messages=messages, temperature=temperature,
+                                              max_tokens=max_tokens, extra_body=extra)
                 text = (r.choices[0].message.content or "").strip()
                 finish = r.choices[0].finish_reason
                 (WORKSHOP / "out").mkdir(exist_ok=True)
                 (WORKSHOP / "out" / "last_llm_reply.txt").write_text(text)
                 if os.environ.get("LLM_DEBUG"):
-                    print(f"  [{model}] {time.time() - t0:.0f}s finish={finish} chars={len(text)}")
+                    print(f"  [{model}] {time.time() - t0:.0f}s finish={finish} chars={len(text)}", flush=True)
                 if not text:
                     raise RuntimeError(f"{model}: empty response (finish={finish})")
                 if validate:
@@ -58,6 +64,8 @@ def chat(messages: list[dict], temperature: float = 0.0, max_tokens: int = 8000,
                 return text, model
             except Exception as e:  # noqa: BLE001 - free tier fails in many ways
                 last_err = e
+                if os.environ.get("LLM_DEBUG"):
+                    print(f"  [{model}] failed: {type(e).__name__}: {str(e)[:160]}", flush=True)
                 time.sleep(3 * (attempt + 1))
     raise RuntimeError(f"all free models failed, last error: {last_err}")
 
