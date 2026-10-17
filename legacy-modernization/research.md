@@ -119,7 +119,7 @@ benchmarks say nothing about system-level behaviour (files, encodings, JCL, rest
 ## 4. What we reproduced ourselves (🧪, 2026-10-17)
 
 Setup: [AWS CardDemo](https://github.com/aws-samples/aws-mainframe-modernization-carddemo) (Apache-2.0, commit
-`59cc6c2`, 31 COBOL programs ≈ 20.6k lines, 38 JCL), program **CBACT04C** (interest calculation batch, 652 lines),
+`59cc6c2`, 31 COBOL source files ≈ 20.6k lines, 38 JCL), program **CBACT04C** (interest calculation batch, 652 lines),
 compiled *unchanged* with GnuCOBOL 3.2 (`-std=ibm -fsign=EBCDIC`), VSAM KSDS emulated with GnuCOBOL indexed files,
 `CEE3ABD` and JCL `PARM` shimmed. Full numbers in `workshop-plan.md`.
 
