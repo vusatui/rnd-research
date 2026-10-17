@@ -1,6 +1,6 @@
 # Workshop: modernize a real mainframe batch job and prove it is equivalent
 
-See [`../workshop-plan.md`](../workshop-plan.md) for the agenda, step-by-step commands and our measured results.
+See [`PARTICIPANTS.md`](PARTICIPANTS.md) for the step-by-step participant guide and [`../workshop-plan.md`](../workshop-plan.md) for the agenda and our measured results.
 
 ```
 setup.sh                    fetch AWS CardDemo (Apache-2.0) at a pinned commit into vendor/ (git-ignored), check GnuCOBOL

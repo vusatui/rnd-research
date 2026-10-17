@@ -1,6 +1,7 @@
 # Workshop plan (~100 min): modernize a mainframe batch job with AI - and prove it
 
 Everything is free: GnuCOBOL 3.2, AWS CardDemo (Apache-2.0), Python 3.10+, a free OpenRouter key. Code: [`workshop/`](workshop/).
+Participant step-by-step guide: [`workshop/PARTICIPANTS.md`](workshop/PARTICIPANTS.md).
 Subject: **CBACT04C**, CardDemo's monthly interest-calculation batch job (652 lines COBOL, 5 copybooks, run by JCL `INTCALC`).
 
 | # | Time | Exercise | Needs | What participants do / learn |
@@ -40,6 +41,7 @@ python ex4_equivalence/diamond.py --impl out/candidate_llm.py   # and the other 
 - Build of CBACT04C + shims with GnuCOBOL 3.2: ~1 s. One legacy run incl. loading 4 KSDS files: ~20 ms; full diamond (25 scenarios, both sides): **0.5-0.7 s**.
 - ex1 over the whole CardDemo tree (31 programs, 38 JCL, 46 copybooks): 157 nodes / 385 edges in <1 s; 16 programs have dynamic `XCTL PROGRAM(var)` targets that static analysis can't resolve.
 - `pytest`: 9 passed, <1 s.
+- Clean-clone re-run for the participant guide (same day): setup, build, pytest, ex1 and ex4 reproduced exactly; ex2 recall 0.73 (nemotron, 132 s); two fresh "verified rules" candidates scored **2/25** because the model wrote `Int. for/a/c` instead of `Int. for a/c` - same model, same prompt as the earlier 25/25 runs.
 
 **ex2 - rule extraction (CBACT04C + copybooks, ~40k chars prompt)**
 
