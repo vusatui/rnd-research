@@ -57,6 +57,12 @@ def interest_run(req: RunIn):
         res = post_interest(accounts, req.card_by_account, rates, bals, req.run_date, req.legacy_compat)
     except JobAbend as e:
         raise HTTPException(status_code=422, detail={"abend": e.code, "reason": e.reason}) from e
-    return {"transactions": [t.__dict__ for t in res.transactions],
-            "accounts": [{"acct_id": a.acct_id, "curr_bal": a.curr_bal, "curr_cyc_credit": a.curr_cyc_credit,
-                          "curr_cyc_debit": a.curr_cyc_debit} for a in res.accounts.values()]}
+    return {"transactions": [{**t.__dict__, "amount": money(t.amount)} for t in res.transactions],
+            "accounts": [{"acct_id": a.acct_id, "curr_bal": money(a.curr_bal), "curr_cyc_credit": money(a.curr_cyc_credit),
+                          "curr_cyc_debit": money(a.curr_cyc_debit)} for a in res.accounts.values()]}
+
+
+def money(d: Decimal) -> str:
+    """Money as a string (never float). `+ 0` turns Decimal('-0.00') into '0.00': the legacy record has no
+    negative zero either, and a JSON consumer seeing -0.0 is a real-world bug found while testing this API."""
+    return str((Decimal(d) + 0).quantize(Decimal("0.01")))
