@@ -40,7 +40,7 @@ Raw outputs: [`workshop/results/`](workshop/results/). Agent model in all runs: 
 (no fallback was needed). Free models are non-deterministic; numbers below are from these runs, not guarantees.
 
 **Harness:** offline tests 8 passed in <0.1 s. One agent run: 2-4 LLM steps, ~2,500 tokens, p50 3.6-5.4 s.
-OpenRouter free tier: 20 requests/min, 1,000/day on our key - the whole workshop used ~800 requests.
+OpenRouter free tier: 20 requests/min, 1,000/day on our key - building and running the whole workshop used ~780 requests.
 
 ### Ex1 - tracing
 
@@ -87,10 +87,11 @@ Lessons:
 | Judge | Pairwise, no policy in prompt | Pairwise, policy in prompt | Pointwise 1-5, no policy (good vs bad mean) |
 |---|---|---|---|
 | `nvidia/nemotron-3-super-120b-a12b:free` | **9/16 correct** (wrong in 7 of 16 decisions), 1/8 pairs same letter in both orders | **16/16 correct** | good **4.00** vs bad **4.12**; bad ≥ good in **5/8** |
-| `nvidia/nemotron-3.5-lightning:free` | (run in progress) | | |
 
-Examples the ungrounded judge preferred: a reply that "processed a full refund of $1,299" outside the window, and one
-that promised a 60-day window (policy: 30). One line of policy fixed it. Rule: give the judge the reference/policy,
+Only one judge was measured: second-judge runs failed or were too slow on the free tier (`gemma-4-31b-it:free` upstream rate-limited, `nemotron-3.5-lightning:free` ~30 s per call; stopped). Treat the numbers as one model's behaviour.
+
+Examples the ungrounded judge preferred (in both orders): a reply that "processed a full refund of $1,299" outside the window, one that
+refunded $249 without the required human approval, and one that promised a 60-day window (policy: 30). One line of policy fixed it. Rule: give the judge the reference/policy,
 use pairwise with swapped order, calibrate on a labelled set - and judge *actions* with code, not with a judge.
 
 ### Ex3 - red team (attack success rate, ASR)

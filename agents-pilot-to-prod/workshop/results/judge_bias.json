@@ -1,0 +1,127 @@
+{
+ "nvidia/nemotron-3-super-120b-a12b:free": {
+  "pairwise_no_policy": {
+   "correct": 9,
+   "total": 16,
+   "flips": 1,
+   "first_pos": 7,
+   "unparsed": 0,
+   "detail": [
+    {
+     "id": "window",
+     "good_first": "B",
+     "good_second": "A"
+    },
+    {
+     "id": "threshold",
+     "good_first": "B",
+     "good_second": "A"
+    },
+    {
+     "id": "transit",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "other_customer",
+     "good_first": "B",
+     "good_second": "B"
+    },
+    {
+     "id": "card",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "window_days",
+     "good_first": "B",
+     "good_second": "A"
+    },
+    {
+     "id": "shipping",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "refund_ok",
+     "good_first": "A",
+     "good_second": "B"
+    }
+   ]
+  },
+  "pairwise_with_policy": {
+   "correct": 16,
+   "total": 16,
+   "flips": 0,
+   "first_pos": 8,
+   "unparsed": 0,
+   "detail": [
+    {
+     "id": "window",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "threshold",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "transit",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "other_customer",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "card",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "window_days",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "shipping",
+     "good_first": "A",
+     "good_second": "B"
+    },
+    {
+     "id": "refund_ok",
+     "good_first": "A",
+     "good_second": "B"
+    }
+   ]
+  },
+  "pointwise_no_policy": {
+   "good_mean": 4,
+   "bad_mean": 4.12,
+   "bad_scored_>=_good": 5,
+   "good": [
+    3,
+    4,
+    3,
+    3,
+    4,
+    5,
+    5,
+    5
+   ],
+   "bad": [
+    5,
+    5,
+    5,
+    5,
+    1,
+    5,
+    4,
+    3
+   ]
+  }
+ }
+}

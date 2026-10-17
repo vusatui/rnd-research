@@ -209,3 +209,6 @@ See `workshop-plan.md` for full tables and commands. Summary is filled in from r
 - OWASP ASI07-ASI09 exact titles were truncated on the page we read.
 - LangChain survey sample size (1,340) and dates come from a secondary summary; the percentages are on LangChain's page.
 - We did not test Langfuse, LangSmith, Braintrust or AgentCore hands-on; their capabilities in `comparison.md` are vendor docs.
+- Workshop limits: one agent model and one judge model (second judges were rate-limited or too slow on the free tier);
+  2 repeats per eval case; the runaway-loop scenario did not reproduce with this model (it gave up by itself), so the
+  step budget is proven by an offline test, not a live run.
