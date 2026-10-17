@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-assisted legacy modernization</title>
+<!-- Self-contained deck: no external dependencies. Keys: →/Space next, ← back, Home/End, N notes, S speaker window, O overview, F fullscreen.
+     Style and JS reused from ../../system-one-models/slides/index.html (itself from ../../sandboxes-and-remote-desktops/slides/).
+     Speaker notes are generated from ../talk-script.md by build_notes.py. Overflow check: open with ?check (and ?render for screenshots). -->
+<style>
+:root{
+  --ink:#0f172a; --muted:#475569; --line:#cbd5e1; --soft:#f1f5f9; --bg:#ffffff;
+  --accent:#0e7490; --accent-soft:#e0f2fe; --warm:#c2410c; --warm-soft:#ffedd5;
+  --bad:#b91c1c; --bad-soft:#fee2e2; --ok:#15803d; --ok-soft:#dcfce7; --navy:#0b2540;
+  --sans:"IBM Plex Sans","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono","JetBrains Mono",Consolas,"DejaVu Sans Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0b1220;overflow:hidden;font-family:var(--sans);color:var(--ink)}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+.slide{position:absolute;inset:0;background:var(--bg);display:none;flex-direction:column;padding:56px 96px 0 96px;overflow:hidden}
+.slide.active{display:flex}
+.slide>header{flex:0 0 auto;margin-bottom:28px}
+.kicker{font-size:24px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 6px}
+h1,h2{margin:0;font-weight:700;letter-spacing:-.01em;line-height:1.1}
+h2{font-size:60px}
+.body{flex:1 1 auto;min-height:0;font-size:38px;line-height:1.35;display:flex;flex-direction:column;justify-content:center;padding-bottom:24px}
+.body.cols,.body[style*="grid"]{align-content:center}
+.slide>footer{flex:0 0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid var(--soft);font-size:22px;color:var(--muted);gap:24px}
+.slide>footer .src{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slide>footer a{color:var(--muted)}
+.slide>footer .num{font-variant-numeric:tabular-nums;flex:0 0 auto}
+ul{margin:0;padding-left:1.1em}
+li{margin:0 0 .45em}
+li::marker{color:var(--accent)}
+ul.tight li{margin-bottom:.25em}
+.sub{font-size:30px;color:var(--muted)}
+.small{font-size:31px}
+.xs{font-size:26px}
+code,.mono{font-family:var(--mono);font-size:.86em;background:var(--soft);padding:.05em .3em;border-radius:6px}
+pre.cmd{font-family:var(--mono);font-size:27px;background:var(--navy);color:#e2e8f0;padding:18px 24px;border-radius:12px;margin:0 0 22px;white-space:pre-wrap;line-height:1.35}
+pre.cmd .p{color:#7dd3fc}
+.cols{display:grid;gap:40px}
+.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:1fr 1fr 1fr}
+.c64{grid-template-columns:1.5fr 1fr}.c46{grid-template-columns:1fr 1.4fr}
+.card{background:var(--soft);border-radius:16px;padding:24px 28px;border-left:8px solid var(--accent)}
+.card h3{margin:0 0 12px;font-size:36px}
+.card.warm{border-color:var(--warm);background:var(--warm-soft)}
+.card.bad{border-color:var(--bad);background:var(--bad-soft)}
+.card.ok{border-color:var(--ok);background:var(--ok-soft)}
+.card p{margin:0}
+.callout{margin-top:24px;font-size:36px;font-weight:700;color:var(--navy);border-left:10px solid var(--warm);padding:10px 0 10px 24px}
+.pill{display:inline-block;font-size:.72em;font-weight:600;padding:.1em .5em;border-radius:999px;vertical-align:.12em;white-space:nowrap}
+.v{background:var(--ok-soft);color:var(--ok)}.w{background:var(--warm-soft);color:var(--warm)}.q{background:#ede9fe;color:#6d28d9}
+table{border-collapse:collapse;width:100%;font-size:28px;line-height:1.25}
+th{background:var(--navy);color:#fff;text-align:left;padding:12px 14px;font-weight:600}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#f8fafc}
+td b{color:var(--navy)}
+figure{margin:0}
+figure img{width:100%;display:block;border-radius:10px;border:2px solid var(--line)}
+figcaption{font-size:25px;color:var(--muted);margin-top:8px}
+svg text{font-family:var(--sans)}
+/* title & section slides */
+.slide.title{background:linear-gradient(135deg,#0b2540 0%,#0e3a5c 60%,#0e7490 100%);color:#fff;justify-content:center;padding:0 140px}
+.slide.title h1{font-size:96px;max-width:1500px}
+.slide.title .sub{color:#bae6fd;font-size:40px;margin-top:28px}
+.slide.title .meta{margin-top:80px;font-size:30px;color:#e2e8f0;line-height:1.6}
+.slide.title .meta .mono{background:rgba(255,255,255,.12);color:#fff}
+.slide.title footer{display:none}
+.big{font-size:54px;font-weight:700;line-height:1.2;color:var(--navy)}
+.step{display:grid;grid-template-columns:70px 1fr;gap:20px;align-items:start;margin-bottom:22px}
+.step .n{width:62px;height:62px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:32px;display:flex;align-items:center;justify-content:center}
+.check li{list-style:none;position:relative;padding-left:.2em}
+.check li::before{content:"☐";position:absolute;left:-1.1em;color:var(--accent);font-weight:700}
+/* ladder */
+.ladder{display:flex;flex-direction:column;gap:14px}
+.rung{display:grid;grid-template-columns:70px 470px 1fr;align-items:center;border-radius:14px;padding:14px 24px;color:#fff;font-size:28px}
+.rung .lvl{font-size:40px;font-weight:700;opacity:.9}
+.rung b{font-size:32px}
+.rung .bd{font-size:29px;opacity:.95}
+/* notes & ui */
+aside.notes{display:none}
+#notesbox{position:fixed;left:0;right:0;bottom:0;max-height:38vh;overflow:auto;background:rgba(15,23,42,.96);color:#e2e8f0;font-size:18px;line-height:1.45;padding:16px 28px;display:none;z-index:10;font-family:var(--sans)}
+#notesbox.on{display:block}
+#notesbox p{margin:0 0 .6em}
+#progress{position:fixed;left:0;bottom:0;height:5px;background:var(--accent);z-index:11}
+#overview{position:fixed;inset:0;background:rgba(11,18,32,.97);display:none;z-index:20;overflow:auto;padding:40px;color:#fff;font-size:20px}
+#overview.on{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;align-content:start}
+#overview button{all:unset;cursor:pointer;background:#1e293b;border-radius:10px;padding:14px 18px;line-height:1.3}
+#overview button:hover,#overview button.cur{background:#0e7490}
+body.render #progress,body.render #notesbox{display:none!important}
+
+/* legacy-modernization deck additions */
+.pill.y{background:#fef9c3;color:#a16207}.pill.bd{background:var(--bad-soft);color:var(--bad)}
+.ticket{font-size:36px;font-style:italic;color:var(--navy);background:var(--soft);border-radius:14px;padding:22px 30px;margin:0 0 22px;border-left:8px solid var(--navy);line-height:1.35}
+pre.code{font-family:var(--mono);font-size:26px;background:var(--navy);color:#e2e8f0;padding:18px 24px;border-radius:12px;margin:0;white-space:pre;line-height:1.4;overflow:hidden}
+pre.code .cm{color:#7dd3fc}
+pre.code .dead{color:#fca5a5;text-decoration:line-through;text-decoration-thickness:2px}
+pre.diff{font-size:25px}
+#s9 pre.code:not(.diff){font-size:28px}
+pre.diff .lg{color:#86efac;font-weight:700}pre.diff .md{color:#fca5a5;font-weight:700}
+table.tbl-s{font-size:26px}
+table.tbl-s td{padding:8px 14px}
+table.vend{font-size:27px}table.vend td{padding:14px 12px}table.vend .xs{font-size:22px}
+tr.hl td{background:var(--ok-soft)!important}
+tr.bad td{background:var(--bad-soft)!important}
+.card .big{margin:0}
+.card .date{margin:0 0 10px;font-size:24px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.legend{margin-top:32px;display:flex;gap:18px;align-items:center;font-size:34px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:16px}
+.chips span{font-size:30px;font-weight:600;background:var(--warm-soft);color:var(--warm);padding:10px 20px;border-radius:12px;border:2px solid #fdba74}
+.strat{background:var(--soft);border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:6px;border-top:8px solid var(--line)}
+.strat b{font-size:32px;color:var(--navy)}.strat span{font-size:25px;color:var(--muted)}
+.strat.hl{border-top-color:var(--accent);background:var(--accent-soft)}
+.big-step{font-size:52px;margin-bottom:34px}.big-step .n{width:76px;height:76px;font-size:38px}
+.big-step{grid-template-columns:96px 1fr;align-items:center}
+</style>
+</head>
+<body>
+<div id="stage">
+<!-- 1 -->
+<section class="slide title" data-time="0:30">
+  <h1>AI-assisted <span style="color:#7dd3fc">legacy modernization</span></h1>
+  <div class="sub">AI won't translate your COBOL for you — but it will help you prove the new system is right</div>
+  <div class="meta">Anton Vusatyi · R&amp;D · October 2026<br>
+    <span class="mono">github.com/vusatui/rnd-research</span> → <span class="mono">legacy-modernization</span></div>
+  <footer></footer>
+  <aside class="notes"><p><i>Timing: 0:30 (0:00–0:30)</i></p><p>Hi, I'm Anton. This talk is about modernizing legacy systems with AI: COBOL on the mainframe first, old Java and .NET briefly at the end. I will cover why clients are coming now, what the big vendors really sell, where language models help and where they silently break behaviour, and what we measured ourselves on a real mainframe batch job. All sources were checked on October 17, 2026. Everything is in the public repo on the slide. When something is only a vendor claim, I will say so.</p><p><b>Sources:</b> <a href="../README.md">README.md</a>, <a href="../talk-outline.md">talk-outline.md</a></p></aside>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Hook · 2026 in three headlines</p><h2>If translation is free, what are clients paying for?</h2></header>
+  <div class="body">
+    <div class="cols c3" style="gap:32px">
+      <div class="card"><p class="date">Feb 23 2026 · Anthropic</p><p class="small">“COBOL modernization with AI: breaking the cost barrier” — <b>“quarters instead of years”</b> <span class="pill y">🟡</span></p></div>
+      <div class="card bad"><p class="date">Next day · IBM</p><p class="small">Shares <b>−13.2%</b>, biggest drop in 25+ years <span class="pill w">🟠</span><br><i>“Translation captures almost none of the actual complexity”</i> <span class="pill w">🟠</span></p></div>
+      <div class="card ok"><p class="date">Mar 17 2026 · AWS Transform</p><p class="small">“Code transformation is now offered <b>at no cost</b>, replacing the previous lines-of-code based pricing model” <span class="pill v">✅</span></p></div>
+    </div>
+    <div class="callout">Answer of this talk: understanding the system, and <b>proving</b> the new one does the same thing</div>
+    <div class="legend"><b>Legend:</b> <span class="pill v">✅ verified, primary page</span> <span class="pill y">🟡 vendor claim</span> <span class="pill w">🟠 secondary only</span> <span class="pill bd">❌ not published</span> <span class="pill q">🧪 measured by us</span></div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://claude.com/resources/articles/how-ai-helps-break-cost-barrier-cobol-modernization">Anthropic article</a> · <a href="https://www.itpro.com/software/development/anthropic-says-claude-code-can-help-streamline-cost-prohibitive-cobol-modernization-but-ibm-says-its-not-that-simple-decades-of-hardware-software-integration-cannot-be-replicated-by-moving-code">ITPro (citing Reuters)</a> · <a href="https://aws.amazon.com/about-aws/whats-new/2026/03/aws-transform-mainframe-refactor/">AWS What's New</a> · <a href="../research.md">research.md §1–2</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (0:30–2:00)</i></p><p>Two headlines from this year. On February 23, Anthropic published an article saying Claude Code can automate the exploration and analysis of COBOL systems, so modernization takes "quarters instead of years". That is a vendor talking about its own product. The next day IBM shares fell 13.2 percent, the biggest drop in more than 25 years. I read that only through ITPro quoting Reuters, so it is marked secondary. IBM's answer was: "translation captures almost none of the actual complexity".</p><p>Three weeks later, AWS made mainframe code transformation in AWS Transform free, replacing pricing per line of code. That one I read on the AWS page.</p><p>So here is the question for the next 35 minutes. If translating COBOL to Java costs nothing, what exactly are clients going to pay us for? My short answer: understanding the system, and proving the new one does the same thing.</p><p>One note on the legend at the bottom. I will use these markers on every slide. Green is verified on a primary page, yellow is a vendor talking about itself, orange is secondary only, red means not published, and the test tube is something we measured ourselves.</p><p><b>Sources:</b> <a href="https://claude.com/resources/articles/how-ai-helps-break-cost-barrier-cobol-modernization">Anthropic article</a>, <a href="https://www.itpro.com/software/development/anthropic-says-claude-code-can-help-streamline-cost-prohibitive-cobol-modernization-but-ibm-says-its-not-that-simple-decades-of-hardware-software-integration-cannot-be-replicated-by-moving-code">ITPro</a> (citing Reuters), <a href="https://aws.amazon.com/about-aws/whats-new/2026/03/aws-transform-mainframe-refactor/">AWS What's New 2026-03-17</a>, <a href="../research.md">research.md §1–2</a></p></aside>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Why now · demand</p><h2>Why now: the demand signals</h2></header>
+  <div class="body">
+    <p class="xs" style="margin:0 0 12px;color:var(--muted)">Kyndryl Modernization Report · Oct 1 2026 · 2,000 leaders, 12 industries · survey by a services vendor <span class="pill v">✅</span></p>
+    <div class="cols c3" style="gap:28px;margin-bottom:28px">
+      <div class="card" style="text-align:center"><p class="big" style="font-size:96px">9%</p><p class="small">fully understand their application <b>dependencies</b></p></div>
+      <div class="card warm" style="text-align:center"><p class="big" style="font-size:96px">~½</p><p class="small">behind schedule; 98% say delays hurt</p></div>
+      <div class="card ok" style="text-align:center"><p class="big" style="font-size:96px">67% <span style="font-size:48px;color:var(--muted)">vs 51%</span></p><p class="small">on track: the 10% using agentic AI in production vs all</p></div>
+    </div>
+    <div class="cols c2" style="gap:28px">
+      <div class="card"><p class="xs"><b>ISG Provider Lens Mainframes US 2026</b> <span class="pill v">✅</span>: GenAI to <b>extract and validate</b> rules, SMEs confirm, functional equivalence via <b>parallel automated testing</b>; 56 providers</p></div>
+      <div class="card"><p class="xs">“Every organization with a mainframe now reports plans to deploy AI to the platform” (Kyndryl) <span class="pill v">✅</span> · GAO: 11 critical federal systems, 8 in outdated languages <span class="pill w">🟠</span></p></div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://www.kyndryl.com/us/en/about-us/news/2026/10/enterprise-it-modernization-trends">Kyndryl</a> · <a href="https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/U-S--Enterprises-Accelerate-Mainframe-Modernization/default.aspx">ISG</a> · <a href="https://www.gao.gov/products/gao-25-107795">GAO-25-107795</a> · <a href="../research.md">research.md §1</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (2:00–3:45)</i></p><p>Why are clients asking now? Three signals.</p><p>First, Kyndryl surveyed 2,000 leaders in 12 industries, published October 1. Remember that Kyndryl sells modernization services, so read it as a vendor survey. The number I want you to remember: only 9 percent say they fully understand their application dependencies. Nearly half are behind schedule, and 98 percent say delays had a negative impact. Ten percent already use agentic AI in production for modernization, for dependency mapping, code conversion and documentation, and 67 percent of those are on or ahead of track, against 51 percent overall. Also note: every organization with a mainframe reports plans to deploy AI on the platform. Mainframes are not simply being switched off.</p><p>Second, ISG's provider report for US mainframes, April 2026. Its description of what enterprises do is almost our talk: use generative AI to extract and validate business rules, have subject-matter experts confirm the logic, and prove functional equivalence with parallel automated testing. 56 providers were evaluated.</p><p>Third, the public sector. The GAO reported 11 critical federal legacy systems, 8 of them in outdated languages like COBOL or assembly. I read only a summary of that report, so it is orange.</p><p>The pattern: the problem is not "convert my code". It is "I don't know what this does".</p><p><b>Sources:</b> <a href="https://www.kyndryl.com/us/en/about-us/news/2026/10/enterprise-it-modernization-trends">Kyndryl press release</a>, <a href="https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/U-S--Enterprises-Accelerate-Mainframe-Modernization/default.aspx">ISG press release</a>, <a href="https://www.gao.gov/products/gao-25-107795">GAO-25-107795</a>, <a href="../research.md">research.md §1</a></p></aside>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Why now · our own house</p><h2>Our own house: what EPAM said in Q2 2026</h2></header>
+  <div class="body cols c64" style="gap:44px">
+    <ul class="small">
+      <li>Financial services <b>+11.5% YoY</b>, fastest-growing vertical; driver: “mainframe modernization using EPAM IP to reverse engineer, automate and rebuild” <span class="pill v">✅</span></li>
+      <li>North America: from task-based services to <b>“AI-led modernization”</b>; pipeline incl. “legacy mainframe transformation”, revenue expected H1 2027 <span class="pill v">✅</span></li>
+      <li>Wealth-management client: &gt;10M LOC, “60% time savings in reverse engineering effort” <span class="pill y">🟡</span></li>
+      <li><b>MF Lens</b> (AI/Run CodeMie): Neo4j + PostgreSQL + LiteLLM-proxied model, COBOL preprocessor <span class="pill v">✅</span></li>
+    </ul>
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div class="card ok"><p class="big" style="font-size:46px">“Coding gets automated, engineering doesn't”</p><p class="xs" style="margin-top:10px">EPAM's CEO, Q2 2026 call <span class="pill v">✅</span></p></div>
+      <div class="card warm"><p class="small">ISG US 2026 leaders: DXC, Kyndryl, TCS, Accenture, AWS, Google, Heirloom… <b>EPAM is not named</b> <span class="pill v">✅</span></p></div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://www.fool.com/earnings/call-transcripts/2026/08/06/epam-epam-q2-2026-earnings-call-transcript/">EPAM Q2 2026 call transcript</a> · <a href="https://docs.codemie.ai/admin/deployment/extensions/mf-lens/">MF Lens docs</a> · <a href="https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/U-S--Enterprises-Accelerate-Mainframe-Modernization/default.aspx">ISG</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (3:45–5:15)</i></p><p>Now our own company. In the Q2 2026 earnings call, financial services grew 11.5 percent year over year and was the fastest-growing vertical. One of the named drivers was mainframe modernization using EPAM's own IP to reverse engineer, automate and rebuild, and MF Lens was named. Management also said North American demand is moving from task-based services, like manual testing and front-end work, to AI-led modernization, with large pipeline deals including legacy mainframe transformation, with revenue expected in the first half of 2027.</p><p>There is also a client story: a wealth-management client, more than 10 million lines reverse-engineered, with 60 percent time savings in reverse-engineering effort. That is us talking about ourselves, so it is yellow like any other vendor claim.</p><p>MF Lens is documented in the AI/Run CodeMie docs as a mainframe code analysis and exploration solution: a graph database, Neo4j, plus PostgreSQL, a model behind a LiteLLM proxy, and a COBOL preprocessor. Note the architecture: a deterministic graph first, the model on top.</p><p>One uncomfortable fact: ISG's US mainframe report names many leaders, from DXC and Kyndryl to AWS, Google and Heirloom, and EPAM is not among them. And the line from our CEO that fits this whole talk: "Coding gets automated, engineering doesn't."</p><p><b>Sources:</b> <a href="https://www.fool.com/earnings/call-transcripts/2026/08/06/epam-epam-q2-2026-earnings-call-transcript/">EPAM Q2 2026 call, Motley Fool transcript</a>, <a href="https://docs.codemie.ai/admin/deployment/extensions/mf-lens/">AI/Run CodeMie docs: MF Lens</a>, <a href="https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/U-S--Enterprises-Accelerate-Mainframe-Modernization/default.aspx">ISG press release</a>, <a href="../research.md">research.md §1</a></p></aside>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">What legacy actually is · ex1 output 🧪</p><h2>A COBOL program is not the system</h2></header>
+  <div class="body cols" style="grid-template-columns:1100px 1fr;gap:48px">
+    <svg viewBox="0 0 1100 640" width="1100" height="640" role="img" aria-label="CBACT04C dependency graph">
+      <defs><marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#475569"/></marker></defs>
+      <g stroke="#94a3b8" stroke-width="3" fill="none">
+        <line x1="490" y1="270" x2="275" y2="72"/><line x1="490" y1="270" x2="440" y2="72"/><line x1="490" y1="270" x2="605" y2="72"/><line x1="490" y1="270" x2="770" y2="72"/><line x1="490" y1="270" x2="935" y2="72"/>
+      </g>
+      <g stroke="#475569" stroke-width="4" fill="none">
+        <line x1="220" y1="320" x2="352" y2="320" marker-end="url(#a5)"/>
+        <line x1="620" y1="320" x2="812" y2="172" marker-end="url(#a5)"/>
+        <line x1="620" y1="320" x2="812" y2="262" marker-end="url(#a5)"/>
+        <line x1="620" y1="320" x2="812" y2="352" marker-end="url(#a5)"/>
+        <line x1="620" y1="320" x2="812" y2="442" marker-end="url(#a5)" stroke="#c2410c"/>
+        <line x1="620" y1="320" x2="812" y2="532" marker-end="url(#a5)" stroke="#c2410c"/>
+        <line x1="490" y1="370" x2="490" y2="522" marker-end="url(#a5)"/>
+      </g>
+      <g font-weight="700" text-anchor="middle">
+        <g fill="#e0f2fe" stroke="#0e7490" stroke-width="2">
+          <rect x="200" y="10" width="150" height="60" rx="10"/><rect x="365" y="10" width="150" height="60" rx="10"/><rect x="530" y="10" width="150" height="60" rx="10"/><rect x="695" y="10" width="150" height="60" rx="10"/><rect x="860" y="10" width="150" height="60" rx="10"/>
+        </g>
+        <g font-size="22" fill="#0b2540" font-family="IBM Plex Mono,monospace"><text x="275" y="48">CVACT01Y</text><text x="440" y="48">CVACT03Y</text><text x="605" y="48">CVTRA01Y</text><text x="770" y="48">CVTRA02Y</text><text x="935" y="48">CVTRA05Y</text></g>
+        <text x="1030" y="100" font-size="22" fill="#0e7490" text-anchor="end" font-weight="400">5 copybooks (copies)</text>
+        <rect x="0" y="280" width="220" height="80" rx="14" fill="#475569"/><text x="110" y="315" font-size="24" fill="#fff">JCL job</text><text x="110" y="345" font-size="24" fill="#fff" font-family="IBM Plex Mono,monospace">INTCALC</text>
+        <text x="286" y="308" font-size="20" fill="#475569" font-weight="400">runs</text>
+        <rect x="360" y="270" width="260" height="100" rx="16" fill="#0b2540"/><text x="490" y="315" font-size="32" fill="#fff" font-family="IBM Plex Mono,monospace">CBACT04C</text><text x="490" y="350" font-size="20" fill="#bae6fd" font-weight="400">interest batch · 652 lines</text>
+        <g fill="#fff" stroke="#0b2540" stroke-width="2">
+          <rect x="820" y="140" width="280" height="64" rx="10"/><rect x="820" y="230" width="280" height="64" rx="10"/><rect x="820" y="320" width="280" height="64" rx="10"/>
+        </g>
+        <g fill="#ffedd5" stroke="#c2410c" stroke-width="3"><rect x="820" y="410" width="280" height="64" rx="10"/><rect x="820" y="500" width="280" height="64" rx="10"/></g>
+        <g font-size="22" text-anchor="start">
+          <text x="836" y="180" fill="#0b2540" font-family="IBM Plex Mono,monospace">TCATBALF</text><text x="1086" y="180" text-anchor="end" fill="#475569" font-weight="400">reads</text>
+          <text x="836" y="270" fill="#0b2540" font-family="IBM Plex Mono,monospace">DISCGRP</text><text x="1086" y="270" text-anchor="end" fill="#475569" font-weight="400">reads</text>
+          <text x="836" y="360" fill="#0b2540" font-family="IBM Plex Mono,monospace">CARDXREF</text><text x="1086" y="360" text-anchor="end" fill="#475569" font-weight="400">reads</text>
+          <text x="836" y="450" fill="#0b2540" font-family="IBM Plex Mono,monospace">ACCTDATA</text><text x="1086" y="450" text-anchor="end" fill="#c2410c">updates</text>
+          <text x="836" y="540" fill="#0b2540" font-family="IBM Plex Mono,monospace">SYSTRAN</text><text x="1086" y="540" text-anchor="end" fill="#c2410c">writes</text>
+        </g>
+        <rect x="360" y="530" width="260" height="80" rx="14" fill="#b91c1c"/><text x="490" y="565" font-size="24" fill="#fff" font-family="IBM Plex Mono,monospace">CEE3ABD</text><text x="490" y="595" font-size="20" fill="#fee2e2" font-weight="400">LE abend service (call)</text>
+        <text x="836" y="610" text-anchor="start" font-size="20" fill="#475569" font-weight="400">VSAM KSDS / sequential datasets</text>
+      </g>
+    </svg>
+    <div>
+      <div class="card" style="margin-bottom:22px"><p class="xs">whole CardDemo tree, &lt;1 s</p><p class="big" style="font-size:52px">157 nodes<br>385 edges</p><p class="xs">31 programs · 38 JCL · 46 copybooks</p></div>
+      <ul class="xs tight">
+        <li><b>16</b> online programs: dynamic <code>XCTL PROGRAM(var)</code>, unresolvable statically</li>
+        <li><code>--impact ACCTDATA</code>: 4 more batch programs read / write it</li>
+        <li>+ CICS/BMS, Db2, assembler, schedulers</li>
+      </ul>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="../workshop/ex1_dependency_graph/graph.py">ex1 graph.py</a> · <a href="https://github.com/aws-samples/aws-mainframe-modernization-carddemo">AWS CardDemo</a> · <a href="../research.md">research.md §4</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (5:15–7:00)</i></p><p>What does "legacy" actually mean? Our test subject is AWS CardDemo, an open-source credit-card application from AWS, Apache-licensed. And the program we modernize is CBACT04C, the monthly interest-calculation batch job: 652 lines of COBOL.</p><p>But the program is not the system. Exercise 1 of our workshop builds a deterministic dependency graph. This diagram is its real output for CBACT04C. A JCL job, INTCALC, runs the program. It reads three VSAM files, updates the account master, writes a transaction file, pulls in five copybooks, and calls CEE3ABD, a Language Environment service, to abend. Every one of those arrows is a place where a rewrite can go wrong.</p><p>For the whole CardDemo tree, the graph has 157 nodes and 385 edges, built in under a second. Two details matter. The impact query "who touches ACCTDATA" finds four other batch programs besides ours, so you cannot change the account file layout in isolation. And 16 online programs transfer control to a program whose name is in a variable. Static analysis cannot resolve those. That is the "only 9 percent understand their dependencies" gap in miniature.</p><p>In a real estate add CICS screens, Db2, assembler helpers and the scheduler. Lesson one: do discovery deterministically, and let the model explain the graph, not invent it.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="../workshop/ex1_dependency_graph/graph.py">workshop/ex1_dependency_graph/graph.py</a>, <a href="https://github.com/aws-samples/aws-mainframe-modernization-carddemo">AWS CardDemo</a>, <a href="../research.md">research.md §4</a></p></aside>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">What legacy actually is · strategies</p><h2>Four strategies, two technical schools</h2></header>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px">
+      <div class="strat"><b>Rehost / replatform</b><span>same code, new runtime</span></div>
+      <div class="strat hl"><b>Refactor</b><span>deterministic conversion</span></div>
+      <div class="strat hl"><b>Reimagine / rewrite</b><span>new idiomatic code</span></div>
+      <div class="strat"><b>Replace</b><span>buy a package</span></div>
+    </div>
+    <div class="cols c2" style="gap:32px">
+      <div class="card"><h3>Deterministic transpilers</h3><p class="xs">Heirloom · AWS Transform <i>refactor</i> (ex-Blu Age) · TSRI · Astadia · CloudFrame · mLogica</p><p class="small" style="margin-top:12px">→ provable, but <b>non-idiomatic</b> code</p></div>
+      <div class="card warm"><h3>LLM “reimagine” pipelines</h3><p class="xs">AWS Transform <i>reimagine</i> + Kiro / Claude Code · Google MAT · IBM Bob for Z · Microsoft agents · Mechanical Orchard</p><p class="small" style="margin-top:12px">→ idiomatic code that <b>must be proven</b></p></div>
+    </div>
+    <div class="callout">Converging: LLM + deterministic analysis + an <b>executable oracle</b></div>
+  </div>
+  <footer><span class="src">Sources: <a href="../research.md">research.md TL;DR, §2</a> · <a href="../comparison.md">comparison.md</a> · <a href="https://heirloomcomputing.com/llms-and-cobol-modernization/">Heirloom</a> · <a href="https://aws.amazon.com/about-aws/whats-new/2026/03/aws-transform-mainframe-refactor/">AWS What's New</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (7:00–8:30)</i></p><p>There are four classic strategies. Rehost or replatform: keep the COBOL, move it to a new runtime. Refactor: convert it mechanically into Java, keeping the structure. Reimagine, or rewrite: produce new, idiomatic code in a modern stack. And replace: buy a package and retire the code.</p><p>For the middle two there are two technical schools. The deterministic transpilers, like Heirloom, AWS Transform's refactor path, which is the former Blu Age, TSRI, Astadia, CloudFrame and mLogica. They give you code you can trust to behave the same, but it often reads like COBOL written in Java. Heirloom's own phrase is that it "compiles, not translates".</p><p>The second school is LLM-based reimagine pipelines: AWS Transform's reimagine pattern with an agentic coder like Kiro or Claude Code, Google's Mainframe Assessment Tool, IBM Bob for Z, Microsoft's open-source agents, and Mechanical Orchard. They give you idiomatic code, and then you have to prove it is right.</p><p>The interesting part is that the two schools are converging. Everyone now combines an LLM with deterministic analysis and some executable oracle that says what correct means. Keep the word "oracle"; it comes back in ten minutes.</p><p><b>Sources:</b> <a href="../research.md">research.md TL;DR §3, §2</a>, <a href="../comparison.md">comparison.md</a>, <a href="https://aws.amazon.com/about-aws/whats-new/2026/03/aws-transform-mainframe-refactor/">AWS What's New 2026-03-17</a>, <a href="https://heirloomcomputing.com/llms-and-cobol-modernization/">Heirloom: LLMs and COBOL</a></p></aside>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Where AI is good · evidence</p><h2>LLMs read COBOL far better than they write it</h2></header>
+  <div class="body cols" style="grid-template-columns:1fr 600px;gap:44px">
+    <div>
+      <table>
+        <tr><th>COBOL-Coder paper (arXiv 2604.03986) <span class="pill v" style="background:#dcfce7">✅</span></th><th style="width:160px">compile %</th><th style="width:150px">pass@1</th></tr>
+        <tr class="hl"><td><b>COBOL → Java</b> · GPT-4o</td><td><b>97.2</b></td><td><b>85.3</b></td></tr>
+        <tr class="hl"><td>COBOL → Java · gpt-oss-120B</td><td>98.6</td><td>89.5</td></tr>
+        <tr class="bad"><td><b>Java → COBOL</b> · GPT-4o</td><td><b>4.4</b></td><td><b>2.2</b></td></tr>
+        <tr><td>Write COBOL (COBOLEval) · GPT-4o</td><td>41.8</td><td>16.4</td></tr>
+        <tr><td>Write COBOL · COBOL-Coder-14B</td><td>73.95</td><td>49.33</td></tr>
+      </table>
+      <p class="xs" style="margin:16px 0 0">Single-file, HumanEval-style tasks: <b>no copybooks, JCL or cross-program dependencies</b>. Practitioners: “junior developer drafts”.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div class="card ok"><h3 style="font-size:30px">Good at</h3><ul class="xs tight"><li>explaining code</li><li>impact analysis on a real graph</li><li>rule extraction with citations</li><li>test generation</li><li>small units from a precise spec</li></ul></div>
+      <div class="card bad"><p class="xs">Microsoft's early GPT-4 attempts: “a good mix of educated guesses … and <b>hallucinational gibberish</b>” <span class="pill v">✅</span></p></div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://arxiv.org/abs/2604.03986">arXiv 2604.03986</a> · <a href="https://devblogs.microsoft.com/all-things-azure/how-we-use-ai-agents-for-cobol-migration-and-mainframe-modernization/">MS dev blog</a> · <a href="../research.md">research.md §3</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (8:30–10:15)</i></p><p>So where is AI actually good? The best recent evidence I found is the COBOL-Coder paper from Concordia University and FPT, 2026.</p><p>On a set of 143 small HumanEval-style programs, translating COBOL into Java works remarkably well: GPT-4o compiles 97 percent and passes the tests 85 percent of the time; the open gpt-oss-120B is slightly better. Now reverse the direction. Java into COBOL: GPT-4o compiles 4.4 percent and passes 2.2. Writing COBOL from scratch on COBOLEval: 42 percent compile, 16 percent pass for GPT-4o, and most open models score zero. A fine-tuned 14B model gets to 74 and 49.</p><p>So: models read COBOL far better than they write it. But look at the authors' own caveat. These are single files, without copybooks, JCL or calls to other programs. And, as the authors report, practitioners see model output as junior-developer drafts and list restartability, file status and SQLCODE handling as adoption requirements. That is system behaviour, and no benchmark measures it.</p><p>Microsoft's dev blog is refreshingly honest about its first GPT-4 attempts: "a good mix of educated guesses and hallucinational gibberish".</p><p>Where AI is good, then: explaining code, impact analysis on top of a real graph, extracting rules with line citations, generating tests, and writing small units from a precise spec. Keep that last point in mind for the demo.</p><p><b>Sources:</b> <a href="https://arxiv.org/abs/2604.03986">arXiv 2604.03986</a>, <a href="https://devblogs.microsoft.com/all-things-azure/how-we-use-ai-agents-for-cobol-migration-and-mainframe-modernization/">MS dev blog</a>, <a href="../research.md">research.md §3</a></p></aside>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Where it breaks</p><h2>Where it breaks: below the business rules</h2></header>
+  <div class="body cols c2" style="gap:56px">
+    <div>
+      <p class="small" style="margin:0 0 18px">Business rules: formula, fee, eligibility. <b>Failures live below them:</b></p>
+      <div class="chips"><span>sign overpunch</span><span>packed decimal</span><span>truncation vs rounding</span><span>VSAM KSDS keys</span><span>LOW-VALUES</span><span>abend codes</span><span>uninitialized storage</span><span>latent defects the business relies on</span></div>
+    </div>
+    <div class="card warm">
+      <h3 style="font-size:32px">Mechanical Orchard on AWS CardDemo</h3>
+      <p class="xs" style="margin-bottom:12px">field CTO, Jun 2026 · article <span class="pill v">✅</span> · their experiment <span class="pill y">🟡</span></p>
+      <p class="small" style="margin-bottom:10px">LLM-only Java replica <b>compiled and ran</b>, but:</p>
+      <ul class="small tight">
+        <li>treated a KSDS as a flat file</li>
+        <li>negatives as <code>"-"</code> strings, not overpunch</li>
+        <li>dropped a <code>COBDATFT</code> branch</li>
+        <li>abend 999 → <code>exit 12</code></li>
+      </ul>
+      <p class="small" style="margin-top:12px"><b>“Modernization is a verification problem”</b></p>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="https://www.mechanical-orchard.com/research/mainframe-modernization-is-a-verification-problem">Mechanical Orchard: verification problem</a> · <a href="../research.md">research.md TL;DR §4, §2</a> · <a href="../talk-outline.md">talk-outline.md</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (10:15–12:00)</i></p><p>Here is the core of the talk. Business rules are the part everyone talks about: the interest formula, the fee, the eligibility check. Models are decent at those. The failures live below the business rules: how a negative number is encoded in the last digit, sign overpunch, or packed decimal; whether a division truncates or rounds; what a keyed VSAM file does that a flat file does not; LOW-VALUES; abend codes that operators and schedulers react to; uninitialized storage; and bugs that the business has quietly built processes around.</p><p>Mechanical Orchard published a nice experiment in June, also on AWS CardDemo. Their field CTO had a model write a Java replica of a CardDemo program. It compiled, it ran, it looked fine. But it treated a keyed VSAM file as a flat file. It wrote negative numbers as minus-sign strings instead of overpunch. It dropped a branch that calls COBDATFT. And it replaced abend 999 with exit code 12. Every one of these would break a downstream job or an operator's runbook.</p><p>Mechanical Orchard sells verification, so this is their experiment, not reproduced by us. But the next three slides show we hit the same class of problems ourselves, on a different CardDemo program.</p><p><b>Sources:</b> <a href="https://www.mechanical-orchard.com/research/mainframe-modernization-is-a-verification-problem">Mechanical Orchard: Modernization is a verification problem</a>, <a href="../research.md">research.md TL;DR §4, §2</a>, <a href="../talk-outline.md">talk-outline.md</a></p></aside>
+</section>
+<!-- 9 -->
+<section class="slide" id="s9" data-time="1:30">
+  <header><p class="kicker">Below the business rules · 1 · 🧪</p><h2>Truncation, not rounding: one missing word</h2></header>
+  <div class="body cols" style="grid-template-columns:800px 1fr;gap:32px">
+    <div style="display:flex;flex-direction:column;gap:22px">
+<pre class="code"><span class="cm">  * CBACT04C · 1300-COMPUTE-INTEREST</span>
+   COMPUTE WS-MONTHLY-INT
+    = ( TRAN-CAT-BAL * DIS-INT-RATE) / 1200
+<span class="cm">  * no ROUNDED → truncated to 2 decimals</span></pre>
+<pre class="code"><span class="cm"># reference: ex3_new_service/interest.py</span>
+(balance * rate / Decimal(1200))
+    .quantize(CENT, rounding=<b style="color:#86efac">ROUND_DOWN</b>)</pre>
+      <div class="callout" style="margin-top:4px;font-size:32px">One cent per transaction, every month, on every account</div>
+    </div>
+    <div>
+      <p class="xs" style="margin:0 0 10px">Real diamond output · LLM candidate from <b>COBOL only</b> (<code>ROUND_HALF_UP</code>) · scenario <code>edge-amounts</code></p>
+<pre class="code diff">tx#1 amount:  legacy=<span class="lg">12.49</span>        modern=<span class="md">12.50</span>
+tx#5 amount:  legacy=<span class="lg">0.99</span>         modern=<span class="md">1.00</span>
+tx#8 amount:  legacy=<span class="lg">-12499999.99</span> modern=<span class="md">-12500000.00</span>
+tx#9 amount:  legacy=<span class="lg">12499999.99</span>  modern=<span class="md">12500000.00</span>
+acct …01 curr_bal: legacy=<span class="lg">206.49</span>
+                    modern=<span class="md">206.50</span>
+acct …09 curr_bal: legacy=<span class="lg">560.00</span>
+                    modern=<span class="md">12500560.00</span></pre>
+      <p class="xs" style="margin:14px 0 0">Last line: the candidate also posted the <b>last account</b> → next slide</p>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop/ex3_new_service/interest.py">interest.py</a> · <a href="../workshop/ex4_equivalence/diamond.py">diamond.py</a> · <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="https://github.com/aws-samples/aws-mainframe-modernization-carddemo">AWS CardDemo</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (12:00–13:30)</i></p><p>The first example. This is the actual interest line in CBACT04C: balance times rate, divided by 1200. What matters is the word that is not there: ROUNDED. Without it, COBOL truncates the result to the target field's two decimals. Our reference implementation does the same with ROUND_DOWN.</p><p>Now the bottom half is real output from our diamond, exercise 4. This candidate was written by a free model that got only the COBOL source, no rule list. It used ROUND_HALF_UP, the "natural" choice for money in Python. The legacy writes 12.49, the candidate 12.50. 0.99 becomes 1.00. And look at the last line: on one account the candidate posted 12.5 million of interest to the balance where the legacy posted nothing. That is the next slide's defect.</p><p>One cent sounds small. It is one cent per transaction, every month, on every account, and it makes reconciliation with the general ledger fail. And none of the models in our rule-extraction runs listed truncation as a rule.</p><p><b>Sources:</b> <a href="../workshop/ex3_new_service/interest.py">workshop/ex3_new_service/interest.py</a>, <a href="../workshop/ex4_equivalence/diamond.py">workshop/ex4_equivalence/diamond.py</a>, <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="https://github.com/aws-samples/aws-mainframe-modernization-carddemo">AWS CardDemo</a></p></aside>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Below the business rules · 2 · 🧪</p><h2>The latent defect the business may rely on</h2></header>
+  <div class="body cols" style="grid-template-columns:1000px 1fr;gap:48px">
+<pre class="code" style="font-size:27px"><span class="cm">      * CBACT04C main loop (simplified)</span>
+       PERFORM UNTIL END-OF-FILE = 'Y'
+         IF END-OF-FILE = 'N'
+           PERFORM 1000-TCATBALF-GET-NEXT
+           IF END-OF-FILE = 'N'
+             IF TRANCAT-ACCT-ID NOT= WS-LAST-ACCT-NUM
+               PERFORM 1050-UPDATE-ACCOUNT  <span class="cm">*> previous</span>
+             ...
+         ELSE
+<span class="dead">           PERFORM 1050-UPDATE-ACCOUNT  *> never runs</span>
+         END-IF
+       END-PERFORM
+<span class="cm">      * loop exits at EOF before the ELSE</span></pre>
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div class="card bad"><p class="small"><b>Last account's interest is never posted</b> to its balance; interest transactions are still written</p></div>
+      <div class="card warm" style="text-align:center"><p class="xs">reference with the defect <b>fixed</b></p><p class="big" style="font-size:80px">9/25</p><p class="xs">scenarios equivalent</p></div>
+      <div class="card ok"><p class="small">Bug-for-bug or fix? A <b>business decision</b>, explicit and documented</p></div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop/ex3_new_service/interest.py">interest.py</a> (<code>legacy_compat</code>) · <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="../research.md">research.md §4</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (13:30–15:15)</i></p><p>The second example is my favourite, because it is a real defect in the sample code that nobody had to plant.</p><p>The main loop runs until end of file. Inside, if not at end of file, it reads the next record and, when the account number changes, posts the previous account's interest. There is an ELSE branch that posts the last account at end of file. It reads perfectly. But the PERFORM UNTIL checks the condition first, so when end of file is reached the loop exits and the ELSE never runs. The last account in the file gets its interest transactions written, but its balance is never updated.</p><p>We found this while building the harness, by running the program, not by reading it. When we ran our reference implementation with the defect fixed, it was equivalent on only 9 of 25 scenarios.</p><p>So what do you do? In a real bank, some process may have grown around this: a manual correction, a reconciliation report. Replicating the bug or fixing it is not an engineering decision. It is a business decision, and the point is to make it explicitly, with the diff in hand, rather than discover it in production. A model that "helpfully" fixes it for you has made that decision without asking.</p><p><b>Sources:</b> <a href="../workshop/ex3_new_service/interest.py">workshop/ex3_new_service/interest.py</a> (<code>legacy_compat</code>), <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="../research.md">research.md §4</a></p></aside>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Below the business rules · 3 · 🧪</p><h2>What the harness taught us before any AI ran</h2></header>
+  <div class="body">
+    <p class="xs" style="margin:0 0 20px">CardDemo <code>59cc6c2</code> · CBACT04C compiled <b>unchanged</b> with GnuCOBOL 3.2 <code>-std=ibm -fsign=EBCDIC</code> · VSAM KSDS → indexed files · <code>CEE3ABD</code> + JCL <code>PARM</code> shimmed · build ~1 s, run ~20 ms</p>
+    <div class="cols c2" style="gap:26px">
+      <div class="card bad"><h3>Abend 999 → exit 231</h3><p class="xs">999 mod 256 on Linux: an operator watching for 999 sees nothing</p></div>
+      <div class="card warm"><h3>LOW-VALUES in TRAN-DESC</h3><p class="xs"><code>STRING … INTO</code> leaves x'00' in the rest of 100 bytes; <code>--strict</code> fails (6/8 scenarios) until the schema decides</p></div>
+      <div class="card warm"><h3>Sample data proves nothing</h3><p class="xs">CardDemo's category balances are all zero: almost any candidate passes → generate scenarios</p></div>
+      <div class="card"><h3>Our own bug: <code>-0.0</code></h3><p class="xs">Our REST API returned money as JSON floats and −0.0 for a truncated negative cent. Caught by a test, fixed</p></div>
+    </div>
+    <div class="callout" style="font-size:32px">None of this needed AI. All of it would break a cutover.</div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="../workshop/legacy/">workshop/legacy/</a> · <a href="../research.md">research.md §4</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (15:15–16:45)</i></p><p>Before we let any model write code, we had to get the legacy running on a laptop. We took CardDemo at a pinned commit and compiled CBACT04C unchanged with the open-source GnuCOBOL 3.2 in IBM mode. Keyed VSAM files are emulated with GnuCOBOL's indexed files, and two mainframe services are shimmed: the Language Environment abend call and the JCL PARM. The build takes about a second and one run about 20 milliseconds.</p><p>Building that harness taught us four things.</p><p>One: abend 999 shows up on Linux as process exit status 231, because exit codes are taken modulo 256. If your scheduler or operator watches for 999, they see nothing.</p><p>Two: the transaction description is built with STRING INTO, which leaves binary zeros, LOW-VALUES, in the rest of the 100-byte field instead of spaces. A byte-exact comparison fails on it until you decide, in the comparison schema, what equivalence means for that field.</p><p>Three: CardDemo's sample category balances are all zero. Zero times any rate is zero. So "it matches on the sample data" proves nothing; you need generated scenarios.</p><p>Four, and this one is on us: our own REST API first returned money as JSON floats, and minus zero for a truncated negative cent. The legacy record has no negative zero. A test caught it.</p><p>None of this needed AI. All of it would break a cutover.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="../workshop/legacy/">workshop/legacy/</a>, <a href="../workshop/README.md">workshop/README.md</a>, <a href="../research.md">research.md §4</a></p></aside>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">The diamond</p><h2>The diamond: the running legacy is the spec</h2></header>
+  <div class="body">
+    <svg viewBox="0 0 1728 400" width="1728" height="400" role="img" aria-label="diamond: same input to COBOL and new code, compare">
+      <defs><marker id="a12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#475569"/></marker></defs>
+      <g stroke="#475569" stroke-width="5" fill="none">
+        <line x1="270" y1="190" x2="412" y2="90" marker-end="url(#a12)"/>
+        <line x1="270" y1="210" x2="412" y2="310" marker-end="url(#a12)"/>
+        <line x1="880" y1="90" x2="1022" y2="185" marker-end="url(#a12)"/>
+        <line x1="880" y1="310" x2="1022" y2="215" marker-end="url(#a12)"/>
+        <line x1="1350" y1="200" x2="1432" y2="200" marker-end="url(#a12)"/>
+      </g>
+      <g font-weight="700" text-anchor="middle">
+        <rect x="0" y="140" width="270" height="120" rx="16" fill="#0b2540"/><text x="135" y="190" font-size="30" fill="#fff">same input</text><text x="135" y="226" font-size="21" fill="#bae6fd" font-weight="400">4 KSDS files + PARM</text>
+        <rect x="420" y="30" width="460" height="120" rx="16" fill="#0e7490"/><text x="650" y="80" font-size="30" fill="#fff">running COBOL = oracle</text><text x="650" y="118" font-size="22" fill="#e0f2fe" font-weight="400">GnuCOBOL · CBACT04C unchanged</text>
+        <rect x="420" y="250" width="460" height="120" rx="16" fill="#c2410c"/><text x="650" y="300" font-size="30" fill="#fff">new code</text><text x="650" y="338" font-size="22" fill="#ffedd5" font-weight="400">reference or LLM candidate</text>
+        <rect x="1030" y="130" width="320" height="140" rx="16" fill="#e0f2fe" stroke="#0e7490" stroke-width="3"/><text x="1190" y="185" font-size="30" fill="#0b2540">byte compare</text><text x="1190" y="222" font-size="22" fill="#0e7490" font-weight="400">per-field schema</text>
+        <rect x="1440" y="110" width="288" height="80" rx="14" fill="#15803d"/><text x="1584" y="160" font-size="28" fill="#fff">equivalent ✓</text>
+        <rect x="1440" y="210" width="288" height="80" rx="14" fill="#b91c1c"/><text x="1584" y="260" font-size="28" fill="#fff">diff → fix / approve</text>
+      </g>
+    </svg>
+    <div class="cols c2" style="gap:32px;margin-top:20px">
+      <div class="card"><p class="xs"><b>Our ex4</b> <span class="pill q">🧪</span>: 25 scenarios (CardDemo data, edge amounts, single account, 20 generated, 2 abend paths) · timestamps masked, FILLER ignored, <code>--strict</code> byte-exact · both sides <b>0.5–0.7 s</b></p></div>
+      <div class="card ok"><p class="xs"><b>Productized diamonds</b> <span class="pill v">✅</span>: Google <b>Dual Run</b> (batch GA, online preview) · Mechanical Orchard <b>Imogen</b> (captured production data, slice by slice) · IBM wca4z (generated equivalence tests)</p></div>
+    </div>
+    <div class="callout" style="font-size:34px">Trust the harness, not the model's account of what it did</div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop/ex4_equivalence/diamond.py">diamond.py</a> · <a href="../workshop/ex4_equivalence/scenarios.py">scenarios.py</a> · <a href="https://docs.cloud.google.com/mainframe-dual-run/docs/dual-run-overview">Dual Run</a> · <a href="https://www.mechanical-orchard.com/platform">Imogen</a> · <a href="https://www.ibm.com/products/watsonx-code-assistant-z">IBM wca4z</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (16:45–18:30)</i></p><p>This is the pattern that ties it together. Mechanical Orchard calls it the diamond. You feed the same input to the running legacy program, which is your oracle, and to the new code. Then you compare the outputs byte by byte, with a schema per field that says what equivalence means: timestamps are masked, filler is ignored, and you can switch to strict byte-exact mode. Anything that differs is a diff you either fix or approve.</p><p>Our exercise 4 is exactly that, in about a hundred lines. Twenty-five scenarios: the CardDemo sample data, edge amounts, a single account, twenty generated random portfolios, and two abend paths. Both sides for all 25 run in well under a second, so it fits in CI on every commit.</p><p>The big vendors sell productized diamonds. Google's Dual Run runs the mainframe and the cloud side by side and replays production events; batch is generally available, online transactions in preview. Mechanical Orchard's Imogen verifies new code against captured production data flows, slice by slice. IBM's code assistant generates unit tests to compare semantic equivalence.</p><p>The message I want you to repeat to clients: the running legacy is the spec. And trust the harness, not the model's account of what it did.</p><p><b>Sources:</b> <a href="../workshop/ex4_equivalence/diamond.py">workshop/ex4_equivalence/diamond.py</a>, <a href="../workshop/ex4_equivalence/scenarios.py">workshop/ex4_equivalence/scenarios.py</a>, <a href="https://docs.cloud.google.com/mainframe-dual-run/docs/dual-run-overview">Google Dual Run overview</a>, <a href="https://www.mechanical-orchard.com/platform">Imogen platform</a>, <a href="https://www.ibm.com/products/watsonx-code-assistant-z">IBM watsonx Code Assistant for Z</a>, <a href="../workshop-plan.md">workshop-plan.md</a></p></aside>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-time="1:00">
+  <header><p class="kicker">Live demo · workshop/</p><h2>Live demo: one batch job, four steps</h2></header>
+  <div class="body">
+    <div class="step"><span class="n">1</span><div><b>ex1 dependency graph</b> · deterministic · <code>--focus CBACT04C --impact ACCTDATA</code></div></div>
+    <div class="step"><span class="n">2</span><div><b>ex2 rule extraction</b> · LLM rules with line citations → grounding check + recall vs answer key (15 rules)</div></div>
+    <div class="step"><span class="n">3</span><div><b>ex3 new service</b> · LLM generates it 3 ways: from <b>verified</b> rules / from <b>LLM-extracted</b> rules / from <b>COBOL only</b></div></div>
+    <div class="step"><span class="n">4</span><div><b>ex4 diamond</b> · every candidate vs the running COBOL, 25 scenarios</div></div>
+    <p class="small" style="margin:8px 0 0">All free: GnuCOBOL · CardDemo (Apache-2.0) · free OpenRouter models, reasoning off (≈1–5 min per call) · fallback: recorded results →</p>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> · <a href="../workshop/README.md">workshop/README.md</a> · <a href="../comparison.md">comparison.md</a> (open pipeline)</span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:00 (18:30–19:30)</i></p><p>Now the demo, from the workshop folder. Four steps, the same four steps an engagement has. Exercise 1 is the deterministic graph you already saw. Exercise 2 asks a model to extract business rules with line citations, and checks them two ways: are the citations real, and how many of 15 hand-verified rules did it find. Exercise 3 generates the new service three ways: from the verified rule list, from the model's own extracted rules, and from the COBOL alone. Exercise 4 runs every candidate through the diamond.</p><p>Everything is free: GnuCOBOL, CardDemo, and free models on OpenRouter. Free models are slow, often one to five minutes per call, and rate-limited, so for the talk I will run the deterministic parts live and show the recorded results from October 17 for the model calls. They are on the next slides.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a>, <a href="../workshop/README.md">workshop/README.md</a>, <a href="../comparison.md">comparison.md</a> (open-source pipeline)</p></aside>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Live demo · ex2 · measured 2026-10-17 🧪</p><h2>ex2: rule extraction, measured</h2></header>
+  <div class="body">
+    <p class="xs" style="margin:0 0 14px">CBACT04C + copybooks · ~40k-char prompt · answer key: 15 hand-verified rules incl. polarity checks</p>
+    <table class="tbl-s" style="margin-bottom:26px">
+      <tr><th>Model (free)</th><th>Runs</th><th>Time / run</th><th>Rules</th><th>Ungrounded</th><th>Recall</th></tr>
+      <tr><td><code>nvidia/nemotron-3-super-120b-a12b</code></td><td>4</td><td>78–163 s</td><td>25–43</td><td>0–9</td><td><b>0.60–0.73</b></td></tr>
+      <tr><td><code>poolside/laguna-s-2.1</code></td><td>1</td><td>55 s</td><td>20</td><td>1</td><td><b>0.87</b></td></tr>
+    </table>
+    <div class="cols" style="grid-template-columns:480px 1fr;gap:28px">
+      <div class="card warm" style="text-align:center"><p class="xs">drift across 3 runs (1 − Jaccard)</p><p class="big" style="font-size:80px">0.25</p></div>
+      <div class="card bad"><h3>Always missed</h3><p class="small"><code>TRUNCATION</code> · <code>LAST_ACCOUNT_NOT_POSTED</code> <span class="xs">(nemotron also <code>NEGATIVE_BALANCE</code>)</span></p><p class="small" style="margin-top:10px">= the two rules that matter most <b>for money</b></p></div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="../workshop/ex2_rule_extraction/extract.py">extract.py</a> · <a href="../workshop/ex2_rule_extraction/gold_rules.json">gold_rules.json</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (19:30–21:15)</i></p><p>Exercise 2 results. We send CBACT04C and its copybooks, about 40 thousand characters, to a free model and ask for business rules, each with the line range it comes from.</p><p>Nemotron 3 Super, a 120-billion-parameter model, four runs: one to almost three minutes per run, between 25 and 43 rules, up to 9 of them with citations that do not hold up, and recall between 0.60 and 0.73 against our answer key of 15 hand-verified rules. Poolside's Laguna, one run: 55 seconds, 20 rules, one ungrounded, recall 0.87. Better, but a single run.</p><p>Two more numbers. Drift: across three runs of the same model on the same input, a quarter of the covered rules changed. Rules like the fee stub or skipping a zero rate appear in one run and disappear in the next.</p><p>And the line that matters: no run found truncation instead of rounding, and no run found that the last account is never posted. Those are the two rules with direct money impact, and both are "below the business rules". The model found the business rules and missed the behaviour.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="../workshop/ex2_rule_extraction/extract.py">workshop/ex2_rule_extraction/extract.py</a>, <a href="../workshop/ex2_rule_extraction/gold_rules.json">workshop/ex2_rule_extraction/gold_rules.json</a></p></aside>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-time="1:15">
+  <header><p class="kicker">Live demo · ex2 · 🧪</p><h2>Grounded is not correct</h2></header>
+  <div class="body">
+    <div class="ticket">R17 [219-221] “When END-OF-FILE is 'Y' (after loop exit), the program performs 1050-UPDATE-ACCOUNT to persist the last account's accumulated interest.”</div>
+    <div class="cols c3" style="gap:26px;margin-top:6px">
+      <div class="card ok" style="text-align:center"><p class="small">cited lines exist,<br>symbols match</p><p class="big" style="font-size:52px;color:var(--ok)">grounded ✓</p></div>
+      <div class="card bad" style="text-align:center"><p class="small">the <code>ELSE</code> branch<br>is unreachable</p><p class="big" style="font-size:52px;color:var(--bad)">wrong ✗</p></div>
+      <div class="card warm" style="text-align:center"><p class="small">our first keyword scorer<br>counted it as a <b>hit</b></p><p class="big" style="font-size:40px">→ polarity checks</p></div>
+    </div>
+    <div class="callout">LLM-as-judge and citation checks verify <i>where</i>, not <i>whether</i></div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="../workshop/ex2_rule_extraction/gold_rules.json">gold_rules.json</a> (<code>require_any</code>)</span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:15 (21:15–22:30)</i></p><p>This slide is one rule from one run, and it is the best illustration I have of why citations are not enough.</p><p>Rule 17, lines 219 to 221: "When end of file is Y, after loop exit, the program performs 1050-UPDATE-ACCOUNT to persist the last account's accumulated interest." The line numbers are right. The symbols are right. Our grounding check passed it. And it is exactly wrong, because that branch never runs. The model described what the code says, not what it does.</p><p>It gets worse. Our first scorer matched rules against the answer key by keywords, and it counted this rule as finding the last-account rule. The opposite meaning scored as a hit. We had to add polarity checks to the answer key.</p><p>That is a lesson for anyone building LLM-as-judge or citation checks into a pipeline: they check where a claim comes from, not whether it is true. Only execution tells you that.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="../workshop/ex2_rule_extraction/gold_rules.json">workshop/ex2_rule_extraction/gold_rules.json</a></p></aside>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-time="2:00">
+  <header><p class="kicker">Live demo · ex3 + ex4 · measured 2026-10-17 🧪</p><h2>ex3 + ex4: three ways to generate, one judge</h2></header>
+  <div class="body cols" style="grid-template-columns:1100px 1fr;gap:40px">
+    <svg viewBox="0 0 1100 690" width="1100" height="690" role="img" aria-label="equivalent scenarios out of 25 per candidate">
+<line x1="420.0" y1="10" x2="420.0" y2="602" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 6"/>
+<line x1="540.0" y1="10" x2="540.0" y2="602" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 6"/>
+<line x1="660.0" y1="10" x2="660.0" y2="602" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 6"/>
+<line x1="780.0" y1="10" x2="780.0" y2="602" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 6"/>
+<line x1="900.0" y1="10" x2="900.0" y2="602" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 6"/>
+<line x1="1020.0" y1="10" x2="1020.0" y2="602" stroke="#e2e8f0" stroke-width="2" stroke-dasharray="4 6"/>
+<text x="400" y="44.0" text-anchor="end" font-size="26" font-weight="700" fill="#0b2540">Hand-written reference</text>
+<rect x="420" y="20" width="600.0" height="30" rx="5" fill="#15803d"/>
+<text x="1032.0" y="44" font-size="24" font-weight="700" fill="#15803d">25/25</text>
+<text x="400" y="114.0" text-anchor="end" font-size="26" font-weight="700" fill="#0b2540">Reference, defect fixed</text>
+<rect x="420" y="90" width="216.0" height="30" rx="5" fill="#c2410c"/>
+<text x="648.0" y="114" font-size="24" font-weight="700" fill="#c2410c">9/25</text>
+<text x="400" y="222.0" text-anchor="end" font-size="26" font-weight="700" fill="#0b2540">LLM ← verified rules</text>
+<rect x="420" y="160" width="600.0" height="30" rx="5" fill="#15803d"/>
+<text x="1032.0" y="184" font-size="24" font-weight="700" fill="#15803d">25/25</text>
+<rect x="420" y="198" width="600.0" height="30" rx="5" fill="#15803d"/>
+<text x="1032.0" y="222" font-size="24" font-weight="700" fill="#15803d">25/25</text>
+<rect x="420" y="236" width="600.0" height="30" rx="5" fill="#15803d"/>
+<text x="1032.0" y="260" font-size="24" font-weight="700" fill="#15803d">25/25</text>
+<text x="400" y="368.0" text-anchor="end" font-size="26" font-weight="700" fill="#0b2540">LLM ← LLM-extracted rules</text>
+<rect x="420" y="306" width="48.0" height="30" rx="5" fill="#b91c1c"/>
+<text x="480.0" y="330" font-size="24" font-weight="700" fill="#b91c1c">2/25</text>
+<rect x="420" y="344" width="24.0" height="30" rx="5" fill="#b91c1c"/>
+<text x="456.0" y="368" font-size="24" font-weight="700" fill="#b91c1c">1/25</text>
+<rect x="420" y="382" width="4.0" height="30" rx="5" fill="#b91c1c"/>
+<text x="436.0" y="406" font-size="24" font-weight="700" fill="#b91c1c">0/25</text>
+<text x="400" y="514.0" text-anchor="end" font-size="26" font-weight="700" fill="#0b2540">LLM ← COBOL only</text>
+<rect x="420" y="452" width="24.0" height="30" rx="5" fill="#b91c1c"/>
+<text x="456.0" y="476" font-size="24" font-weight="700" fill="#b91c1c">1/25</text>
+<rect x="420" y="490" width="72.0" height="30" rx="5" fill="#b91c1c"/>
+<text x="504.0" y="514" font-size="24" font-weight="700" fill="#b91c1c">3/25</text>
+<rect x="420" y="528" width="48.0" height="30" rx="5" fill="#b91c1c"/>
+<text x="480.0" y="552" font-size="24" font-weight="700" fill="#b91c1c">2/25</text>
+<line x1="420" y1="602" x2="1020" y2="602" stroke="#0b2540" stroke-width="3"/>
+<line x1="420.0" y1="602" x2="420.0" y2="612" stroke="#0b2540" stroke-width="2"/><text x="420.0" y="638" text-anchor="middle" font-size="22" fill="#475569">0</text>
+<line x1="540.0" y1="602" x2="540.0" y2="612" stroke="#0b2540" stroke-width="2"/><text x="540.0" y="638" text-anchor="middle" font-size="22" fill="#475569">5</text>
+<line x1="660.0" y1="602" x2="660.0" y2="612" stroke="#0b2540" stroke-width="2"/><text x="660.0" y="638" text-anchor="middle" font-size="22" fill="#475569">10</text>
+<line x1="780.0" y1="602" x2="780.0" y2="612" stroke="#0b2540" stroke-width="2"/><text x="780.0" y="638" text-anchor="middle" font-size="22" fill="#475569">15</text>
+<line x1="900.0" y1="602" x2="900.0" y2="612" stroke="#0b2540" stroke-width="2"/><text x="900.0" y="638" text-anchor="middle" font-size="22" fill="#475569">20</text>
+<line x1="1020.0" y1="602" x2="1020.0" y2="612" stroke="#0b2540" stroke-width="2"/><text x="1020.0" y="638" text-anchor="middle" font-size="22" fill="#475569">25</text>
+<text x="720.0" y="672" text-anchor="middle" font-size="22" fill="#475569">scenarios equivalent to the running COBOL (diamond, 25)</text>
+</svg>
+    <div>
+      <p class="xs" style="margin:0 0 10px"><b>What the diamond caught</b> (candidates: 70–100 lines of plausible Python)</p>
+      <ul class="xs tight">
+        <li>abend where legacy falls back to <code>DEFAULT</code> rate</li>
+        <li>rate looked up once per account</li>
+        <li>last account posted</li>
+        <li>tx id format</li>
+        <li><code>ROUND_HALF_UP</code> (12.49 vs 12.50)</li>
+        <li><code>.get()</code> instead of abend 999</li>
+        <li>transaction order / count</li>
+        <li><code>UnboundLocalError</code> crash</li>
+      </ul>
+      <p class="xs" style="margin:12px 0 0;color:var(--muted)">verified rules: nemotron-3-super, 12–85 s · COBOL only: gemma-4-31b, nemotron ×2</p>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17) · <a href="../workshop/ex3_new_service/generate.py">generate.py</a> · <a href="../workshop/ex4_equivalence/diamond.py">diamond.py</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 2:00 (22:30–24:30)</i></p><p>Now the main result. Same diamond, five kinds of candidate.</p><p>Our hand-written reference: 25 of 25. With the last-account defect fixed: 9 of 25, the business decision from before.</p><p>A free model, Nemotron, writing the service from the verified rule list: 25 of 25, three times out of three, in 12 to 85 seconds per generation. That is a strong result. Given a correct spec, a free model wrote byte-equivalent code.</p><p>The same model writing from rules that a model extracted: 2, 1 and 0 out of 25. It raised abends where the legacy quietly falls back to a DEFAULT rate; it looked up the rate once per account instead of per category; it posted the last account; it got the transaction id format wrong; one candidate crashed with an UnboundLocalError.</p><p>And the "just translate it" path, model reads COBOL and writes Python, three runs with Gemma and Nemotron: 1, 3 and 2 out of 25. Rounding instead of truncation, the last account posted, a dictionary get with a default instead of abend 999, and different transaction order and count.</p><p>Every one of these candidates is 70 to 100 lines of clean, plausible Python. Without the diamond you would have approved most of them in code review.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a> (measured 2026-10-17), <a href="../workshop/ex3_new_service/generate.py">workshop/ex3_new_service/generate.py</a>, <a href="../workshop/ex4_equivalence/diamond.py">workshop/ex4_equivalence/diamond.py</a></p></aside>
+</section>
+<!-- 17 -->
+<section class="slide" data-time="1:15">
+  <header><p class="kicker">Live demo · takeaways</p><h2>What the numbers say</h2></header>
+  <div class="body">
+    <div class="step"><span class="n">1</span><div>The LLM is a good <b>implementer</b> of a correct spec and a mediocre <b>extractor</b> of the spec</div></div>
+    <div class="step"><span class="n">2</span><div>“LLM reads COBOL, LLM writes Java” fails on exactly the <b>money-relevant details</b></div></div>
+    <div class="step"><span class="n">3</span><div>Only the <b>running COBOL</b> told us which candidate is right; code review would have missed most of it</div></div>
+    <div class="card warm" style="margin-top:12px"><p class="xs"><b>Caveats:</b> one batch program · free models, reasoning off · small sample · no CICS/BMS runtime · no EBCDIC files or COMP-3 in this program (CardDemo ships ASCII extracts)</p></div>
+  </div>
+  <footer><span class="src">Sources: <a href="../workshop-plan.md">workshop-plan.md</a> (takeaways) · <a href="../comparison.md">comparison.md</a> (limits of the open pipeline)</span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:15 (24:30–25:45)</i></p><p>Three takeaways from the demo, straight from our workshop notes.</p><p>One: the model is a good implementer of a correct spec and a mediocre extractor of the spec. So put the human effort, with subject-matter experts, into the spec, and let the model write code against it.</p><p>Two: the popular pipeline, model reads COBOL, model writes Java, fails on exactly the details that move money. This matches the benchmark from slide 7: good at small units, blind to system behaviour.</p><p>Three: only the running COBOL told us which candidate was right.</p><p>And the honest caveats. This is one batch program, with free models and hidden reasoning switched off. There is no CICS or BMS online runtime in our harness, and this program has no EBCDIC files or packed decimal, because CardDemo ships ASCII extracts. A paid frontier model would probably score higher on extraction. I would still not ship it without the diamond.</p><p><b>Sources:</b> <a href="../workshop-plan.md">workshop-plan.md</a> (takeaways), <a href="../comparison.md">comparison.md</a> (limits of the open pipeline)</p></aside>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Vendor map · checked 2026-10-17 · from docs, not run by us</p><h2>Vendor map: mainframe platforms</h2></header>
+  <div class="body">
+    <table class="tbl-s vend">
+      <tr><th style="width:18%"></th><th style="width:21%">Type</th><th style="width:22%">Targets</th><th style="width:21%">How it is checked</th><th>Self-host / pricing</th></tr>
+      <tr><td><b>AWS Transform for mainframe</b></td><td>managed agentic service; COBOL, PL/I, JCL, CICS, BMS, Db2, VSAM, IMS ✅</td><td>refactor → Java (ex-Blu Age); reimagine via Kiro / Claude Code ✅</td><td>deterministic refactor + human in the loop; partners (Imogen) ✅</td><td>AWS regions only · transformation <b>free</b> ✅</td></tr>
+      <tr><td><b>IBM Bob for Z</b> <span class="xs">(ex wca4z)</span></td><td>IDE agent + deterministic app understanding ✅</td><td>COBOL/PL/I → Java; optimize in place ✅</td><td>generated unit tests for equivalence ✅</td><td><b>self-hosted on OpenShift</b> ✅ · per user + tokens ✅</td></tr>
+      <tr><td><b>Google MAT + Dual Run</b></td><td>assessment in your GCP project; MCP server ✅</td><td>code suggestions: Python, Java, C#, SQL ✅</td><td><b>Dual Run</b>: replay production, compare ✅</td><td>your project ✅ · price ❌</td></tr>
+      <tr><td><b>Microsoft Legacy-Modernization-Agents</b></td><td>open-source sample framework ✅</td><td>Java Quarkus or C# .NET ✅</td><td>none built in ✅</td><td>yes · free + your tokens 🟠</td></tr>
+      <tr><td><b>Mechanical Orchard Imogen</b></td><td>platform + delivery team ✅</td><td>modern code (Java etc.) 🟡</td><td><b>diamond</b> vs captured production data ✅</td><td>❌ · “&gt;10k verified LOC / engineer / week” 🟡</td></tr>
+    </table>
+  </div>
+  <footer><span class="src">Sources: <a href="../comparison.md">comparison.md</a> · <a href="https://docs.aws.amazon.com/transform/latest/userguide/transform-app-mainframe.html">AWS docs</a> · <a href="https://www.ibm.com/new/announcements/ibm-bob-premium-package-for-z-expands-with-on-premises-deployment-and-new-saas-capabilities">IBM Bob</a> · <a href="https://docs.cloud.google.com/mainframe-assessment-tool/docs/mcp-server">MAT</a> · <a href="https://github.com/Azure-Samples/Legacy-Modernization-Agents">MS agents</a> · <a href="https://www.mechanical-orchard.com/insights/whats-new-in-imogen-the-summer-2026-release">Imogen</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (25:45–27:30)</i></p><p>Now the vendor map. I will not read the table; here is how to think about each.</p><p>AWS Transform for mainframe is the broadest managed service: it covers COBOL, PL/I, JCL, CICS, BMS screens, Db2, VSAM and IMS. Since March it has three patterns in one service: deterministic refactor to Java, replatform, and reimagine with an agentic coder. It runs only in AWS regions.</p><p>IBM replaced watsonx Code Assistant for Z with Bob Premium Package for Z. It is an agent in the IDE with deterministic application understanding underneath. The important news from September 30: it can be self-hosted on the customer's OpenShift with approved models. For regulated clients who cannot send code to a cloud model, that matters. That Bob is the successor of watsonx Code Assistant comes only from a search summary, so it is orange.</p><p>Google has the Mainframe Assessment Tool, Gemini-based, which you deploy in your own project, and it exposes an MCP server for agents. Plus Dual Run for parallel running. No published prices.</p><p>Microsoft has open-source agents as a sample: good for proofs of concept and teaching, but verification is up to you.</p><p>And Mechanical Orchard sells a platform plus a delivery team, built around the diamond. Their "more than ten thousand lines of verified code per engineer per week" is their own claim.</p><p><b>Sources:</b> <a href="../comparison.md">comparison.md</a>, <a href="https://docs.aws.amazon.com/transform/latest/userguide/transform-app-mainframe.html">AWS Transform docs</a>, <a href="https://www.ibm.com/new/announcements/ibm-bob-premium-package-for-z-expands-with-on-premises-deployment-and-new-saas-capabilities">IBM Bob for Z announcement 2026-09-30</a>, <a href="https://docs.cloud.google.com/mainframe-assessment-tool/docs/configure-settings">Google MAT settings</a>, <a href="https://docs.cloud.google.com/mainframe-assessment-tool/docs/mcp-server">MAT MCP server</a>, <a href="https://github.com/Azure-Samples/Legacy-Modernization-Agents">Legacy-Modernization-Agents</a>, <a href="https://www.mechanical-orchard.com/insights/whats-new-in-imogen-the-summer-2026-release">Imogen Summer 2026</a></p></aside>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-time="1:30">
+  <header><p class="kicker">Vendor map · beyond the big platforms</p><h2>Deterministic converters and old Java/.NET</h2></header>
+  <div class="body cols c2" style="gap:40px">
+    <div class="card">
+      <h3>Classic converters, + AI on top</h3>
+      <ul class="xs tight">
+        <li><b>Heirloom</b>: COBOL→Java transpiler + runtime (CICS, JCL, VSAM, IMS) ✅; AI after a deterministic baseline 🟡</li>
+        <li><b>AWS Transform refactor</b> (ex-Blu Age) ✅</li>
+        <li>TSRI · Astadia · CloudFrame · Rocket / OpenText 🟠</li>
+        <li><b>mLogica</b> via AWS: Assembler→COBOL <b>$2.75 / LOC</b> ✅</li>
+      </ul>
+    </div>
+    <div class="card ok">
+      <h3>Old Java / .NET</h3>
+      <ul class="xs tight">
+        <li><b>OpenRewrite</b> (OSS recipes) / <b>Moderne</b> (agent composes recipes): Java 8→25, Spring, .NET; “$250K typical”, “$2M typical” ✅</li>
+        <li><b>Copilot modernization</b>: Java, .NET, C++ upgrades + Azure; uses OpenRewrite; not COBOL ✅</li>
+        <li><b>AWS Transform for .NET</b>: free within 50k agent-min / month ✅</li>
+      </ul>
+    </div>
+    <div class="callout" style="grid-column:1/-1;margin-top:0;font-size:32px">Same shape everywhere: deterministic first, LLM on top, build + tests as the check</div>
+  </div>
+  <footer><span class="src">Sources: <a href="../comparison.md">comparison.md</a> · <a href="https://heirloomcomputing.com/llms-and-cobol-modernization/">Heirloom</a> · <a href="https://aws.amazon.com/mainframe-modernization/pricing/">AWS MM pricing</a> · <a href="https://moderne.ai/pricing">Moderne</a> · <a href="https://learn.microsoft.com/en-us/azure/developer/github-copilot-app-modernization/overview">Copilot modernization</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:30 (27:30–29:00)</i></p><p>Two more families.</p><p>The classic deterministic converters existed long before LLMs and are now adding AI on top. Heirloom transpiles COBOL to Java and ships a runtime for CICS, JCL, VSAM and IMS. Its own argument is that models belong on documentation, tests and refactoring after a deterministic baseline. AWS's refactor path, the former Blu Age, is in the same family. TSRI, Astadia, CloudFrame and the Rocket and OpenText runtimes I know only from secondary sources. One published price for scale: mLogica's Assembler to COBOL conversion through AWS is 2 dollars 75 per line.</p><p>For old Java and .NET, the picture is simpler because the target languages are close. OpenRewrite is open source with deterministic recipes, for example Java 8 to 25 or Spring upgrades. Moderne is the commercial version, where an agent picks and composes recipes; their pricing page says 250 thousand dollars typical, and 2 million typical for enterprise. GitHub Copilot's modernization uses OpenRewrite under the hood for Java and .NET upgrades; it does not do COBOL. AWS Transform for .NET ports .NET Framework to modern .NET, free within 50 thousand agent minutes a month.</p><p>The common pattern again: deterministic transformation first, the model on top, and the build and tests as the check. We did not run a Java or .NET workshop; that is a follow-up.</p><p><b>Sources:</b> <a href="../comparison.md">comparison.md</a>, <a href="https://heirloomcomputing.com/llms-and-cobol-modernization/">Heirloom: LLMs and COBOL</a>, <a href="https://aws.amazon.com/mainframe-modernization/pricing/">AWS Mainframe Modernization pricing</a>, <a href="https://moderne.ai/pricing">Moderne pricing</a>, <a href="https://moderne.ai/openrewrite">OpenRewrite</a>, <a href="https://learn.microsoft.com/en-us/azure/developer/github-copilot-app-modernization/overview">Copilot modernization</a>, <a href="https://aws.amazon.com/transform/pricing/">AWS Transform pricing</a></p></aside>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-time="1:15">
+  <header><p class="kicker">Positioning</p><h2>Translation is commoditized: follow the money</h2></header>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:repeat(4,1fr);gap:22px;margin-bottom:24px">
+      <div class="card ok" style="text-align:center"><p class="big" style="font-size:60px">free</p><p class="xs">AWS assessment + mainframe agent ✅</p></div>
+      <div class="card" style="text-align:center"><p class="big" style="font-size:60px">$0.035</p><p class="xs">AWS custom agent / agent-minute ✅</p></div>
+      <div class="card" style="text-align:center"><p class="big" style="font-size:60px">$0.31</p><p class="xs">AWS refactored runtime / core-hour ✅</p></div>
+      <div class="card" style="text-align:center"><p class="big" style="font-size:44px;line-height:1.36">150k tokens<br>≈ 5–7k LOC</p><p class="xs">IBM resource unit ✅</p></div>
+    </div>
+    <p class="small" style="margin:0 0 6px">Not published ❌: Google MAT / Dual Run, IBM Bob for Z, Mechanical Orchard, Heirloom, TSRI, CloudFrame · IBM ~€1,454 / user list 🟠</p>
+    <div class="callout" style="font-size:34px">Differentiate on discovery, the equivalence harness, data migration and cutover</div>
+    <p class="small" style="margin:18px 0 0"><b>Per client platform:</b> AWS → Transform + Imogen-style verification · IBM Z staying on Z → Bob for Z · GCP → MAT + Dual Run · sovereign / multi-cloud → open pipeline, self-hosted models</p>
+  </div>
+  <footer><span class="src">Sources: <a href="https://aws.amazon.com/transform/pricing/">AWS Transform pricing</a> · <a href="https://aws.amazon.com/mainframe-modernization/pricing/">AWS MM pricing</a> · <a href="https://www.ibm.com/docs/en/watsonx/watsonx-code-assistant-4z/2.x?topic=information-license-guide-watsonx-code-assistant-z">IBM license guide</a> · <a href="../comparison.md">comparison.md</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:15 (29:00–30:15)</i></p><p>Follow the money. AWS gives away assessment and the mainframe transformation agent. You pay 3.5 cents per agent minute for custom transformations and 31 cents per CPU core per hour to run the refactored application. IBM charges per user plus tokens, and gives a useful conversion factor: one resource unit is 150 thousand tokens, roughly 5 to 7 thousand lines of COBOL. A reseller lists about 1,450 euros per user. Most of the others don't publish prices.</p><p>So the translation itself is close to free. What is not free, and what nobody can give away, is understanding a client's estate, building the harness that proves equivalence, migrating the data, and running the cutover without stopping the business. That is where a services company earns its money, and it is what MF Lens plus our delivery teams are positioned for.</p><p>Practical pairing by platform: an AWS client, use Transform and add Imogen-style verification. An IBM Z shop that stays on Z, Bob for Z, self-hosted if needed. A GCP client, the Assessment Tool plus Dual Run. Sovereign or multi-cloud, an open pipeline like our workshop with self-hosted models; self-hosted Bob is the only big-vendor option we found.</p><p><b>Sources:</b> <a href="https://aws.amazon.com/transform/pricing/">AWS Transform pricing</a>, <a href="https://aws.amazon.com/mainframe-modernization/pricing/">AWS Mainframe Modernization pricing</a>, <a href="https://www.ibm.com/docs/en/watsonx/watsonx-code-assistant-4z/2.x?topic=information-license-guide-watsonx-code-assistant-z">IBM license guide</a>, <a href="https://bueckergmbh.de/Kauf-IBM-D0GQ3ZX/IBM-watsonx-Code-Assistant-for-Z-for-IBM-Z-Authorized-User-Subscription-License">Bücker GmbH reseller page</a>, <a href="../comparison.md">comparison.md</a> (how to position)</p></aside>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-time="1:45">
+  <header><p class="kicker">Delivery playbook · 7 steps</p><h2>How we run an engagement</h2></header>
+  <div class="body cols c2" style="gap:48px;font-size:34px">
+    <div>
+      <div class="step"><span class="n">1</span><div><b>Inventory + graph</b>, deterministic (MF Lens, ex1-style)</div></div>
+      <div class="step"><span class="n">2</span><div><b>Get the oracle running</b>: test LPAR or GnuCOBOL / Micro Focus harness. No oracle → price the harness first</div></div>
+      <div class="step"><span class="n">3</span><div><b>Capture inputs</b>, generate scenarios (sample data is all zeros)</div></div>
+      <div class="step"><span class="n">4</span><div><b>Extract rules</b> with citations; <b>SMEs verify</b>; keep the answer key</div></div>
+    </div>
+    <div>
+      <div class="step"><span class="n">5</span><div><b>Generate code per slice</b> from verified rules</div></div>
+      <div class="step"><span class="n">6</span><div><b>Diamond in CI</b>: per-field schema, abend paths included</div></div>
+      <div class="step"><span class="n">7</span><div><b>Strangler cutover</b> with parallel run</div></div>
+      <div class="card warm" style="margin-top:6px"><p class="small"><b>Bug-for-bug or fix?</b> Decide explicitly, per defect, with the business</p></div>
+    </div>
+  </div>
+  <footer><span class="src">Sources: <a href="../talk-outline.md">talk-outline.md §9</a> · <a href="../comparison.md">comparison.md</a> (how to position) · <a href="../workshop-plan.md">workshop-plan.md</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:45 (30:15–32:00)</i></p><p>So how do we run an engagement? Seven steps, and each one maps to something you saw.</p><p>One, inventory and dependency graph, deterministic. MF Lens or a scanner like exercise 1. The model explains the graph; it does not build it.</p><p>Two, get the oracle running before anything else. A test LPAR at the client, or a harness on GnuCOBOL or Micro Focus. If the client cannot give you a running legacy or data, price the harness work first, because everything else depends on it.</p><p>Three, capture production-like inputs and generate scenarios. Remember the sample data that was all zeros.</p><p>Four, extract rules with a model, with line citations, then verify them with the client's subject-matter experts. That verified list is the most valuable artefact of the project. Keep it as an answer key.</p><p>Five, generate code slice by slice from the verified rules. That is where models are good.</p><p>Six, the diamond runs in CI, with a comparison schema per field and the abend paths included.</p><p>Seven, cut over with a strangler pattern and parallel run. And for every defect you find, like the last account, decide bug-for-bug or fix explicitly, with the business, in writing.</p><p><b>Sources:</b> <a href="../talk-outline.md">talk-outline.md</a> §9, <a href="../comparison.md">comparison.md</a> (how to position), <a href="../workshop-plan.md">workshop-plan.md</a></p></aside>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-time="1:15">
+  <header><p class="kicker">Honesty slide</p><h2>What we did not verify</h2></header>
+  <div class="body cols c2" style="gap:48px">
+    <ul class="small">
+      <li>We did <b>not run</b> AWS Transform, Google MAT, IBM Bob or Imogen; vendor facts are from docs</li>
+      <li>All productivity numbers are <b>vendor claims</b> 🟡: EPAM 60%, MO 10k LOC/week and 11,578 LOC in 28 h, AWS “years to months”</li>
+      <li>Prices not public ❌ · IBM share drop and GAO: secondary 🟠</li>
+    </ul>
+    <ul class="small">
+      <li>Our workshop: <b>one batch program</b>, free models, no CICS/BMS, no EBCDIC / COMP-3 data</li>
+      <li>Old Java/.NET: tooling reviewed, <b>no workshop yet</b></li>
+      <li>Next: Java 8 → 21 / .NET Framework → .NET 8 with OpenRewrite + an LLM, <b>same diamond</b></li>
+    </ul>
+  </div>
+  <footer><span class="src">Sources: <a href="../research.md">research.md §5</a> (open items) · <a href="../comparison.md">comparison.md</a> · <a href="https://www.mechanical-orchard.com/insights/reflections-on-the-first-year-of-imogen">MO: first year of Imogen</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 1:15 (32:00–33:15)</i></p><p>Before the summary, what I did not verify, so you can calibrate everything I said.</p><p>We did not run any of the big platforms: AWS Transform, Google's tool, IBM Bob or Imogen. They need accounts or contracts. Everything about them comes from their documentation and announcements.</p><p>Every productivity number in this space is a vendor claim, including ours: EPAM's 60 percent, Mechanical Orchard's ten thousand lines per engineer per week and their 11,578 lines in 28 hours, AWS's "years to months".</p><p>Most prices are not public. The IBM share drop and the GAO report I read only through secondary sources.</p><p>Our own workshop is one batch program with free models, no online CICS runtime and no EBCDIC or packed-decimal data. And for old Java and .NET we reviewed the tooling but ran nothing. The obvious next step is a Java 8 to 21 or .NET Framework to .NET 8 migration with OpenRewrite plus a model, and the same diamond.</p><p><b>Sources:</b> <a href="../research.md">research.md §5</a> (open items), <a href="../comparison.md">comparison.md</a>, <a href="https://www.mechanical-orchard.com/insights/reflections-on-the-first-year-of-imogen">Mechanical Orchard: first year of Imogen</a></p></aside>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-time="0:45">
+  <header><p class="kicker">Wrap-up</p><h2>Takeaways</h2></header>
+  <div class="body">
+    <div class="step big-step"><span class="n">1</span><div>The running legacy <b>is the spec</b></div></div>
+    <div class="step big-step"><span class="n">2</span><div>Trust the harness, <b>not the model's account</b> of what it did</div></div>
+    <div class="step big-step"><span class="n">3</span><div>Free translation makes <b>verification the product</b></div></div>
+    <p class="small" style="margin:16px 0 0">Use AI to read, extract and implement from a verified spec; never as the judge of equivalence.</p>
+  </div>
+  <footer><span class="src">Sources: <a href="../talk-outline.md">talk-outline.md</a> (key messages) · <a href="../research.md">research.md TL;DR</a></span><span class="num"></span></footer>
+  <aside class="notes"><p><i>Timing: 0:45 (33:15–34:00)</i></p><p>Three sentences to take away. The running legacy is the spec, not the documentation and not the model's summary. Trust the harness, not the model's account of what it did; we saw a perfectly cited rule that was exactly wrong. And free translation makes verification the product; that is our business. Use models to read, to extract rules for experts to confirm, and to implement from a verified spec. Never let them be the judge of equivalence.</p><p><b>Sources:</b> <a href="../talk-outline.md">talk-outline.md</a> (key messages), <a href="../research.md">research.md TL;DR</a></p></aside>
+</section>
+
+<!-- 24 -->
+<section class="slide title" data-time="1:00">
+  <h1>Questions?</h1>
+  <div class="sub">Research, vendor comparison, workshop (4 exercises, all free), this deck and the script</div>
+  <div class="meta"><span class="mono">https://github.com/vusatui/rnd-research/tree/main/legacy-modernization</span><br>Anton Vusatyi</div>
+  <footer></footer>
+  <aside class="notes"><p><i>Timing: 1:00 (34:00–35:00)</i></p><p>Thank you. Everything is in the repo: the research notes with verification markers, the vendor comparison, the workshop you can run on a laptop with GnuCOBOL and a free OpenRouter key, this deck and the full script. I am happy to take questions, especially about client situations where you can't get a running legacy to compare against.</p><p><b>Sources:</b> <a href="../README.md">README.md</a>, <a href="../workshop-plan.md">workshop-plan.md</a></p></aside>
+</section>
+
+</div>
+<div id="progress"></div>
+<div id="notesbox"></div>
+<div id="overview"></div>
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')], N=slides.length;
+  const params=new URLSearchParams(location.search);
+  const render=params.has('render');
+  if(render) document.body.classList.add('render');
+  let cur=0, speaker=null, t0=Date.now();
+  slides.forEach((s,i)=>{const n=s.querySelector('footer .num'); if(n) n.textContent=(i+1)+' / '+N;});
+  function fit(){const st=document.getElementById('stage');const k=Math.min(innerWidth/1920,innerHeight/1080);
+    st.style.transformOrigin='center center';st.style.transform=`translate(-50%,-50%) scale(${k})`;}
+  function title(s){const h=s.querySelector('h2,h1');return h?h.textContent.trim():'';}
+  function notesHTML(i){const a=slides[i].querySelector('aside.notes');return a?a.innerHTML:'';}
+  function go(i){cur=Math.max(0,Math.min(N-1,i));slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+    history.replaceState(null,'',location.pathname+location.search+'#'+(cur+1));
+    document.getElementById('progress').style.width=((cur+1)/N*100)+'%';
+    const nb=document.getElementById('notesbox');nb.innerHTML='<b>'+(cur+1)+'. '+title(slides[cur])+' · '+slides[cur].dataset.time+'</b>'+notesHTML(cur);
+    updateSpeaker();}
+  function updateSpeaker(){if(!speaker||speaker.closed)return;const d=speaker.document;
+    d.getElementById('cur').textContent=(cur+1)+' / '+N+' · '+title(slides[cur])+' · planned '+slides[cur].dataset.time;
+    d.getElementById('nxt').textContent=cur+1<N?'Next: '+title(slides[cur+1]):'Last slide';
+    d.getElementById('notes').innerHTML=notesHTML(cur);}
+  function openSpeaker(){speaker=window.open('','speaker','width=900,height=700');if(!speaker)return;
+    speaker.document.write('<!doctype html><title>Speaker notes</title><body style="font-family:IBM Plex Sans,Segoe UI,Arial,sans-serif;background:#0f172a;color:#e2e8f0;margin:24px;font-size:22px;line-height:1.5"><div style="display:flex;justify-content:space-between;font-size:26px"><b id="cur"></b><b id="clock" style="color:#7dd3fc"></b></div><div id="nxt" style="color:#94a3b8;margin:8px 0 16px"></div><div id="notes"></div></body>');
+    speaker.document.close();speaker.document.addEventListener('keydown',key);
+    setInterval(()=>{if(speaker&&!speaker.closed){const s=Math.floor((Date.now()-t0)/1000);speaker.document.getElementById('clock').textContent='elapsed '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}},1000);
+    updateSpeaker();}
+  function overview(){const o=document.getElementById('overview');if(o.classList.toggle('on')){o.innerHTML='';
+    slides.forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+title(s)+' ('+s.dataset.time+')';if(i===cur)b.className='cur';b.onclick=()=>{o.classList.remove('on');go(i);};o.appendChild(b);});}}
+  function key(e){const k=e.key;
+    if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(k)){e.preventDefault();go(cur+1);}
+    else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(k)){e.preventDefault();go(cur-1);}
+    else if(k==='Home')go(0);else if(k==='End')go(N-1);
+    else if(k==='n'||k==='N')document.getElementById('notesbox').classList.toggle('on');
+    else if(k==='s'||k==='S')openSpeaker();
+    else if(k==='o'||k==='O'||k==='Escape')overview();
+    else if(k==='f'||k==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}}
+  document.addEventListener('keydown',key);
+  document.addEventListener('click',e=>{if(e.target.closest('a,button,#notesbox,#overview'))return;if(!render)go(cur+(e.clientX<innerWidth/3?-1:1));});
+  addEventListener('resize',fit);addEventListener('hashchange',()=>{const h=parseInt(location.hash.slice(1));if(h&&h-1!==cur)go(h-1);});
+  fit();go((parseInt(location.hash.slice(1))||1)-1);
+  if(params.has('check')){ // overflow report for the render script
+    const out=[];slides.forEach((s,i)=>{slides.forEach(x=>x.classList.remove('active'));s.classList.add('active');
+      const sb=s.getBoundingClientRect(), k=sb.width/1920, body=s.querySelector('.body'), foot=s.querySelector('footer');
+      const lim=(foot&&foot.offsetParent?foot.getBoundingClientRect().top:sb.bottom);
+      if(s.scrollHeight>s.clientHeight+1) out.push(`slide ${i+1}: slide scrollHeight ${s.scrollHeight}>${s.clientHeight}`);
+      s.querySelectorAll('.body *').forEach(el=>{const r=el.getBoundingClientRect();if(!r.width)return;
+        if(r.bottom>lim+1) out.push(`slide ${i+1}: <${el.tagName.toLowerCase()} class="${el.className.baseVal??el.className}"> bottom ${Math.round((r.bottom-sb.top)/k)} > footer ${Math.round((lim-sb.top)/k)}`);
+        if(r.right>sb.right-60*k) out.push(`slide ${i+1}: <${el.tagName.toLowerCase()}> right ${Math.round((r.right-sb.left)/k)}`);
+        if(el.scrollWidth>el.clientWidth+2&&getComputedStyle(el).overflow!=='visible') out.push(`slide ${i+1}: <${el.tagName.toLowerCase()}> clipped horizontally`);});
+      const src=s.querySelector('footer .src');if(src&&src.scrollWidth>src.clientWidth+1)out.push(`slide ${i+1}: footer sources truncated`);
+    });
+    const pre=document.createElement('pre');pre.id='check';pre.textContent='CHECK-BEGIN\n'+(out.join('\n')||'OK')+'\nCHECK-END';document.body.appendChild(pre);go(cur);}
+})();
+</script>
+</body>
+</html>

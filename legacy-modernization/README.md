@@ -8,6 +8,8 @@ that modernizes a real mainframe batch job (AWS CardDemo `CBACT04C`) and **prove
 - [`comparison.md`](comparison.md) - AWS Transform, IBM Bob for Z / watsonx Code Assistant for Z, Google MAT + Dual Run,
   Microsoft agents, Mechanical Orchard, deterministic converters, OpenRewrite/Moderne; pricing, languages, self-hosting
 - [`talk-outline.md`](talk-outline.md) - ~35 min talk
+- [`talk-script.md`](talk-script.md) - full English talk script (~35 min, 24 slides): on-slide content, speaker notes, timing, sources, plus likely audience questions & answers
+- [`slides/index.html`](slides/index.html) - self-contained HTML deck (no external dependencies, 1920x1080, autoscale). Open it locally in a browser. Keys: →/Space next, ← back, `N` notes, `S` speaker window with timer, `O` overview, `F` fullscreen. Preview of all slides: [`slides/contact-sheet.png`](slides/contact-sheet.png). Speaker notes are generated from talk-script.md: `python3 slides/build_notes.py`; open with `?check` for an overflow report
 - [`workshop-plan.md`](workshop-plan.md) + [`workshop/`](workshop/) - 4 exercises, all free (GnuCOBOL + free OpenRouter models), with real run results
 
 Quick start:
@@ -22,4 +24,4 @@ python ex4_equivalence/diamond.py   # reference implementation vs running COBOL:
 export OPENROUTER_API_KEY=...   # free key, then ex2/ex3 (see workshop-plan.md)
 ```
 
-Status: Draft (2026-10-17). Research, comparison, talk outline and workshop done; talk script and HTML slides: next.
+Status: Draft (2026-10-17). Research, comparison, talk outline, workshop, talk script and HTML slides done (same style and tooling as `../system-one-models/slides/` and `../sandboxes-and-remote-desktops/slides/`).
