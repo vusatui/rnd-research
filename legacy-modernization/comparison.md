@@ -48,10 +48,10 @@ no CICS/BMS online runtime (batch only); no EBCDIC files or COMP-3 in this progr
 | Approach | Deterministic recipes; agent (Moddy / MCP) picks and composes them ✅ | Agent plans, uses OpenRewrite, builds, fixes CVEs, opens PR ✅ | Agent minutes; builds/tests used for validation ✅ | 🟠 |
 | Price | OSS free; Moderne "$250K typical", "$2M typical" ✅ | Copilot licence 🟠 | .NET free within 50k agent-min/month; custom $0.035/agent-min ✅ | ❌ |
 
-## How to position (for EPAM-style engagements)
+## How to position (for enterprise engagements)
 
 - **Translation is commoditized** (free at AWS, bundled at IBM/Google). Differentiate on discovery quality, the
-  equivalence harness, data migration and cutover - i.e. what MF Lens + delivery teams do.
+  equivalence harness, data migration and cutover — discovery tools (e.g. EPAM MF Lens, public docs) plus delivery teams.
 - **Pick per client platform:** AWS → Transform (+ Imogen-style verification); IBM Z staying on Z → Bob for Z; GCP →
   MAT + Dual Run; multi-cloud/sovereign → open pipeline with self-hosted models (IBM self-hosted Bob is the only big-vendor option we found).
 - **Always bring an oracle:** if the legacy can't be run (no test LPAR, no data), price the harness work first.

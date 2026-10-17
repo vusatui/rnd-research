@@ -1,7 +1,7 @@
 # Talk script: "AI-assisted legacy modernization" (~35 min)
 
 Working title from the outline: *AI won't translate your COBOL for you - but it will help you prove the new system is right.*
-Audience: EPAM engineers, architects, consultants and pre-sales.
+Audience: engineers, architects, consultants and pre-sales.
 
 24 slides, 35:00 of planned speaking time including Q&A. The HTML deck is in [`slides/index.html`](slides/index.html). Its speaker notes are built from this file by `slides/build_notes.py`, so edit the notes here first. Likely audience questions with prepared answers are at the end of this file.
 
@@ -14,7 +14,7 @@ Audience: EPAM engineers, architects, consultants and pre-sales.
 | 1 | AI-assisted legacy modernization | 0:30 | 0:30 |
 | 2 | If translation is free, what are clients paying for? | 1:30 | 2:00 |
 | 3 | Why now: the demand signals | 1:45 | 3:45 |
-| 4 | Our own house: what EPAM said in Q2 2026 | 1:30 | 5:15 |
+| 4 | Demand signal: EPAM Q2 2026 (public) | 1:30 | 5:15 |
 | 5 | A COBOL program is not the system | 1:45 | 7:00 |
 | 6 | Four strategies, two technical schools | 1:30 | 8:30 |
 | 7 | LLMs read COBOL far better than they write it | 1:45 | 10:15 |
@@ -95,24 +95,24 @@ The pattern: the problem is not "convert my code". It is "I don't know what this
 
 **Sources:** [Kyndryl press release](https://www.kyndryl.com/us/en/about-us/news/2026/10/enterprise-it-modernization-trends), [ISG press release](https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/U-S--Enterprises-Accelerate-Mainframe-Modernization/default.aspx), [GAO-25-107795](https://www.gao.gov/products/gao-25-107795), [research.md §1](research.md)
 
-## Slide 4 — Our own house: what EPAM said in Q2 2026
+## Slide 4 — Demand signal: EPAM Q2 2026 (public)
 **Timing:** 1:30 (3:45–5:15)
 **On slide:**
-- Q2 2026 call ✅: financial services +11.5% YoY, fastest-growing vertical; drivers include "mainframe modernization using EPAM IP to reverse engineer, automate and rebuild"
+- EPAM Q2 2026 call ✅: financial services +11.5% YoY, fastest-growing vertical; drivers include "mainframe modernization using EPAM IP to reverse engineer, automate and rebuild"
 - North America: demand moving from task-based services to "AI-led modernization"; large pipeline deals incl. "legacy mainframe transformation", revenue expected H1 2027 ✅
-- Wealth-management client: >10M LOC reverse-engineered, "60% time savings in reverse engineering effort" 🟡
+- Wealth-management client story: >10M LOC reverse-engineered, "60% time savings in reverse engineering effort" 🟡 (vendor claim)
 - **MF Lens** = mainframe code analysis and exploration in EPAM AI/Run (CodeMie): Neo4j + PostgreSQL + LiteLLM-proxied model, COBOL preprocessor ✅
 - ISG US 2026 leaders list does **not** name EPAM ✅
-- CEO: "Coding gets automated, engineering doesn't" ✅
+- EPAM CEO: "Coding gets automated, engineering doesn't" ✅
 
 **Speaker notes:**
-Now our own company. In the Q2 2026 earnings call, financial services grew 11.5 percent year over year and was the fastest-growing vertical. One of the named drivers was mainframe modernization using EPAM's own IP to reverse engineer, automate and rebuild, and MF Lens was named. Management also said North American demand is moving from task-based services, like manual testing and front-end work, to AI-led modernization, with large pipeline deals including legacy mainframe transformation, with revenue expected in the first half of 2027.
+Another public demand signal, from a large services vendor. In EPAM's Q2 2026 earnings call, financial services grew 11.5 percent year over year and was their fastest-growing vertical. One of the named drivers was mainframe modernization using EPAM IP to reverse engineer, automate and rebuild, and MF Lens was named. Management also said North American demand is moving from task-based services, like manual testing and front-end work, to AI-led modernization, with large pipeline deals including legacy mainframe transformation, with revenue expected in the first half of 2027.
 
-There is also a client story: a wealth-management client, more than 10 million lines reverse-engineered, with 60 percent time savings in reverse-engineering effort. That is us talking about ourselves, so it is yellow like any other vendor claim.
+There is also a client story on that call: a wealth-management client, more than 10 million lines reverse-engineered, with 60 percent time savings in reverse-engineering effort. That is a vendor talking about itself, so it is yellow like any other vendor claim.
 
 MF Lens is documented in the AI/Run CodeMie docs as a mainframe code analysis and exploration solution: a graph database, Neo4j, plus PostgreSQL, a model behind a LiteLLM proxy, and a COBOL preprocessor. Note the architecture: a deterministic graph first, the model on top.
 
-One uncomfortable fact: ISG's US mainframe report names many leaders, from DXC and Kyndryl to AWS, Google and Heirloom, and EPAM is not among them. And the line from our CEO that fits this whole talk: "Coding gets automated, engineering doesn't."
+One market fact: ISG's US mainframe report names many leaders, from DXC and Kyndryl to AWS, Google and Heirloom, and EPAM is not among them. And a line from that same call that fits this whole talk: "Coding gets automated, engineering doesn't."
 
 **Sources:** [EPAM Q2 2026 call, Motley Fool transcript](https://www.fool.com/earnings/call-transcripts/2026/08/06/epam-epam-q2-2026-earnings-call-transcript/), [AI/Run CodeMie docs: MF Lens](https://docs.codemie.ai/admin/deployment/extensions/mf-lens/), [ISG press release](https://ir.isg-one.com/news-market-information/press-releases/news-details/2026/U-S--Enterprises-Accelerate-Mainframe-Modernization/default.aspx), [research.md §1](research.md)
 
@@ -440,13 +440,13 @@ The common pattern again: deterministic transformation first, the model on top, 
 - AWS Transform: assessment + mainframe agent **free**; custom transformation agent **$0.035 / agent-minute**; refactored-app runtime **$0.31 per CPU core-hour** ✅
 - IBM: per authorized user + tokens; 1 resource unit = 150k tokens ≈ 5,000–7,000 COBOL lines ✅; ~€1,454 per user list 🟠
 - Google MAT / Dual Run, Mechanical Orchard, Heirloom, TSRI, CloudFrame: **not published** ❌
-- Positioning: differentiate on **discovery quality, the equivalence harness, data migration and cutover** - what MF Lens + delivery teams do
+- Positioning: differentiate on **discovery quality, the equivalence harness, data migration and cutover** (e.g. graph tools such as EPAM MF Lens + delivery)
 - Pick per client platform: AWS → Transform (+ Imogen-style verification) · IBM Z staying on Z → Bob for Z · GCP → MAT + Dual Run · sovereign / multi-cloud → open pipeline with self-hosted models
 
 **Speaker notes:**
 Follow the money. AWS gives away assessment and the mainframe transformation agent. You pay 3.5 cents per agent minute for custom transformations and 31 cents per CPU core per hour to run the refactored application. IBM charges per user plus tokens, and gives a useful conversion factor: one resource unit is 150 thousand tokens, roughly 5 to 7 thousand lines of COBOL. A reseller lists about 1,450 euros per user. Most of the others don't publish prices.
 
-So the translation itself is close to free. What is not free, and what nobody can give away, is understanding a client's estate, building the harness that proves equivalence, migrating the data, and running the cutover without stopping the business. That is where a services company earns its money, and it is what MF Lens plus our delivery teams are positioned for.
+So the translation itself is close to free. What is not free, and what nobody can give away, is understanding a client's estate, building the harness that proves equivalence, migrating the data, and running the cutover without stopping the business. That is where a services company earns its money: discovery, verification and cutover — the same space tools like EPAM MF Lens target on the analysis side.
 
 Practical pairing by platform: an AWS client, use Transform and add Imogen-style verification. An IBM Z shop that stays on Z, Bob for Z, self-hosted if needed. A GCP client, the Assessment Tool plus Dual Run. Sovereign or multi-cloud, an open pipeline like our workshop with self-hosted models; self-hosted Bob is the only big-vendor option we found.
 
@@ -455,7 +455,7 @@ Practical pairing by platform: an AWS client, use Transform and add Imogen-style
 ## Slide 21 — How we run an engagement
 **Timing:** 1:45 (30:15–32:00)
 **On slide:**
-- 1 Inventory and dependency graph, deterministic (MF Lens, ex1-style scanner)
+- 1 Inventory and dependency graph, deterministic (ex1-style scanner; commercial options include EPAM MF Lens)
 - 2 Get the oracle running: a test LPAR, or a GnuCOBOL / Micro Focus harness. No oracle → price the harness work first
 - 3 Capture production-like inputs; generate scenarios (sample data is all zeros)
 - 4 Extract rules with an LLM, with citations; verify with SMEs; keep the answer key
@@ -466,7 +466,7 @@ Practical pairing by platform: an AWS client, use Transform and add Imogen-style
 **Speaker notes:**
 So how do we run an engagement? Seven steps, and each one maps to something you saw.
 
-One, inventory and dependency graph, deterministic. MF Lens or a scanner like exercise 1. The model explains the graph; it does not build it.
+One, inventory and dependency graph, deterministic. A scanner like exercise 1, or a commercial graph tool such as EPAM MF Lens. The model explains the graph; it does not build it.
 
 Two, get the oracle running before anything else. A test LPAR at the client, or a harness on GnuCOBOL or Micro Focus. If the client cannot give you a running legacy or data, price the harness work first, because everything else depends on it.
 
@@ -486,7 +486,7 @@ Seven, cut over with a strangler pattern and parallel run. And for every defect 
 **Timing:** 1:15 (32:00–33:15)
 **On slide:**
 - We did **not** run AWS Transform, Google MAT, IBM Bob or Imogen (accounts / contracts needed); all vendor facts come from docs
-- All productivity numbers are vendor claims 🟡: EPAM 60%, Mechanical Orchard 10k LOC/week and 11,578 LOC in 28 hours, AWS "years to months"
+- All productivity numbers are vendor claims 🟡: EPAM's "60% time savings", Mechanical Orchard 10k LOC/week and 11,578 LOC in 28 hours, AWS "years to months"
 - Prices not public ❌: Google MAT / Dual Run, IBM Bob for Z, Mechanical Orchard, Heirloom, TSRI, CloudFrame
 - Secondary only 🟠: IBM share drop (Reuters paywalled), GAO report (summary)
 - Our workshop: one batch program, free models, no online (CICS/BMS) runtime, no EBCDIC / COMP-3 data
@@ -497,7 +497,7 @@ Before the summary, what I did not verify, so you can calibrate everything I sai
 
 We did not run any of the big platforms: AWS Transform, Google's tool, IBM Bob or Imogen. They need accounts or contracts. Everything about them comes from their documentation and announcements.
 
-Every productivity number in this space is a vendor claim, including ours: EPAM's 60 percent, Mechanical Orchard's ten thousand lines per engineer per week and their 11,578 lines in 28 hours, AWS's "years to months".
+Every productivity number in this space is a vendor claim: EPAM's 60 percent reverse-engineering savings, Mechanical Orchard's ten thousand lines per engineer per week and their 11,578 lines in 28 hours, AWS's "years to months".
 
 Most prices are not public. The IBM share drop and the GAO report I read only through secondary sources.
 
@@ -549,7 +549,7 @@ We did not test one; it is a listed stretch goal ([workshop-plan.md](workshop-pl
 Speed of iteration and zero setup for a workshop. The diamond is language-agnostic: it compares records, not code. Porting the reference to Java/Spring behind the same diamond is a listed stretch goal ([workshop-plan.md](workshop-plan.md)).
 
 **Q5. Is it legal / safe to send client COBOL to a cloud LLM?**
-Depends on the contract. Options from comparison.md: IBM Bob for Z can be self-hosted on the customer's OpenShift with approved models ✅; Google MAT runs in the client's GCP project ✅; AWS Transform runs in AWS regions ✅; Microsoft's agents and our pipeline can use self-hosted models. MF Lens routes model calls through a LiteLLM proxy ✅ ([MF Lens docs](https://docs.codemie.ai/admin/deployment/extensions/mf-lens/)), so the model is configurable.
+Depends on the contract. Options from comparison.md: IBM Bob for Z can be self-hosted on the customer's OpenShift with approved models ✅; Google MAT runs in the client's GCP project ✅; AWS Transform runs in AWS regions ✅; Microsoft's agents and an open workshop-style pipeline can use self-hosted models. EPAM MF Lens routes model calls through a LiteLLM proxy ✅ ([MF Lens docs](https://docs.codemie.ai/admin/deployment/extensions/mf-lens/)), so the model is configurable.
 
 **Q6. Should we always replicate bugs bug-for-bug?**
 No - but never fix silently. The diamond makes each deviation visible (fixing the last-account defect drops equivalence to 9/25 🧪), and the business decides per defect, in writing. Often: replicate first for a clean parallel run, then fix as a separate, tested change.
@@ -564,10 +564,10 @@ Correct: CBACT04C in CardDemo uses ASCII extracts and no COMP-3 ([comparison.md]
 We only have our own number for one program: build ~1 s, one run ~20 ms, full diamond 0.5-0.7 s 🧪 - runtime, not effort. Effort depends on how many LE services, files and JCL features need shims; ex1's graph (copybooks, datasets, calls) is the input for that estimate. We have no verified effort benchmark across programs.
 
 **Q10. Is "10,000 lines of verified code per engineer per week" realistic?**
-It is Mechanical Orchard's own claim 🟡 ([Imogen Summer 2026](https://www.mechanical-orchard.com/insights/whats-new-in-imogen-the-summer-2026-release)), like their 11,578 LOC in 28 hours and EPAM's 60%. None is independently reproduced. Ask what "verified" means: which scenarios, which comparison schema.
+It is Mechanical Orchard's own claim 🟡 ([Imogen Summer 2026](https://www.mechanical-orchard.com/insights/whats-new-in-imogen-the-summer-2026-release)), like their 11,578 LOC in 28 hours and EPAM's claimed 60% reverse-engineering savings. None is independently reproduced. Ask what "verified" means: which scenarios, which comparison schema.
 
-**Q11. Does EPAM have a product here, or are we just a delivery partner?**
-MF Lens is EPAM IP inside AI/Run CodeMie for mainframe code analysis and exploration ✅, and it was named on the Q2 2026 call ✅. ISG's US 2026 mainframe report does not name EPAM among leaders ✅. The open part of the market is the verification harness and cutover, which is delivery-heavy - where we are strong.
+**Q11. Does EPAM have a product in this space?**
+Publicly, yes on the analysis side: MF Lens is EPAM IP inside AI/Run CodeMie for mainframe code analysis and exploration ✅, and it was named on the Q2 2026 call ✅. ISG's US 2026 mainframe report does not name EPAM among leaders ✅. Separately, the open part of the market for any services firm is still the verification harness and cutover — delivery-heavy work around whatever discovery tool is chosen.
 
 **Q12. What about old Java/.NET - is AI more useful there?**
 The gap between source and target is smaller, so deterministic recipes do most of the work: OpenRewrite/Moderne, GitHub Copilot modernization (uses OpenRewrite), AWS Transform for .NET ✅ ([comparison.md](comparison.md)). The model picks and composes recipes and fixes build errors; builds and tests are the check. We ran no workshop on it yet.

@@ -1,7 +1,7 @@
 # AI-assisted legacy modernization: research notes
 
 Topic: AI-assisted modernization of legacy systems (COBOL/PL/I on mainframes, old Java/.NET), seen from the side of a
-services company (EPAM-style): what clients are asking for, what the vendors sell, what actually works, and what we must
+services company: what clients are asking for, what the vendors sell, what actually works, and what we must
 be able to demo.
 
 All sources were checked on **2026-10-17** unless noted. Legend (same as the other topics):
@@ -13,8 +13,9 @@ All sources were checked on **2026-10-17** unless noted. Legend (same as the oth
 
 ## TL;DR (key findings)
 
-1. **Demand is real and is shifting from "convert code" to "understand + verify".** EPAM's own Q2 2026 call names AI-led
-   mainframe modernization (with its MF Lens IP) as a driver of the fastest-growing vertical (financial services). Kyndryl
+1. **Demand is real and is shifting from "convert code" to "understand + verify".** EPAM's public Q2 2026 call names AI-led
+   mainframe modernization (with its MF Lens IP) as a driver of its fastest-growing vertical (financial services) — a demand
+   signal from a large services vendor, not our claim. Kyndryl
    (2,000 leaders, Oct 2026): only **9%** fully understand application dependencies; nearly half are behind schedule.
    ISG (Apr 2026): enterprises use GenAI to *extract and validate business rules* and prove functional equivalence through
    parallel testing.
@@ -51,7 +52,7 @@ All sources were checked on **2026-10-17** unless noted. Legend (same as the oth
 | Feb 23 2026 Anthropic article "COBOL modernization with AI: breaking the cost barrier": Claude Code automates exploration/analysis; "quarters instead of years"; COBOL ~95% of US ATM transactions | ✅ (article) / 🟡 (claims) | [claude.com article](https://claude.com/resources/articles/how-ai-helps-break-cost-barrier-cobol-modernization) |
 | IBM shares fell 13.2% next day, biggest drop in 25+ years; IBM (Rob Thomas): "Translation captures almost none of the actual complexity" | 🟠 (ITPro citing Reuters; Reuters paywalled for us) | [ITPro](https://www.itpro.com/software/development/anthropic-says-claude-code-can-help-streamline-cost-prohibitive-cobol-modernization-but-ibm-says-its-not-that-simple-decades-of-hardware-software-integration-cannot-be-replicated-by-moving-code), [Reuters](https://www.reuters.com/business/ibm-posts-steepest-daily-drop-since-2000-after-anthropic-says-ai-can-modernize-2026-02-24/) |
 
-**Takeaway for EPAM:** the client conversation is "we don't know what this does, prove the new thing does the same, and
+**Takeaway for a services company:** the client conversation is "we don't know what this does, prove the new thing does the same, and
 don't stop the business". The deliverable that wins is discovery + equivalence evidence + incremental cutover.
 
 ## 2. Vendor landscape (details in `comparison.md`)
