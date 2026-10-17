@@ -1,0 +1,8 @@
+# fetched by workshop/setup.sh (AWS CardDemo, Apache-2.0)
+workshop/vendor/
+# generated
+workshop/out/
+workshop/legacy/build/
+workshop/.venv/
+__pycache__/
+.env
