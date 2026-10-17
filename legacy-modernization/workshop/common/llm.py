@@ -46,9 +46,11 @@ def chat(messages: list[dict], temperature: float = 0.0, max_tokens: int = 8000,
             try:
                 t0 = time.time()
                 # Free "thinking" models can burn the whole max_tokens budget on hidden reasoning and return
-                # an empty answer (finish=length). Ask OpenRouter for low reasoning effort (ignored by others).
-                effort = os.environ.get("OPENROUTER_REASONING_EFFORT", "low")
-                extra = {"reasoning": {"effort": effort}} if effort != "default" else {}
+                # an empty or truncated answer (finish=length) after minutes. Default: reasoning off.
+                # OPENROUTER_REASONING=off|low|medium|high|default
+                mode = os.environ.get("OPENROUTER_REASONING", "off")
+                extra = ({"reasoning": {"enabled": False}} if mode == "off" else
+                         {} if mode == "default" else {"reasoning": {"effort": mode}})
                 r = c.chat.completions.create(model=model, messages=messages, temperature=temperature,
                                               max_tokens=max_tokens, extra_body=extra)
                 text = (r.choices[0].message.content or "").strip()

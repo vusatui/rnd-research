@@ -56,8 +56,16 @@ def copybooks() -> str:
     return "\n".join(out)
 
 
+def norm_ranges(rule: dict) -> list:
+    """Accept [[a, b]], [a, b], [[a]] and [a] (models are sloppy about the shape); keep invalid ones for reporting."""
+    raw = rule.get("source_lines") or []
+    if raw and all(isinstance(x, int) for x in raw):
+        raw = [raw] if len(raw) == 2 else [[x, x] for x in raw]
+    return [[r[0], r[0]] if isinstance(r, list) and len(r) == 1 else r for r in raw]
+
+
 def grounded(rule: dict) -> tuple[bool, str]:
-    ranges = rule.get("source_lines") or []
+    ranges = norm_ranges(rule)
     if not ranges:
         return False, "no source lines"
     text = ""
@@ -80,8 +88,10 @@ def score(rules: list[dict], gold: list[dict]) -> dict:
     for g in gold:
         for r in rules:
             blob = f"{r.get('title', '')} {r.get('description', '')}".lower()
-            ranges = [x for x in r.get("source_lines") or [] if isinstance(x, list) and len(x) == 2]
-            if any(overlaps(x, a) for x in ranges for a in g["anchor"]) and any(k.lower() in blob for k in g["keywords"]):
+            ranges = [x for x in norm_ranges(r) if isinstance(x, list) and len(x) == 2]
+            polarity_ok = not g.get("require_any") or any(k in blob for k in g["require_any"])
+            if (any(overlaps(x, a) for x in ranges for a in g["anchor"]) and polarity_ok
+                    and any(k.lower() in blob for k in g["keywords"])):
                 covered[g["id"]] = r.get("id")
                 break
     return {"recall": round(len(covered) / len(gold), 2), "covered": covered,
@@ -104,7 +114,15 @@ def run_once() -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", type=int, default=1)
+    ap.add_argument("--rescore", action="store_true", help="re-score out/rules.json against the answer key, no LLM call")
     a = ap.parse_args()
+    if a.rescore:
+        rules = json.loads((OUT / "rules.json").read_text())["rules"]
+        gold = json.loads((HERE / "gold_rules.json").read_text())["rules"]
+        s = score(rules, gold)
+        print(f"{len(rules)} rules | ungrounded {sum(1 for r in rules if not grounded(r)[0])} | "
+              f"recall {s['recall']} | missed: {', '.join(s['missed']) or '-'}")
+        return
     runs = []
     for i in range(a.runs):
         r = run_once()

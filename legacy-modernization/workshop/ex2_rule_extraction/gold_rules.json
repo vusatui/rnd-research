@@ -1,21 +1,301 @@
 {
-  "program": "CBACT04C",
-  "note": "Hand-written answer key, verified by reading the code AND by running the program under GnuCOBOL (see ex4). 'anchor' = line ranges in vendor/carddemo/app/cbl/CBACT04C.cbl at the pinned commit. A predicted rule covers a gold rule if one of its cited ranges overlaps an anchor AND its text mentions one of the keywords.",
-  "rules": [
-    {"id": "RATE_LOOKUP", "anchor": [[210, 213], [415, 420]], "keywords": ["group", "disclosure", "discgrp"], "text": "Interest rate is looked up in the disclosure-group file by (account group id, transaction type code, transaction category code)."},
-    {"id": "DEFAULT_FALLBACK", "anchor": [[436, 439], [443, 460]], "keywords": ["default"], "text": "If no disclosure record exists for the account's group (file status 23), the lookup is retried with group id 'DEFAULT' and the same type/category."},
-    {"id": "ZERO_RATE_SKIP", "anchor": [[214, 217]], "keywords": ["zero", "non-zero", "nonzero", "not = 0", "not equal", "!= 0", "<> 0", "is 0"], "text": "If the rate is 0, no interest is computed and no transaction is written for that category balance."},
-    {"id": "FORMULA", "anchor": [[462, 470]], "keywords": ["1200", "/ 12", "monthly"], "text": "Monthly interest = category balance x annual rate (percent) / 1200."},
-    {"id": "TRUNCATION", "anchor": [[462, 470], [168, 168]], "keywords": ["truncat", "round"], "text": "The result is truncated (not rounded) to 2 decimals because COMPUTE has no ROUNDED phrase and WS-MONTHLY-INT is S9(9)V99."},
-    {"id": "NEGATIVE_BALANCE", "anchor": [[462, 470]], "keywords": ["negative", "credit balance", "sign"], "text": "Negative category balances produce negative interest; there is no floor, cap or minimum charge."},
-    {"id": "ACCUMULATE_POST", "anchor": [[467, 467], [350, 356]], "keywords": ["total", "accumul", "sum", "add"], "text": "Per-category interest is summed per account and the total is added to ACCT-CURR-BAL when the account is rewritten."},
-    {"id": "RESET_CYCLE", "anchor": [[353, 354]], "keywords": ["cycle", "cyc"], "text": "When the account is rewritten, current-cycle credit and debit are reset to 0."},
-    {"id": "ACCOUNT_BREAK", "anchor": [[194, 206]], "keywords": ["break", "change", "previous", "new account", "different", "first"], "text": "Input is processed in key order with a control break on account id: the previous account is updated when the account id changes."},
-    {"id": "LAST_ACCOUNT_NOT_POSTED", "anchor": [[188, 222]], "keywords": ["last", "final", "end of file", "eof"], "text": "Latent defect: the PERFORM UNTIL loop exits right after EOF, so the ELSE branch never runs and the LAST account's interest is never added to its balance (its interest transactions are still written)."},
-    {"id": "TX_RECORD", "anchor": [[473, 515]], "keywords": ["transaction", "tran-record", "systran", "transact"], "text": "For each non-zero-rate category an interest transaction is written: type '01', category '05', source 'System', description 'Int. for a/c <acct id>', amount = monthly interest, card number from xref, timestamps = current time."},
-    {"id": "TRAN_ID", "anchor": [[474, 480]], "keywords": ["parm", "suffix", "sequence", "counter", "tran-id", "transaction id"], "text": "Transaction id = 10-char PARM date followed by a 6-digit running counter that is global across accounts (not reset per account)."},
-    {"id": "CARD_FROM_XREF", "anchor": [[204, 205], [393, 413], [495, 495]], "keywords": ["card", "xref", "cross"], "text": "The card number on the transaction comes from the card cross-reference file, read by alternate key = account id."},
-    {"id": "ABEND_ON_ERROR", "anchor": [[628, 632], [248, 248], [389, 389], [411, 411], [458, 458]], "keywords": ["abend", "999", "terminat", "abort"], "text": "Any unexpected file status (open/read/write errors, missing account, missing xref, missing DEFAULT rate) abends the job with user code 999."},
-    {"id": "FEES_STUB", "anchor": [[518, 520]], "keywords": ["fee"], "text": "1400-COMPUTE-FEES is an empty stub: no fees are charged."}
-  ]
+ "program": "CBACT04C",
+ "note": "Hand-written answer key, verified by reading the code AND by running the program under GnuCOBOL (see ex4). 'anchor' = line ranges in vendor/carddemo/app/cbl/CBACT04C.cbl at the pinned commit. A predicted rule covers a gold rule if one of its cited ranges overlaps an anchor AND its text mentions one of the keywords. Optional 'require_any': the predicted text must ALSO contain one of these (catches rules that cite the right lines but state the opposite, e.g. 'the last account IS updated').",
+ "rules": [
+  {
+   "id": "RATE_LOOKUP",
+   "anchor": [
+    [
+     210,
+     213
+    ],
+    [
+     415,
+     420
+    ]
+   ],
+   "keywords": [
+    "group",
+    "disclosure",
+    "discgrp"
+   ],
+   "text": "Interest rate is looked up in the disclosure-group file by (account group id, transaction type code, transaction category code)."
+  },
+  {
+   "id": "DEFAULT_FALLBACK",
+   "anchor": [
+    [
+     436,
+     439
+    ],
+    [
+     443,
+     460
+    ]
+   ],
+   "keywords": [
+    "default"
+   ],
+   "text": "If no disclosure record exists for the account's group (file status 23), the lookup is retried with group id 'DEFAULT' and the same type/category."
+  },
+  {
+   "id": "ZERO_RATE_SKIP",
+   "anchor": [
+    [
+     214,
+     217
+    ]
+   ],
+   "keywords": [
+    "zero",
+    "non-zero",
+    "nonzero",
+    "not = 0",
+    "not equal",
+    "!= 0",
+    "<> 0",
+    "is 0"
+   ],
+   "text": "If the rate is 0, no interest is computed and no transaction is written for that category balance."
+  },
+  {
+   "id": "FORMULA",
+   "anchor": [
+    [
+     462,
+     470
+    ]
+   ],
+   "keywords": [
+    "1200",
+    "/ 12",
+    "monthly"
+   ],
+   "text": "Monthly interest = category balance x annual rate (percent) / 1200."
+  },
+  {
+   "id": "TRUNCATION",
+   "anchor": [
+    [
+     462,
+     470
+    ],
+    [
+     168,
+     168
+    ]
+   ],
+   "keywords": [
+    "truncat",
+    "round"
+   ],
+   "text": "The result is truncated (not rounded) to 2 decimals because COMPUTE has no ROUNDED phrase and WS-MONTHLY-INT is S9(9)V99.",
+   "require_any": [
+    "truncat",
+    "no rounded",
+    "not rounded",
+    "without round"
+   ]
+  },
+  {
+   "id": "NEGATIVE_BALANCE",
+   "anchor": [
+    [
+     462,
+     470
+    ]
+   ],
+   "keywords": [
+    "negative",
+    "credit balance",
+    "sign"
+   ],
+   "text": "Negative category balances produce negative interest; there is no floor, cap or minimum charge."
+  },
+  {
+   "id": "ACCUMULATE_POST",
+   "anchor": [
+    [
+     467,
+     467
+    ],
+    [
+     350,
+     356
+    ]
+   ],
+   "keywords": [
+    "total",
+    "accumul",
+    "sum",
+    "add"
+   ],
+   "text": "Per-category interest is summed per account and the total is added to ACCT-CURR-BAL when the account is rewritten."
+  },
+  {
+   "id": "RESET_CYCLE",
+   "anchor": [
+    [
+     353,
+     354
+    ]
+   ],
+   "keywords": [
+    "cycle",
+    "cyc"
+   ],
+   "text": "When the account is rewritten, current-cycle credit and debit are reset to 0."
+  },
+  {
+   "id": "ACCOUNT_BREAK",
+   "anchor": [
+    [
+     194,
+     206
+    ]
+   ],
+   "keywords": [
+    "break",
+    "change",
+    "previous",
+    "new account",
+    "different",
+    "first"
+   ],
+   "text": "Input is processed in key order with a control break on account id: the previous account is updated when the account id changes."
+  },
+  {
+   "id": "LAST_ACCOUNT_NOT_POSTED",
+   "anchor": [
+    [
+     188,
+     222
+    ]
+   ],
+   "keywords": [
+    "last account",
+    "final account",
+    "last record",
+    "last acct"
+   ],
+   "text": "Latent defect: the PERFORM UNTIL loop exits right after EOF, so the ELSE branch never runs and the LAST account's interest is never added to its balance (its interest transactions are still written).",
+   "require_any": [
+    "never",
+    "not posted",
+    "not updated",
+    "not applied",
+    "not added",
+    "not rewritten",
+    "defect",
+    "bug",
+    "skipped",
+    "missing",
+    "omitted",
+    "is lost",
+    "does not"
+   ]
+  },
+  {
+   "id": "TX_RECORD",
+   "anchor": [
+    [
+     473,
+     515
+    ]
+   ],
+   "keywords": [
+    "transaction",
+    "tran-record",
+    "systran",
+    "transact"
+   ],
+   "text": "For each non-zero-rate category an interest transaction is written: type '01', category '05', source 'System', description 'Int. for a/c <acct id>', amount = monthly interest, card number from xref, timestamps = current time."
+  },
+  {
+   "id": "TRAN_ID",
+   "anchor": [
+    [
+     474,
+     480
+    ]
+   ],
+   "keywords": [
+    "parm",
+    "suffix",
+    "sequence",
+    "counter",
+    "tran-id",
+    "transaction id"
+   ],
+   "text": "Transaction id = 10-char PARM date followed by a 6-digit running counter that is global across accounts (not reset per account)."
+  },
+  {
+   "id": "CARD_FROM_XREF",
+   "anchor": [
+    [
+     204,
+     205
+    ],
+    [
+     393,
+     413
+    ],
+    [
+     495,
+     495
+    ]
+   ],
+   "keywords": [
+    "card",
+    "xref",
+    "cross"
+   ],
+   "text": "The card number on the transaction comes from the card cross-reference file, read by alternate key = account id."
+  },
+  {
+   "id": "ABEND_ON_ERROR",
+   "anchor": [
+    [
+     628,
+     632
+    ],
+    [
+     248,
+     248
+    ],
+    [
+     389,
+     389
+    ],
+    [
+     411,
+     411
+    ],
+    [
+     458,
+     458
+    ]
+   ],
+   "keywords": [
+    "abend",
+    "999",
+    "terminat",
+    "abort"
+   ],
+   "text": "Any unexpected file status (open/read/write errors, missing account, missing xref, missing DEFAULT rate) abends the job with user code 999."
+  },
+  {
+   "id": "FEES_STUB",
+   "anchor": [
+    [
+     518,
+     520
+    ]
+   ],
+   "keywords": [
+    "fee"
+   ],
+   "text": "1400-COMPUTE-FEES is an empty stub: no fees are charged."
+  }
+ ]
 }
