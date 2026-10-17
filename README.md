@@ -13,3 +13,7 @@ A collection of R&D research. Each topic lives in its own folder and includes an
 
 - One topic = one top-level folder with its own `README.md`.
 - Never commit secrets: use `.env` (it is in `.gitignore`) with `.env.example` as a template.
+
+## Backlog
+
+The single source of truth for topics and their status is the [R&D Research project board](https://github.com/users/vusatui/projects/3).
