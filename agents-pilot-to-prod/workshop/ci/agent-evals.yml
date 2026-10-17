@@ -1,0 +1,24 @@
+# Example GitHub Actions workflow (NOT active: copy to .github/workflows/ in your own repo to use it).
+# Runs offline tests on every PR, and the LLM eval suite + regression gate when agent code or prompts change.
+name: agent-evals
+on:
+  pull_request:
+    paths: ["agents-pilot-to-prod/workshop/agent/**", "agents-pilot-to-prod/workshop/ex2_evals/**"]
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults: { run: { working-directory: agents-pilot-to-prod/workshop } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q tests                 # deterministic, no LLM
+      - name: Eval suite + gate (fails the PR on regression)
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python ex2_evals/run_evals.py --prompt v1 --guards --repeats 2 --baseline ex2_evals/baseline.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: eval-results, path: agents-pilot-to-prod/workshop/out/ }
