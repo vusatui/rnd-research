@@ -67,8 +67,8 @@ def from_gateway(path: Path) -> list[dict]:
         calls.append({"ts": str(r.get("startTime"))[:19].replace(" ", "T"), "model": model,
                       "input_tokens": r.get("prompt_tokens") or 0, "cached_tokens": 0, "cache_write_tokens": 0,
                       "output_tokens": r.get("completion_tokens") or 0,
-                      "team": md.get("user_api_key_team_alias") or "unknown",
-                      "principal": md.get("user_api_key_alias") or "unknown",
+                      "team": md.get("user_api_key_team_alias") or r.get("team_alias") or "unknown",
+                      "principal": md.get("user_api_key_alias") or r.get("key_alias") or "unknown",
                       "feature": next((t for t in (r.get("request_tags") or []) if not t.startswith(("T", "User-"))),
                                       "untagged"),
                       "config": f"gateway:{r.get('model_group')}", "gateway_spend": r.get("spend")})
@@ -81,9 +81,13 @@ def main():
     ap.add_argument("--gateway", nargs="?", const=str(OUT / "gateway_spend_logs.json"),
                     help="use LiteLLM spend logs (from run_teams.py --report) instead of the workshop ledger")
     a = ap.parse_args()
+    if a.gateway and not Path(a.gateway).exists():
+        raise SystemExit(f"{a.gateway} not found: run `python ex4_gateway/run_teams.py --report` first, or use the "
+                         "committed logs: python ex4_gateway/to_focus.py --gateway results/gateway_spend_logs_reduced.json")
     calls = from_gateway(Path(a.gateway)) if a.gateway else load(run=a.run)
     if not calls:
-        raise SystemExit("ledger is empty: run ex2_levers/run_levers.py first")
+        raise SystemExit("ledger is empty (out/ledger.jsonl is written by live runs): run ex2_levers/run_levers.py "
+                         "or cache_probe.py first")
     out = OUT / ("focus_gateway.csv" if a.gateway else "focus_cost_usage.csv")
     agg = defaultdict(lambda: [0, 0.0])
     n = 0

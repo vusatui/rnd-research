@@ -3,7 +3,8 @@
 Goal: participants leave able to (1) compute **$ per successful task** for an LLM feature, (2) predict and measure the
 effect of the main cost levers on cost *and* quality, (3) put a gateway with budgets and attribution in front of a
 feature and produce a FOCUS-shaped chargeback, and (4) reason about self-host break-even with explicit assumptions.
-Code and commands: [`workshop/README.md`](workshop/README.md). All numbers below were measured on **2026-10-19** with
+Code and commands: [`workshop/README.md`](workshop/README.md); participant guide:
+[`workshop/PARTICIPANTS.md`](workshop/PARTICIPANTS.md). All numbers below were measured on **2026-10-19** with
 free OpenRouter models (large = `nvidia/nemotron-3-ultra-550b-a55b:free`, small = `nvidia/nemotron-3.5-lightning:free`),
 reasoning/retries/fallbacks off, one run per configuration, n=16 tickets. Costs are **shadow costs** from published
 paid prices (twin = paid OpenRouter endpoint of the same model; frontier = gpt-6.1-sol / gpt-6-luna list prices).
@@ -95,7 +96,8 @@ LiteLLM v1.106.0 (OSS) + Postgres 16, frontier shadow prices in the model config
   served). Team spend shown to the client lags by one request.
 - Team **growth** ($0.01, small only): `large` → HTTP 403 (not on allow-list); two small calls $0.00091.
 - Gotchas: key-level tags are Enterprise-only (403); per-request `metadata.tags` work. With the `openrouter/`
-  provider prefix free models were logged at $0 despite custom prices, so budgets never tripped - verify the gateway's
+  provider prefix free models were logged at $0 despite custom prices, so budgets never tripped (cause: LiteLLM takes OpenRouter's
+  reported `usage.cost`, 0 for `:free`, before custom prices; demo alias `small-openrouter-prefix`) - verify the gateway's
   cost numbers against a hand calculation before trusting a budget.
 - `to_focus.py` turned the spend logs and the local ledger into FOCUS-shaped rows (one row per model x token direction
   x cache action, `PrincipalId` = team key alias, never the key, `Tags` = team/feature/config) and a chargeback table:

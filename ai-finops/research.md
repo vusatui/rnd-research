@@ -48,7 +48,9 @@ Prices change monthly. Every price below is "as read on 2026-10-19" from the lin
 7. **Budgets need a gateway, and gateways need checking.** Self-hosted LiteLLM enforced a per-team budget and a model
    allow-list in our run 🧪, but (a) the budget check happens before the request, so the team ended at 112% of budget;
    (b) with the `openrouter/` provider prefix our custom prices were silently ignored ($0 logged), so budgets never
-   tripped until we switched provider type; (c) key-level tags are an Enterprise feature. Cloudflare documents the same
+   tripped until we switched provider type (root cause, traced in the v1.106.0 source and reproduced: the OpenRouter
+   integration copies OpenRouter's own `usage.cost`, 0 for `:free` models, into the response cost, which takes precedence
+   over custom prices 🧪); (c) key-level tags are an Enterprise feature. Cloudflare documents the same
    eventual consistency for its spend limits ✅. Verify gateway cost numbers against a hand calculation.
 8. **Self-hosting wins only at high, steady utilization.** The break-even is a utilization question: with our
    assumptions (8xH100 at $3.50/GPU-h, 5,000 tok/s, $15k/month ops) a replica must run at ~64% average utilization to

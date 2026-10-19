@@ -1,6 +1,7 @@
 # LiteLLM proxy (self-hosted AI gateway) for the workshop.
 # Two model aliases point at FREE OpenRouter endpoints. Free models cost $0, and LiteLLM skips budget checks for
-# zero-cost models, so we attach SHADOW prices (model_info) = the frontier price card used in the workshop:
+# zero-cost models, so we attach SHADOW prices (per-token costs in litellm_params; the docs also show them under
+# model_info) = the frontier price card used in the workshop:
 #   large -> priced like gpt-6.1-sol: $2.00 in / $0.10 cached / $10.00 out per 1M tokens
 #   small -> priced like gpt-6-luna:  $0.10 in / $0.01 cached / $0.50 out per 1M tokens
 # Source: https://platform.openai.com/docs/pricing (read 2026-10-19). Budgets below are in these shadow dollars.
@@ -18,6 +19,20 @@ model_list:
     litellm_params:
       model: openai/nvidia/nemotron-3.5-lightning:free
       api_base: https://openrouter.ai/api/v1
+      api_key: os.environ/OPENROUTER_API_KEY
+      max_retries: 0
+      input_cost_per_token: 0.0000001
+      cache_read_input_token_cost: 0.00000001
+      output_cost_per_token: 0.0000005
+  # PITFALL DEMO (not on any team's allow-list): the same small model through LiteLLM's native `openrouter/`
+  # provider with the SAME custom prices. LiteLLM v1.106.0 asks OpenRouter for usage accounting
+  # (llms/openrouter/chat/transformation.py adds usage.include=true and copies usage.cost into the
+  # `x-litellm-response-cost` hidden header), and cost_calculator.response_cost_calculator() returns that
+  # provider-stated cost BEFORE it looks at custom prices. usage.cost is 0 for `:free` models -> spend $0,
+  # budgets never trip. See workshop/PARTICIPANTS.md, Exercise 4.
+  - model_name: small-openrouter-prefix
+    litellm_params:
+      model: openrouter/nvidia/nemotron-3.5-lightning:free
       api_key: os.environ/OPENROUTER_API_KEY
       max_retries: 0
       input_cost_per_token: 0.0000001

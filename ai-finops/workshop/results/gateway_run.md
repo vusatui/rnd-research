@@ -41,5 +41,8 @@ Observations
   2. With the `openrouter/` provider prefix, free-model calls were logged at **$0 even with custom per-token
      prices** (warning: "Billable request priced at $0 ... pricing_not_applied"), so budgets never tripped. Routing
      the same models through the generic OpenAI-compatible provider (`openai/<model>` + `api_base`) applied our
-     prices. Root cause not investigated. Lesson: verify the gateway's cost numbers against a hand calculation
+     prices. Root cause (traced later in the v1.106.0 source and reproduced in a 2-call test, see
+     `../PARTICIPANTS.md` Exercise 4): `llms/openrouter/chat/transformation.py` copies OpenRouter's own `usage.cost`
+     (0 for `:free`) into the `x-litellm-response-cost` hidden header, and `cost_calculator.response_cost_calculator()`
+     returns that provider-stated cost before custom prices are considered. Lesson: verify the gateway's cost numbers against a hand calculation
      before trusting budgets built on them.

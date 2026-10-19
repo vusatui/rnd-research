@@ -462,7 +462,7 @@ The clouds have native pieces: Bedrock application inference profiles with cost-
 - LiteLLM v1.106.0 OSS + Postgres 16, frontier shadow prices in the model config 🧪
 - Team **support** ($0.05 budget): requests 1-6 served, #7 → HTTP 422 "Budget has been exceeded"; final spend $0.05619 = **112%** (check runs before the call) 🧪
 - Team **growth** ($0.01, small model only): `large` → HTTP **403** (not on allow-list); 2 small calls $0.00091 🧪
-- Gotchas 🧪: team spend lags one request; key-level tags = Enterprise-only (403), per-request `metadata.tags` work; with the `openrouter/` prefix our custom prices were logged as **$0** → budgets never tripped (root cause not investigated ❌)
+- Gotchas 🧪: team spend lags one request; key-level tags = Enterprise-only (403), per-request `metadata.tags` work; with the `openrouter/` prefix our custom prices were logged as **$0** → budgets never tripped; root cause found 🧪: LiteLLM uses OpenRouter's own `usage.cost` (0 for `:free`) before custom prices
 - Cloudflare documents the same: spend limits are eventually consistent, may overshoot ✅
 - `to_focus.py`: one FOCUS-shaped row per model × token direction × cache action, `PrincipalId` = key alias, never the key 🧪
 
@@ -473,7 +473,7 @@ The support team had a budget of five cents and access to both models. Requests 
 
 The growth team was allowed only the small model. Its call to the large model got a 403. The allow-list is a cost control in itself.
 
-Three gotchas. The team spend shown to the client application lags by one request. Tags on the key itself are an Enterprise feature in LiteLLM; tags on each request work. And the big one: when we routed free models with the openrouter provider prefix, the gateway logged every call at zero dollars despite our custom prices, so the budgets never tripped. Switching to the generic OpenAI-compatible provider fixed it; we did not investigate the root cause. Verify your gateway's cost numbers against a hand calculation before you trust a budget built on them.
+Three gotchas. The team spend shown to the client application lags by one request. Tags on the key itself are an Enterprise feature in LiteLLM; tags on each request work. And the big one: when we routed free models with the openrouter provider prefix, the gateway logged every call at zero dollars despite our custom prices, so the budgets never tripped. Switching to the generic OpenAI-compatible provider fixed it. The root cause: LiteLLM's OpenRouter integration takes the cost that OpenRouter itself reports in each response, and for free models that is zero, and it uses that number before it ever looks at your custom prices. Verify your gateway's cost numbers against a hand calculation before you trust a budget built on them.
 
 Finally, a small script turned the spend logs into FOCUS-shaped rows: one per model, token direction and cache action, with the key alias as principal id, never the key.
 
@@ -526,7 +526,7 @@ The decision rule is boring on purpose: start with the gateway your platform tea
 **On slide:**
 - Our workshop 🧪: one free model pair, **16 tickets, one run per config** → 1-2 ticket differences are noise; our regex checks missed an invented "$5,000"
 - Provider caching on **paid** endpoints not measured; free-endpoint caching undocumented ❌; multipliers applied by simulation
-- Gateways: only LiteLLM v1.106.0 OSS tested; Portkey, Cloudflare, Kong, Envoy, Azure APIM, Bedrock attribution = docs only; `$0` root cause not investigated ❌
+- Gateways: only LiteLLM v1.106.0 OSS tested; Portkey, Cloudflare, Kong, Envoy, Azure APIM, Bedrock attribution = docs only; `$0` root cause traced in LiteLLM's source and reproduced once, not reported upstream 🧪
 - Not run: batch APIs, prompt compression, distillation
 - FOCUS export hand-shaped from 1.4 columns + 1.5 **draft** names; not validated
 - Surveys and interviews (Accenture, McKinsey, EY) 🟡; Gartner 🔮; GPU prices and blog break-evens 🟠; our throughput is an assumption
@@ -538,7 +538,7 @@ Our own numbers are small: one free model pair, 16 tickets, one run per configur
 
 We did not measure provider caching on paid endpoints. The free endpoint's caching is undocumented and sporadic, so the caching savings come from a simulation with published multipliers.
 
-We only tested LiteLLM's open-source version. Everything about Portkey, Cloudflare, Kong, Envoy, Azure and Bedrock comes from documentation, and we did not find the root cause of the zero-dollar pricing bug. We did not run batch APIs, prompt compression or distillation. Our FOCUS export is shaped by hand from the 1.4 columns and the 1.5 draft names and was not validated.
+We only tested LiteLLM's open-source version. Everything about Portkey, Cloudflare, Kong, Envoy, Azure and Bedrock comes from documentation, and we traced the zero-dollar pricing bug in LiteLLM's source and reproduced it, but did not report it upstream. We did not run batch APIs, prompt compression or distillation. Our FOCUS export is shaped by hand from the 1.4 columns and the 1.5 draft names and was not validated.
 
 The survey and interview numbers are self-reported by their publishers, the Gartner number is a forecast, the GPU prices and published break-evens are secondary, and our GPU throughput is an assumption.
 

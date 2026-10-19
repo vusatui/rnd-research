@@ -12,7 +12,13 @@ docker rm -f finops-pg finops-litellm >/dev/null 2>&1 || true
 PG_PORT="${PG_PORT:-55432}"
 docker run -d --name finops-pg --network host -e POSTGRES_USER=llm -e POSTGRES_PASSWORD=llm -e PGPORT="$PG_PORT" \
   -e POSTGRES_DB=litellm postgres:16-alpine -c listen_addresses=127.0.0.1 >/dev/null
-until docker exec finops-pg pg_isready -U llm -h 127.0.0.1 -p "$PG_PORT" >/dev/null 2>&1; do sleep 1; done
+for i in $(seq 1 60); do
+  docker exec finops-pg pg_isready -U llm -h 127.0.0.1 -p "$PG_PORT" >/dev/null 2>&1 && break
+  if [ "$(docker inspect -f '{{.State.Running}}' finops-pg 2>/dev/null)" != "true" ] || [ "$i" = 60 ]; then
+    echo "Postgres did not start (port $PG_PORT busy? try PG_PORT=55433 ./up.sh):"; docker logs --tail 5 finops-pg; exit 1
+  fi
+  sleep 1
+done
 docker run -d --name finops-litellm --network host \
   -e OPENROUTER_API_KEY -e LITELLM_MASTER_KEY="$MASTER" \
   -e DATABASE_URL="postgresql://llm:llm@127.0.0.1:${PG_PORT}/litellm" \

@@ -20,4 +20,4 @@ d = json.load(urllib.request.urlopen(req, timeout=20))["data"]
 q = d.get("free_model_daily_requests") or {}
 print(f"free-model requests today (UTC day): used {q.get('used', '?')} / limit {q.get('limit', '?')} "
       f"-> remaining {q.get('remaining', '?')}")
-print("the full workshop needs ~200 requests; with a 50/day limit use --only (see README.md)")
+print("the full workshop as run used ~230 requests; with a 50/day limit use --only (see README.md)")

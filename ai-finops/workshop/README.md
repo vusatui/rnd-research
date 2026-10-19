@@ -24,6 +24,8 @@ results/        committed outputs of the runs described in workshop-plan.md
 tests/          offline tests (no network)
 ```
 
+Step-by-step participant guide with expected outputs and troubleshooting: [`PARTICIPANTS.md`](PARTICIPANTS.md).
+
 ## Setup
 
 ```bash
@@ -79,7 +81,9 @@ python ex5_breakeven/breakeven.py --gpu-hour 10       # hyperscaler-like GPU pri
 - The gateway master key in `up.sh` is a workshop placeholder; generated team keys go to `out/gateway_keys.json`
   (git-ignored). Everything listens on 127.0.0.1 only.
 - In LiteLLM v1.106.0 the `openrouter/` provider prefix logged $0 for `:free` models even with custom prices, so the
-  budget never tripped; the config uses the `openai/` provider with `api_base: https://openrouter.ai/api/v1` instead.
+  budget never tripped: LiteLLM uses the cost OpenRouter reports in `usage.cost` (0 for free models) before custom
+  prices. The config uses the `openai/` provider with `api_base: https://openrouter.ai/api/v1` instead, and keeps a
+  `small-openrouter-prefix` alias to demonstrate the pitfall (details: [`PARTICIPANTS.md`](PARTICIPANTS.md), Exercise 4).
 - `to_focus.py` writes FOCUS 1.4 column names plus FOCUS 1.5 *draft* properties (ModelId, TokenDirection,
   TokenCacheAction) in `SkuPriceDetails`; BilledCost is 0 (free tier) and ListCost is the shadow cost. It is not
   validated against the FOCUS validator.

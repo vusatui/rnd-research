@@ -1,5 +1,6 @@
-"""List current OpenRouter ':free' models that support tool calling, with the list price of their paid twin
-(used for shadow cost). The free list changes often; pick one and set OPENROUTER_MODEL."""
+"""List current OpenRouter ':free' models ("tools" = supports tool calling) with the list price of their paid twin
+(used for shadow cost). The free list changes often; if a default model vanished, pick one WITH a paid twin and set
+LARGE_MODEL / SMALL_MODEL in .env (without a paid twin there is no shadow price)."""
 import json
 import urllib.request
 
