@@ -1,0 +1,484 @@
+{
+ "run": "levers-20261019-165100",
+ "models": {
+  "large": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "small": "nvidia/nemotron-3.5-lightning:free"
+ },
+ "llm_calls": 17,
+ "summary": {
+  "I_cascade_grounded": {
+   "tasks": 16,
+   "passed": 14,
+   "pass_rate": 0.875,
+   "errors": 0,
+   "calls": 17,
+   "escalated": 1,
+   "avg_input_tokens": 4310,
+   "cache_hit_rate": 0.152,
+   "avg_output_tokens": 87,
+   "usd_per_task_twin": 0.00036185687500000005,
+   "usd_per_task_frontier": 0.00064900625,
+   "usd_per_success_twin": 0.00041355071428571434,
+   "usd_per_success_frontier": 0.0007417214285714285,
+   "usd_month_twin": 36.18568750000001,
+   "usd_month_frontier": 64.900625,
+   "p50_latency_s": 1.52
+  }
+ },
+ "rows": {
+  "I_cascade_grounded": [
+   {
+    "ticket": "T01",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"billing\", \"reply\": \"Annual plans are refundable only within 30 days of the charge. Since you paid 3 weeks ago, you are still within the 30-day window. Request a refund from Settings > Billing > Request refund, or email support from your owner's address. Refunds take 5-10 business days to appear.\", \"sources\": [\"billing\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00025253000000000005,
+    "usd_frontier": 0.00028316,
+    "input_tokens": 4223,
+    "cached_tokens": 2096,
+    "output_tokens": 99,
+    "finish_reason": "stop",
+    "latency_s": 2.1271626949310303,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 48,
+     "confidence": 1.0,
+     "sources": [
+      "billing"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T02",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"billing\", \"reply\": \"I'm sorry to hear about the duplicate charge. To investigate, please provide the last 4 digits of the card used and the dates of the two charges. I will then escalate this to the billing team for a full refund.\", \"sources\": [\"billing\"], \"confidence\": 0.95}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00031003000000000004,
+    "usd_frontier": 0.00045940000000000005,
+    "input_tokens": 4209,
+    "cached_tokens": 0,
+    "output_tokens": 77,
+    "finish_reason": "stop",
+    "latency_s": 6.630503416061401,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 40,
+     "confidence": 0.95,
+     "sources": [
+      "billing"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T03",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"account\", \"reply\": \"As the workspace owner with no other admin, you must verify identity via a video call and government ID. This takes up to 3 business days. Contact support from your owner email to start the process.\", \"sources\": [\"account\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00030907000000000005,
+    "usd_frontier": 0.00045610000000000003,
+    "input_tokens": 4221,
+    "cached_tokens": 0,
+    "output_tokens": 68,
+    "finish_reason": "stop",
+    "latency_s": 1.3787074089050293,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": false,
+     "pass": false,
+     "missing": [
+      "recovery code"
+     ],
+     "words": 36,
+     "confidence": 1.0,
+     "sources": [
+      "account"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T04",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"account\", \"reply\": \"I cannot disable 2FA based on an email request alone. As a workspace owner on Business or Enterprise, you can reset 2FA for a member from Settings > Members. If you are the sole owner and have lost your recovery codes, support must verify your identity via a video call and government ID; this takes up to 3 business days. Please use one of your 10 recovery codes, or contact support from your owner email to start the identity verification process.\", \"sources\": [\"account\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00031986000000000004,
+    "usd_frontier": 0.00048330000000000004,
+    "input_tokens": 4218,
+    "cached_tokens": 0,
+    "output_tokens": 123,
+    "finish_reason": "stop",
+    "latency_s": 1.7107429504394531,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 81,
+     "confidence": 1.0,
+     "sources": [
+      "account"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T05",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"technical\", \"reply\": \"A sent invoice cannot be edited. Create a credit note (Invoice > More > Create credit note) for INV-2026-0142 and issue a new invoice with the correct amount. Drafts can be edited freely.\", \"sources\": [\"invoicing\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00024859,
+    "usd_frontier": 0.00027346000000000006,
+    "input_tokens": 4221,
+    "cached_tokens": 2096,
+    "output_tokens": 80,
+    "finish_reason": "stop",
+    "latency_s": 1.0302016735076904,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 33,
+     "confidence": 1.0,
+     "sources": [
+      "invoicing"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T06",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"technical\", \"reply\": \"Change the numbering prefix in Ledgerly under Settings > Invoicing > Numbering, or rename the conflicting document in QuickBooks. Then trigger a manual sync from Settings > Integrations.\", \"sources\": [\"integrations\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00024543000000000004,
+    "usd_frontier": 0.00026616000000000004,
+    "input_tokens": 4213,
+    "cached_tokens": 2096,
+    "output_tokens": 67,
+    "finish_reason": "stop",
+    "latency_s": 1.0322554111480713,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 28,
+     "confidence": 1.0,
+     "sources": [
+      "integrations"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T07",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"technical\", \"reply\": \"Team plan rate limits: 60 requests per minute and 10,000 per day per workspace. Exceeding returns HTTP 429 with Retry-After header. Limits apply per workspace, not per API key.\", \"sources\": [\"api\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00031065000000000004,
+    "usd_frontier": 0.0004605,
+    "input_tokens": 4215,
+    "cached_tokens": 0,
+    "output_tokens": 78,
+    "finish_reason": "stop",
+    "latency_s": 1.9050605297088623,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 29,
+     "confidence": 1.0,
+     "sources": [
+      "api"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T08",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"data_privacy\", \"reply\": \"The end-customer must be redirected to your business, because you are the data controller and Ledgerly is the processor. Support cannot delete data on behalf of an end-customer.\", \"sources\": [\"data\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00030873,
+    "usd_frontier": 0.0004554,
+    "input_tokens": 4219,
+    "cached_tokens": 0,
+    "output_tokens": 67,
+    "finish_reason": "stop",
+    "latency_s": 1.1825611591339111,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 28,
+     "confidence": 1.0,
+     "sources": [
+      "data"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T09",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"data_privacy\", \"reply\": \"To download all invoices and customers, go to Settings > Data > Export. Owners and admins can export data as CSV or a full JSON archive. Large exports may take up to 2 hours; a download link valid for 7 days will be emailed when ready. Invoice PDFs can be exported as a ZIP of up to 5,000 files per export.\", \"sources\": [\"data\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00031685000000000003,
+    "usd_frontier": 0.000476,
+    "input_tokens": 4215,
+    "cached_tokens": 0,
+    "output_tokens": 109,
+    "finish_reason": "stop",
+    "latency_s": 1.6669964790344238,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 61,
+     "confidence": 1.0,
+     "sources": [
+      "data"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T10",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"data_privacy\", \"reply\": \"Ledgerly is not HIPAA compliant and does not sign Business Associate Agreements (BAAs). Our platform cannot be used for patient billing under HIPAA regulations. Please contact our sales team at sales@ledgerly.example if you have Enterprise interest and would like to discuss alternative compliance options.\", \"sources\": [\"data\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00031394,
+    "usd_frontier": 0.00046820000000000005,
+    "input_tokens": 4222,
+    "cached_tokens": 0,
+    "output_tokens": 92,
+    "finish_reason": "stop",
+    "latency_s": 1.1526038646697998,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 44,
+     "confidence": 1.0,
+     "sources": [
+      "data"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T11",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"sales\", \"reply\": \"You need the Enterprise plan, which includes SAML SSO (Okta, Entra ID, OneLogin, any SAML 2.0 provider). Enterprise has custom pricing, a minimum of 50 seats, and requires an annual contract. For 120 seats, contact sales for a quote.\", \"sources\": [\"plans\", \"account\"], \"confidence\": 0.95}",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "usd_twin": 0.00143888,
+    "usd_frontier": 0.0044079,
+    "input_tokens": 5711,
+    "cached_tokens": 0,
+    "output_tokens": 199,
+    "finish_reason": "stop",
+    "latency_s": 7.645650148391724,
+    "calls": 2,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 39,
+     "confidence": 0.95,
+     "sources": [
+      "plans",
+      "account"
+     ]
+    },
+    "escalated": true,
+    "why": "ungrounded numbers ['$9900']"
+   },
+   {
+    "ticket": "T12",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"data_privacy\", \"reply\": \"Chorus Pro is on the roadmap with no committed date. Support must not promise a date.\", \"sources\": [\"data\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00024210000000000003,
+    "usd_frontier": 0.00025776,
+    "input_tokens": 4214,
+    "cached_tokens": 2096,
+    "output_tokens": 50,
+    "finish_reason": "stop",
+    "latency_s": 0.9176163673400879,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": false,
+     "facts_ok": true,
+     "pass": false,
+     "missing": [],
+     "words": 16,
+     "confidence": 1.0,
+     "sources": [
+      "data"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T13",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"technical\", \"reply\": \"Check the status page at status.ledgerly.example for current incidents. Support cannot speculate on cause or provide an ETA outside the status page.\", \"sources\": [\"support\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00030637000000000004,
+    "usd_frontier": 0.00045010000000000004,
+    "input_tokens": 4211,
+    "cached_tokens": 0,
+    "output_tokens": 58,
+    "finish_reason": "stop",
+    "latency_s": 21.728172063827515,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 22,
+     "confidence": 1.0,
+     "sources": [
+      "support"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T14",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"billing\", \"reply\": \"Yes, non-profits registered in the EU, UK, US or Canada get 30% off the Team and Business plans after verification. Upload your charity registration certificate under Settings > Billing > Discounts. Note that discounts cannot be combined with other offers.\", \"sources\": [\"billing\", \"plans\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00024978,
+    "usd_frontier": 0.00027666,
+    "input_tokens": 4218,
+    "cached_tokens": 2096,
+    "output_tokens": 87,
+    "finish_reason": "stop",
+    "latency_s": 1.0173051357269287,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 40,
+     "confidence": 1.0,
+     "sources": [
+      "billing",
+      "plans"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T15",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"account\", \"reply\": \"If the previous owner cannot be reached, send a request on company letterhead signed by a director. Support will escalate it to the trust team (tag: trust-escalation).\", \"sources\": [\"account\"], \"confidence\": 1.0}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00030819000000000007,
+    "usd_frontier": 0.00045420000000000004,
+    "input_tokens": 4217,
+    "cached_tokens": 0,
+    "output_tokens": 65,
+    "finish_reason": "stop",
+    "latency_s": 0.998387336730957,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 27,
+     "confidence": 1.0,
+     "sources": [
+      "account"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   },
+   {
+    "ticket": "T16",
+    "config": "I_cascade_grounded",
+    "raw": "{\"category\": \"technical\", \"reply\": \"Yes, this is a known issue for Android 15 with battery optimisation enabled. The workaround is to exclude Ledgerly from battery optimisation in Android settings. Push notifications are otherwise functional.\", \"sources\": [\"mobile\"], \"confidence\": 0.95}",
+    "model": "nvidia/nemotron-3.5-lightning:free",
+    "usd_twin": 0.00030871,
+    "usd_frontier": 0.0004558,
+    "input_tokens": 4213,
+    "cached_tokens": 0,
+    "output_tokens": 69,
+    "finish_reason": "stop",
+    "latency_s": 1.8588311672210693,
+    "calls": 1,
+    "score": {
+     "json_ok": true,
+     "category_ok": true,
+     "facts_ok": true,
+     "pass": true,
+     "missing": [],
+     "words": 30,
+     "confidence": 0.95,
+     "sources": [
+      "mobile"
+     ]
+    },
+    "escalated": false,
+    "why": "ok"
+   }
+  ]
+ }
+}

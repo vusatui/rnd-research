@@ -1,0 +1,62 @@
+{
+ "dynamic": [
+  {
+   "ticket": "T01",
+   "input": 8142,
+   "cached": 0,
+   "provider": "Nvidia",
+   "usd_twin": 0.00059134
+  },
+  {
+   "ticket": "T02",
+   "input": 8133,
+   "cached": 0,
+   "provider": "Nvidia",
+   "usd_twin": 0.0005837100000000001
+  },
+  {
+   "ticket": "T03",
+   "input": 8145,
+   "cached": 0,
+   "provider": "Nvidia",
+   "usd_twin": 0.0005851500000000001
+  },
+  {
+   "ticket": "T04",
+   "input": 8141,
+   "cached": 0,
+   "provider": "Nvidia",
+   "usd_twin": 0.00059567
+  }
+ ],
+ "stable": [
+  {
+   "ticket": "T01",
+   "input": 8141,
+   "cached": 0,
+   "provider": "Nvidia",
+   "usd_twin": 0.00059007
+  },
+  {
+   "ticket": "T02",
+   "input": 8129,
+   "cached": 6288,
+   "provider": "Nvidia",
+   "usd_twin": 0.00039579
+  },
+  {
+   "ticket": "T03",
+   "input": 8144,
+   "cached": 6288,
+   "provider": "Nvidia",
+   "usd_twin": 0.0003950400000000001
+  },
+  {
+   "ticket": "T04",
+   "input": 8142,
+   "cached": 6288,
+   "provider": "Nvidia",
+   "usd_twin": 0.00040730000000000003
+  }
+ ]
+}

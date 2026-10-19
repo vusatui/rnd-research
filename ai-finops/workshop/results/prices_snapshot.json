@@ -1,0 +1,30 @@
+{
+  "fetched": "2026-10-19",
+  "source": "https://openrouter.ai/api/v1/models",
+  "usd_per_1m_tokens": {
+    "nvidia/nemotron-3-ultra-550b-a55b": {
+      "in": 0.6,
+      "out": 2.4,
+      "cached": 0.12,
+      "write": null
+    },
+    "nvidia/nemotron-3.5-lightning": {
+      "in": 0.07,
+      "out": 0.19999999999999998,
+      "cached": 0.04,
+      "write": null
+    }
+  },
+  "nvidia/nemotron-3-ultra-550b-a55b": {
+    "in": 0.6,
+    "out": 2.4,
+    "cached": 0.12,
+    "write": null
+  },
+  "nvidia/nemotron-3.5-lightning": {
+    "in": 0.07,
+    "out": 0.19999999999999998,
+    "cached": 0.04,
+    "write": null
+  }
+}

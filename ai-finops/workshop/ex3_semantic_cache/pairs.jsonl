@@ -1,0 +1,24 @@
+{"cached": "How do I upgrade to the Business plan?", "new": "How can I move up to the Business plan?", "same": true}
+{"cached": "How do I upgrade to the Business plan?", "new": "How do I downgrade from the Business plan?", "same": false}
+{"cached": "What is the refund window for annual plans?", "new": "How long do I have to get a refund on a yearly subscription?", "same": true}
+{"cached": "What is the refund window for annual plans?", "new": "What is the refund window for monthly plans?", "same": false}
+{"cached": "Is SAML SSO available on the Business plan?", "new": "Can we use SAML single sign-on with Business?", "same": true}
+{"cached": "Is SAML SSO available on the Business plan?", "new": "Is SAML SSO available on the Enterprise plan?", "same": false}
+{"cached": "What is the API rate limit on the Team plan?", "new": "How many API requests per minute does Team allow?", "same": true}
+{"cached": "What is the API rate limit on the Team plan?", "new": "What is the API rate limit on the Business plan?", "same": false}
+{"cached": "Do you support Peppol e-invoicing in Germany?", "new": "Can I send XRechnung / Peppol invoices to German customers?", "same": true}
+{"cached": "Do you support Peppol e-invoicing in Germany?", "new": "Do you support e-invoicing in France?", "same": false}
+{"cached": "How do I export all my invoices?", "new": "How can I download a backup of all invoices?", "same": true}
+{"cached": "How do I export all my invoices?", "new": "How do I import all my invoices?", "same": false}
+{"cached": "Can support disable 2FA for me?", "new": "Could you turn off two-factor authentication on my account?", "same": true}
+{"cached": "Can support disable 2FA for me?", "new": "Can I enable 2FA for my whole team?", "same": false}
+{"cached": "How much does an extra seat cost on Team?", "new": "What's the price of an additional user on the Team plan?", "same": true}
+{"cached": "How much does an extra seat cost on Team?", "new": "How much does an extra seat cost on Business?", "same": false}
+{"cached": "Do you accept PayPal?", "new": "Can I pay with PayPal?", "same": true}
+{"cached": "Do you accept PayPal?", "new": "Do you accept SEPA direct debit?", "same": false}
+{"cached": "Are you HIPAA compliant?", "new": "Is Ledgerly HIPAA compliant?", "same": true}
+{"cached": "Are you HIPAA compliant?", "new": "Are you SOC 2 compliant?", "same": false}
+{"cached": "My card payment failed, what happens now?", "new": "What happens if my card is declined at renewal?", "same": true}
+{"cached": "My card payment failed, what happens now?", "new": "My card was charged twice, what happens now?", "same": false}
+{"cached": "How long are web sessions kept?", "new": "When do I get logged out automatically?", "same": true}
+{"cached": "How long are web sessions kept?", "new": "How long are invoices kept after closing the account?", "same": false}

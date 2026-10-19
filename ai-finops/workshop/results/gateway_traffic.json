@@ -1,0 +1,78 @@
+[
+ {
+  "team": "support",
+  "i": 1,
+  "ticket": "T01",
+  "code": 200,
+  "team_spend": 0.0,
+  "error": ""
+ },
+ {
+  "team": "support",
+  "i": 2,
+  "ticket": "T02",
+  "code": 200,
+  "team_spend": 0.009504,
+  "error": ""
+ },
+ {
+  "team": "support",
+  "i": 3,
+  "ticket": "T03",
+  "code": 200,
+  "team_spend": 0.018722,
+  "error": ""
+ },
+ {
+  "team": "support",
+  "i": 4,
+  "ticket": "T04",
+  "code": 200,
+  "team_spend": 0.02807,
+  "error": ""
+ },
+ {
+  "team": "support",
+  "i": 5,
+  "ticket": "T05",
+  "code": 200,
+  "team_spend": 0.037728,
+  "error": ""
+ },
+ {
+  "team": "support",
+  "i": 6,
+  "ticket": "T06",
+  "code": 200,
+  "team_spend": 0.04690999999999999,
+  "error": ""
+ },
+ {
+  "team": "support",
+  "i": 7,
+  "ticket": "T07",
+  "code": 422,
+  "team_spend": 0.04690999999999999,
+  "error": "Budget has been exceeded! Team=fd7338a8-1d25-4d7d-894a-6b8ddd7ce665 Current cost: 0.05618600000000001, Max budget: 0.05"
+ },
+ {
+  "team": "growth",
+  "model": "large",
+  "code": 403,
+  "error": "The requested model 'large' is not available for this API key, or the model name is invalid. Check the models available to you and try again."
+ },
+ {
+  "team": "growth",
+  "model": "small",
+  "ticket": "T06",
+  "code": 200,
+  "error": ""
+ },
+ {
+  "team": "growth",
+  "model": "small",
+  "ticket": "T07",
+  "code": 200,
+  "error": ""
+ }
+]

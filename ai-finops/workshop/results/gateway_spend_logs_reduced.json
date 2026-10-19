@@ -1,0 +1,177 @@
+[
+ {
+  "startTime": "2026-10-19T13:59:52.731000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3.5-lightning:free",
+  "model_group": "small",
+  "prompt_tokens": 4216,
+  "completion_tokens": 77,
+  "spend": 0.0004601,
+  "team_id": "9bc4ecb2-bc1b-4f1a-b646-c0daf1b292f3",
+  "request_tags": [
+   "ticket-reply",
+   "T07",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "growth",
+  "key_alias": "growth-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:45.818000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3.5-lightning:free",
+  "model_group": "small",
+  "prompt_tokens": 4213,
+  "completion_tokens": 67,
+  "spend": 0.0004548,
+  "team_id": "9bc4ecb2-bc1b-4f1a-b646-c0daf1b292f3",
+  "request_tags": [
+   "ticket-reply",
+   "T06",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "growth",
+  "key_alias": "growth-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:45.797000Z",
+  "status": "failure",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "spend": 0.0,
+  "team_id": "9bc4ecb2-bc1b-4f1a-b646-c0daf1b292f3",
+  "request_tags": [
+   "ticket-reply"
+  ],
+  "team_alias": "growth",
+  "key_alias": "growth-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:45.769000Z",
+  "status": "failure",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "spend": 0.0,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T07"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:37.481000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 4213,
+  "completion_tokens": 85,
+  "spend": 0.009276,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T06",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:28.021000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 4221,
+  "completion_tokens": 74,
+  "spend": 0.009182,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T05",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:17.426000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 4219,
+  "completion_tokens": 122,
+  "spend": 0.009658,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T04",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:09.749000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 4224,
+  "completion_tokens": 90,
+  "spend": 0.009347999999999999,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T03",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:59:01.090000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 4209,
+  "completion_tokens": 80,
+  "spend": 0.009218,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T02",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ },
+ {
+  "startTime": "2026-10-19T13:58:51.384000Z",
+  "status": "success",
+  "model": "openai/nvidia/nemotron-3-ultra-550b-a55b:free",
+  "model_group": "large",
+  "prompt_tokens": 4222,
+  "completion_tokens": 106,
+  "spend": 0.009504,
+  "team_id": "fd7338a8-1d25-4d7d-894a-6b8ddd7ce665",
+  "request_tags": [
+   "ticket-reply",
+   "T01",
+   "User-Agent: Python-urllib",
+   "User-Agent: Python-urllib/3.13"
+  ],
+  "team_alias": "support",
+  "key_alias": "support-bot"
+ }
+]
