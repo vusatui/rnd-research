@@ -12,6 +12,8 @@ small support agent through all of it on free models and self-hosted tools, with
   Promptfoo, Inspect, DeepEval, NeMo Guardrails, Guardrails AI, LLM Guard, safety classifiers, AWS AgentCore,
   Microsoft Agent 365; licenses, self-hosting, OTel support, ownership changes; decision guide
 - [`talk-outline.md`](talk-outline.md) - ~35 min talk, 9 segments with timing
+- [`talk-script.md`](talk-script.md) - full English talk script (~35 min, 25 slides): on-slide content, speaker notes, timing, sources, markers (✅/🟡/🟠/❌/🧪 plus 🔮 for analyst forecasts), a "What we did not verify" slide, plus likely audience questions & answers
+- [`slides/index.html`](slides/index.html) - self-contained HTML deck (no external dependencies, 1920x1080, autoscale; the Phoenix screenshot is embedded). Open it locally in a browser. Keys: →/Space next, ← back, `N` notes, `S` speaker window with timer, `O` overview, `F` fullscreen. Preview of all slides: [`slides/contact-sheet.png`](slides/contact-sheet.png). Speaker notes are generated from talk-script.md: `python3 slides/build_notes.py`; open with `?check` for an overflow report
 - [`workshop-plan.md`](workshop-plan.md) + [`workshop/`](workshop/) - 4 exercises (tracing, evals + gate, guardrails /
   red team, budgets) with real run results
 
@@ -27,5 +29,5 @@ python run_agent.py "Any community tips about late parcels?" --guards
 python ex2_evals/run_evals.py --prompt v2 --repeats 2   # regression gate vs the committed baseline
 ```
 
-Status: In progress (2026-10-17). Research, comparison, talk outline, workshop and workshop plan done; talk script and
-HTML slides next.
+Status: Done (2026-10-19). Research, comparison, talk outline, workshop, workshop plan, talk script and HTML slides done
+(slides use the same style and tooling as `../legacy-modernization/slides/`).

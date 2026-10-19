@@ -365,7 +365,7 @@ So if a model vendor says it is not solvable in the prompt, your security review
 - Attack success rate (ASR) table 🧪:
   - v1 prompt only: **22%** (4/18)
   - v1 + tool policy + output redaction: **0%** (0/18)
-  - v1 + input classifier: **0%** (0/9)
+  - v1 + tool policy + input classifier: **0%** (0/9)
   - v2 prompt only: **89%** (8/9)
   - v2 + tool policy + output redaction: **11%** (1/9)
   - v2 + cumulative limits (fix): **0%** (0/3 repeats of the split attack)
@@ -470,12 +470,13 @@ The hedge against lock-in is three habits: instrument with OpenTelemetry GenAI c
 **On slide:**
 - EU AI Act: Art. 50 transparency (tell users they talk to AI) from **2 Aug 2026** ✅
 - Digital Omnibus, Regulation (EU) 2026/1744: high-risk obligations from **2 Dec 2027** (Annex III) and **2 Aug 2028** (Annex I) ✅
+- 2 Dec 2026: new prohibitions; Art. 50(2) transition deadline ✅
 - High-risk requirements map to engineering: Art. 12 logging → tracing · Art. 14 human oversight → approval gates · Art. 15 accuracy/robustness → eval evidence · Art. 9 risk management
 - Most customer-service / internal agents are **not** Annex III high-risk - legal advice per case
 - Procurement often cites ISO/IEC 42001 and NIST AI RMF 🟠
 
 **Speaker notes:**
-Regulation is a timeline, not a blocker yet. Under the EU AI Act, the Article 50 transparency duty, telling users they are talking to an AI, applies from August 2, 2026. The high-risk obligations were moved by the Digital Omnibus, Regulation 2026/1744: December 2, 2027 for Annex III systems and August 2, 2028 for Annex I.
+Regulation is a timeline, not a blocker yet. Under the EU AI Act, the Article 50 transparency duty, telling users they are talking to an AI, applies from August 2, 2026, and new prohibitions and the end of the Article 50(2) transition follow on December 2, 2026. The high-risk obligations were moved by the Digital Omnibus, Regulation 2026/1744: December 2, 2027 for Annex III systems and August 2, 2028 for Annex I.
 
 The good news for engineers: the high-risk requirements map directly onto what we just built. Automatic logging in Article 12 is tracing. Human oversight in Article 14 is approval gates. Accuracy, robustness and cybersecurity in Article 15 is eval and red-team evidence. Most customer-service and internal agents are not high-risk under Annex III, but get legal advice per case; sector rules and GDPR still apply. In procurement you will also hear ISO 42001 and the NIST AI RMF; that is common practice we did not separately verify.
 
