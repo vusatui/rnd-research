@@ -1,3 +1,5 @@
 openai>=1.50
 python-dotenv>=1.0
 pytest>=8
+# optional: embedding model for ex3_semantic_cache (otherwise run it with --lexical)
+# fastembed>=0.4
