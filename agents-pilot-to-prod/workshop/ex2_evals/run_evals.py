@@ -48,6 +48,9 @@ def main():
     p.add_argument("--rescore", help="re-apply current checks to a saved out/evals_<label>.json (no LLM calls)")
     p.add_argument("--cost-per-run", type=float, default=0.002)
     a = p.parse_args()
+    if a.save_baseline and (a.only or a.rescore):
+        print("refusing --save-baseline with --only/--rescore: a baseline must be a fresh run of the whole dataset")
+        return 2
     label = a.label or f"{a.prompt}{'-guards' if a.guards else ''}{'-' + a.model.split('/')[-1] if a.model else ''}"
     cases = [json.loads(x) for x in (HERE / "dataset.jsonl").read_text().splitlines() if x.strip()]
     if a.only:
@@ -96,9 +99,6 @@ def main():
     print("\n" + json.dumps(summary, indent=1))
 
     if a.save_baseline:
-        if a.only:
-            print("refusing --save-baseline with --only: a baseline must cover the whole dataset")
-            return 2
         Path(a.baseline).write_text(json.dumps(summary, indent=1))
         print(f"baseline saved -> {a.baseline}")
         return 0

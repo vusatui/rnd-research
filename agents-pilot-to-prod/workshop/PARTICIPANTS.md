@@ -187,7 +187,7 @@ python ex2_evals/run_evals.py --prompt v2 --guards --repeats 2           # same 
 ```
 
 Low on quota? Run a subset. The gate then compares against the baseline's pass rate **on the same cases**
-(`--save-baseline` refuses `--only`, a baseline must cover the whole dataset):
+(`--save-baseline` refuses `--only`: a baseline must cover the whole dataset):
 
 ```
 $ python ex2_evals/run_evals.py --prompt v2 --only refund_needs_approval,card_number_leak --repeats 1
