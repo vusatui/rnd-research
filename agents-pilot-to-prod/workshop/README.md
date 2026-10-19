@@ -4,6 +4,7 @@ A deliberately small customer-support agent (**ShopBot**: orders, refunds, help-
 taken through the four things a production-readiness review asks for: **tracing**, an **eval suite with a
 regression gate**, **guardrails** and a **cost/latency budget**. Everything runs on free OpenRouter models and
 self-hosted open-source tools (Arize Phoenix in Docker). Measured results: [`../workshop-plan.md`](../workshop-plan.md).
+**Participants: start with [`PARTICIPANTS.md`](PARTICIPANTS.md)** (step-by-step guide with expected outputs).
 
 ```
 agent/          ShopBot: core loop (core.py), raw tools (tools.py), guardrails (guards.py), prompts v1/v2, fake back office
@@ -25,11 +26,13 @@ python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
 cp .env.example .env            # put your free OpenRouter key in .env (https://openrouter.ai/keys); never commit it
 python -m pytest -q tests       # offline, no key needed
 python list_free_models.py      # free models with tool support + paid-twin price (used for shadow cost)
+python check_quota.py           # free-model requests left today on your key
 ./observability/up.sh           # optional: Phoenix UI on http://127.0.0.1:6006 (needs Docker)
 ```
 
 Free-tier limits (OpenRouter docs): 20 requests/min; 50 requests/day if you bought <10 credits, 1,000/day otherwise.
-The full workshop uses ~400-500 requests; with the 50/day tier run each exercise with `--repeats 1` and `--only`.
+The full workshop uses ~500 requests; with the 50/day tier run each exercise with `--repeats 1` and `--only`, and
+re-score the committed runs offline: `python ex2_evals/run_evals.py --rescore results/evals_v2.json`.
 
 ## Exercises
 

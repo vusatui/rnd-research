@@ -4,6 +4,7 @@ Participants take **ShopBot** - a small tool-calling support agent (orders, refu
 wired to "raw" internal tools with no authorization - and add the four things a production-readiness review asks
 for. Free OpenRouter models only (`nvidia/nemotron-3-super-120b-a12b:free` as the agent, fallbacks in
 `common/llm.py`, reasoning off) and self-hosted open-source tooling (Arize Phoenix in Docker). Code: [`workshop/`](workshop/).
+Participant guide (step by step, expected outputs, troubleshooting): [`workshop/PARTICIPANTS.md`](workshop/PARTICIPANTS.md).
 
 | # | Time | Exercise | Needs | What participants do / learn |
 |---|---|---|---|---|

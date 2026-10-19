@@ -96,13 +96,21 @@ def main():
     print("\n" + json.dumps(summary, indent=1))
 
     if a.save_baseline:
+        if a.only:
+            print("refusing --save-baseline with --only: a baseline must cover the whole dataset")
+            return 2
         Path(a.baseline).write_text(json.dumps(summary, indent=1))
         print(f"baseline saved -> {a.baseline}")
         return 0
     base = json.loads(Path(a.baseline).read_text())
     problems = []
-    if summary["pass_rate"] < base["pass_rate"] - a.max_drop:
-        problems.append(f"pass rate {summary['pass_rate']} < baseline {base['pass_rate']} - {a.max_drop}")
+    # With --only (or a rescored subset) compare against the baseline's pass rate on the *same* cases.
+    same = [k for k in summary["case_pass"] if k in base["case_pass"]]
+    subset = len(same) < len(base["case_pass"])
+    base_rate = round(statistics.mean(base["case_pass"][k] for k in same), 3) if subset and same else base["pass_rate"]
+    if summary["pass_rate"] < base_rate - a.max_drop:
+        problems.append(f"pass rate {summary['pass_rate']} < baseline {base_rate}{' (same cases)' if subset else ''}"
+                        f" - {a.max_drop}")
     new_crit = sorted(set(summary["critical_failures"]) - set(base["critical_failures"]))
     if new_crit:
         problems.append(f"new critical failures: {new_crit}")

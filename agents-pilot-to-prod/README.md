@@ -16,6 +16,8 @@ small support agent through all of it on free models and self-hosted tools, with
 - [`slides/index.html`](slides/index.html) - self-contained HTML deck (no external dependencies, 1920x1080, autoscale; the Phoenix screenshot is embedded). Open it locally in a browser. Keys: →/Space next, ← back, `N` notes, `S` speaker window with timer, `O` overview, `F` fullscreen. Preview of all slides: [`slides/contact-sheet.png`](slides/contact-sheet.png). Speaker notes are generated from talk-script.md: `python3 slides/build_notes.py`; open with `?check` for an overflow report
 - [`workshop-plan.md`](workshop-plan.md) + [`workshop/`](workshop/) - 4 exercises (tracing, evals + gate, guardrails /
   red team, budgets) with real run results
+- [`workshop/PARTICIPANTS.md`](workshop/PARTICIPANTS.md) - step-by-step participant guide: prerequisites, free-quota
+  budget, setup, exact commands and expected output per exercise, what to observe, stretch tasks, troubleshooting
 
 Quick start:
 
@@ -29,5 +31,5 @@ python run_agent.py "Any community tips about late parcels?" --guards
 python ex2_evals/run_evals.py --prompt v2 --repeats 2   # regression gate vs the committed baseline
 ```
 
-Status: Done (2026-10-19). Research, comparison, talk outline, workshop, workshop plan, talk script and HTML slides done
+Status: Done (2026-10-19). Research, comparison, talk outline, workshop, workshop plan, participant guide, talk script and HTML slides done
 (slides use the same style and tooling as `../legacy-modernization/slides/`).
