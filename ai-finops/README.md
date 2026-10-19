@@ -8,6 +8,8 @@ bill exploded - show us who spends it, on what, and cut it without breaking qual
 | [`research.md`](research.md) | Fact-checked notes (2026-10-19): why bills surprise, FinOps Foundation guidance, FOCUS 1.4/1.5, unit economics, levers (routing, caching, semantic caching, batch, compression, distillation, self-hosting), attribution and budgets, pricing trends, consensus vs disputed, open items |
 | [`comparison.md`](comparison.md) | Gateways (LiteLLM, Portkey/Prisma AIRS, Cloudflare, OpenRouter, Azure APIM, Bedrock, Kong, Envoy), observability, provider price levers, lever decision table - with prices and dates |
 | [`talk-outline.md`](talk-outline.md) | ~35-minute talk outline with timing |
+| [`talk-script.md`](talk-script.md) | Full talk script: 25 slides, 35 min, on-slide content, speaker notes, timing, sources with verification markers, 13 likely audience questions with answers |
+| [`slides/`](slides/) | Self-contained HTML deck ([`index.html`](slides/index.html): 1920x1080 autoscale, no CDN, keys `N` notes / `S` speaker window / `O` overview / `F` fullscreen, `?check` overflow report), [`build_notes.py`](slides/build_notes.py) copies speaker notes from the script, [`contact-sheet.png`](slides/contact-sheet.png) |
 | [`workshop-plan.md`](workshop-plan.md) | ~2.5-3 h workshop agenda and the measured results |
 | [`workshop/`](workshop/) | Runnable code: lever lab, prompt-cache probe and simulator, semantic-cache stress test, LiteLLM gateway with team budgets, FOCUS-shaped chargeback, self-host break-even |
 
