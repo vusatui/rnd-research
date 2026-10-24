@@ -1,5 +1,7 @@
 # System One: the light version (30 min, general audience)
 
+> Two variants of the same talk: the **fun** one (this folder, cartoon characters) and the **serious** one, sober Excalidraw style with a read-aloud script and a "try it yourself" slide: see [`serious/`](serious/README.md).
+
 A short, visual, funny talk for people who are **not** going to read research notes: what a "System One" decision model is, what Jev is, where to use it, and a 15-minute hands-on that calls it. The deep material stays in the parent folder ([research](../research.md), [talk script](../talk-script.md), [HTML deck](../slides/index.html), [workshop](../workshop/)).
 
 | What | File |
