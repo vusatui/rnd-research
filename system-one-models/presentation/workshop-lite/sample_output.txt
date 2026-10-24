@@ -1,0 +1,63 @@
+
+=== 1. Route a support ticket ===
+STATE: Our API integration started returning 500 errors on every request 20 minutes ago. We can't process any customer orders until this is fixed.
+BACKEND: http://127.0.0.1:8787  model=EMULATOR(nvidia/nemotron-3.5-lightning:free)  (1461 ms)
+{
+  "department": {
+    "type": "choice",
+    "choice": "technical",
+    "confidence": 1.0,
+    "probabilities": {
+      "billing": 0.0,
+      "technical": 1.0,
+      "sales": 0.0
+    }
+  },
+  "urgent": {
+    "type": "noul",
+    "noul": 1.0
+  }
+}
+-> CODE decides: send to 'technical'
+
+=== 2. Moderate a comment ===
+STATE: You are all idiots. Go read the docs before posting garbage.
+BACKEND: http://127.0.0.1:8787  model=EMULATOR(nvidia/nemotron-3.5-lightning:free)  (1496 ms)
+{
+  "toxic": {
+    "type": "noul",
+    "noul": 1.0
+  },
+  "action": {
+    "type": "choice",
+    "choice": "block",
+    "confidence": 0.6,
+    "probabilities": {
+      "allow": 0.0,
+      "review": 0.4,
+      "block": 0.6
+    }
+  }
+}
+-> CODE decides: BLOCK
+
+=== 3. Approve or reject an expense ===
+STATE: {"item": "Team lunch", "amount_usd": 42, "policy": "Meals up to $60 per person are fine.", "people": 4}
+BACKEND: http://127.0.0.1:8787  model=EMULATOR(nvidia/nemotron-3.5-lightning:free)  (513 ms)
+{
+  "within_policy": {
+    "type": "noul",
+    "noul": 1.0
+  },
+  "decision": {
+    "type": "choice",
+    "choice": "approve",
+    "confidence": 1.0,
+    "probabilities": {
+      "approve": 1.0,
+      "reject": 0.0,
+      "escalate": 0.0
+    }
+  }
+}
+-> CODE decides: APPROVE
