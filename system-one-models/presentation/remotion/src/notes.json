@@ -1,0 +1,245 @@
+{
+  "slides": [
+    {
+      "n": 1,
+      "title": "Title",
+      "time": "1.5 min",
+      "paragraphs": [
+        "Hello everyone, and thank you for being here. Today I want to talk about a kind of AI model that does not write text at all. Instead, it makes a decision. These models are called System One models, and the one we will look at closely is called Jev.",
+        "Here is the plan for the next half hour. First, I will explain what these models are and how they differ from the chatbots we already know. Then we will look at what a single call to one of them looks like, and where such a model fits into real work. After that, I will run a short live example, so you can see a request and a response with your own eyes. Near the end, I will show you where you can try all of this yourself.",
+        "I will keep it practical and fairly light. You do not need any machine learning background to follow along. If you have ever called a web API, you already know almost everything you need. It is also fine to ask questions along the way, although I will leave a couple of minutes at the end for them. So let's start with the basic idea."
+      ]
+    },
+    {
+      "n": 2,
+      "title": "Two kinds of AI models",
+      "time": "2.5 min",
+      "paragraphs": [
+        "Most of the AI we use every day is a text generator. You give it some text, and it gives you more text back. That could be an answer, a summary, an email draft, or a piece of code. This is what the top row of the slide shows, and it is what we usually mean when we say a large language model.",
+        "Now look at the bottom row. A decision model starts with the same kind of input, some text. But what comes out is not more text. What comes out is a decision. It might be a choice among a few options that you defined yourself, a score on a scale, or the probability that the answer to a yes or no question is yes. On the slide this is drawn as a small bar chart and a check mark, because the result is a set of numbers and a pick, not a paragraph.",
+        "I think this difference matters a lot for developers. When a generator answers with words, your program has to read those words and work out what they mean. When a decision model answers, your program receives a result it can use directly. There is no free text to parse, and no guessing whether the model said yes or maybe. Let me give you a small example to make this concrete. Suppose a customer writes to you, and you want to know which team should handle the message. With a generator, you might get a friendly paragraph that starts with the words, it looks like this message is about a technical problem. Your program then has to find the word technical somewhere inside that paragraph. With a decision model, you get the word technical, together with a number that says how sure the model is. That is a much easier thing to build on.",
+        "That is the whole idea of the talk in one sentence. So where does the strange name System One come from? Let's look at that next."
+      ]
+    },
+    {
+      "n": 3,
+      "title": "Two ways to think",
+      "time": "1.5 min",
+      "paragraphs": [
+        "The name comes from a well-known idea by the psychologist Daniel Kahneman, who described it in his book Thinking, Fast and Slow. He said that people have two modes of thinking. System one is fast and instinctive. It is what you use when you glance at a message and just know it is spam. System two is slow and deliberate. It is what you use when you plan a budget or work through a hard problem step by step.",
+        "The vendor's own documentation uses this analogy for these models, and I find it helpful. The point is on the bottom of the slide. Decision models are built for the quick judgement calls, the System One kind of jobs. They are not meant to replace careful reasoning. You could say that a good team uses both modes. A person does not think hard about every single email, because that would be exhausting and slow. They sort most things quickly, and they save the careful thinking for the few cases that really need it. We can build software the same way, and we will come back to this idea when we talk about using a fast model first.",
+        "Now that we have the idea, let me introduce the specific model we will use today."
+      ]
+    },
+    {
+      "n": 4,
+      "title": "What is Jev?",
+      "time": "1.5 min",
+      "paragraphs": [
+        "Jev is a hosted System One model from a company called TypeSafe AI. Hosted simply means that you do not run it yourself. You send a request over the internet, and you get an answer back. Its own documentation describes it as the first model of this kind.",
+        "The slide shows three simple facts about Jev. First, it is one HTTP call. Second, it generates no text. Third, it returns typed answers, which means a choice, a score or a yes or no probability, rather than sentences.",
+        "One small warning before we continue. If you search the internet for Jev, you will find many unofficial websites with launch dates, funding figures and speed numbers. I have not been able to verify those, so I will not quote them today. Everything I say about Jev comes from the official documentation. So how would you actually use it? There is no special software to install, and no model to download. If you can send a request from your own code, you can use Jev. In the next few slides, I will show you what such a request contains, what comes back, and what you can do with it. I think you will see that it is simpler than it sounds.",
+        "With that in place, let's look at what a call actually looks like."
+      ]
+    },
+    {
+      "n": 5,
+      "title": "One call, one decision",
+      "time": "2.5 min",
+      "paragraphs": [
+        "Let's walk through this picture from left to right. On the left, you send two things to Jev. The first is the state. That is simply the text you want it to look at, for example a message from a customer. The second is the list of questions. These are the things you want to know about that text, and you describe the possible answers in plain words.",
+        "In the middle is Jev itself. It reads the text and the questions in one pass. On the right is what comes back. For a question with several options, you get a number for each option, and the model also tells you which one it picked and how confident it is. For a yes or no question, you get the probability of yes. On the slide this is drawn as a bar for the department and a gauge for urgency.",
+        "Please note that this drawing is an illustration, not real output. We will see a real response in a few minutes. The important thing to remember is that the answer is numbers, not sentences. Your code can act on those numbers right away. You ask the questions you care about, and the model replies with a typed answer for each of them. Typed here means that every answer has a clear shape. A choice always comes back as a choice, and a yes or no question always comes back as a probability. Because of that, you can write ordinary code against it, in the same way you would write code against any other well-defined web interface.",
+        "It is also worth noticing what is missing from this picture. There is no long prompt, no instructions about the format of the output, and no code to clean up the answer. You describe what you want to know, and the shape of the reply is already decided for you. Let's look more closely at the kinds of questions you can ask."
+      ]
+    },
+    {
+      "n": 6,
+      "title": "Three kinds of questions",
+      "time": "1.5 min",
+      "paragraphs": [
+        "There are three kinds of questions, and they cover a surprising amount of everyday work. The first is a choice. You give a list of options, such as billing, technical and sales, and the model picks one and tells you how likely each option is.",
+        "The second is a score. Here you define an ordered scale, for example from calm to angry, and the model places the text somewhere on it.",
+        "The third is a yes or no question, such as whether a message is urgent. The answer is the probability of yes. In the Jev interface this type is called noul, which is a slightly odd name, but you only need to remember that it means yes or no.",
+        "You can ask several questions about the same text in a single call. And because you describe the options in plain words in the request, you can change them at any time, without retraining anything. For example, with a single support ticket you might ask which team should handle it, how angry the customer sounds, and whether it is urgent, all in the same request. Jev is not the only product that works this way, so let's take a quick look around."
+      ]
+    },
+    {
+      "n": 7,
+      "title": "Not only Jev",
+      "time": "1 min",
+      "paragraphs": [
+        "The same idea exists elsewhere. OpenAI has a Decisions API, which was in beta when I looked into this. Cloudflare has released a decision model called Clef, with open weights, which you can use on its Workers AI platform. And the team at Unsloth has published a recipe for training your own decision model.",
+        "These are different vendors, but the shape is similar. You send text and questions in, and you get typed answers back. If you ask me which one is best, my honest answer is that I do not know, because there is no independent comparison yet. The benchmark numbers that exist come from the vendors themselves, so the right approach is to test on your own data. So where would you use a model like this?"
+      ]
+    },
+    {
+      "n": 8,
+      "title": "Where it fits",
+      "time": "1 min",
+      "paragraphs": [
+        "Here are six everyday jobs where a decision model fits well. Routing, moderation, fraud triage, form checks, intent detection, and approvals.",
+        "What these have in common is that a person could look at each item and decide in a second or two, but there are far too many items for a person to handle them all. That is exactly the gap a fast decision model can fill. Think about the work behind a busy online shop, a large community forum or a payment system. In each of them, there is a constant stream of small questions. Where should this message go? Is this comment acceptable? Does this payment look unusual? None of these questions needs an essay. Each of them needs a quick and consistent answer, and that is the sweet spot for a decision model. Over the next three slides, I will show three of these jobs in a little more detail."
+      ]
+    },
+    {
+      "n": 9,
+      "title": "Routing",
+      "time": "1 min",
+      "paragraphs": [
+        "The first example is routing. Please keep in mind that this is an illustration I made up to explain the idea. Imagine a support ticket arrives. Jev reads it and picks the right team, and in this case the technical team gets it.",
+        "The dashed arrow at the bottom is the part I find most interesting. When the model is not confident about its answer, the ticket does not go to a team at random. It goes to a person. And the threshold for what counts as not confident is a decision made by your code, not by the model. This way the fast and cheap path handles the easy tickets, and your support staff spend their time on the ones that are genuinely unclear. This idea of letting people handle the unclear cases comes back in the next example."
+      ]
+    },
+    {
+      "n": 10,
+      "title": "Moderation",
+      "time": "1 min",
+      "paragraphs": [
+        "The second example is moderation, and again this is an illustration. A comment comes in, and the model judges it. It might say allow, send to a human, or block.",
+        "You can think of it as a scale. At one end, the model is sure the comment is fine. At the other end, it is sure the comment breaks the rules. The clear cases at both ends can be handled automatically. The unclear cases in the middle are for people. The simple rule is to act when you are sure, and ask a person when you are not. That keeps the moderators focused on the difficult decisions, instead of reading every single comment from top to bottom."
+      ]
+    },
+    {
+      "n": 11,
+      "title": "Fraud triage",
+      "time": "1 min",
+      "paragraphs": [
+        "The third example is fraud triage, and once more, this is an illustration. A payment comes in, and the model gives it a risk score. If the score is low, the payment takes the fast path. If it is above the threshold, an analyst takes a closer look.",
+        "I want to be clear about one thing here. This is a first look, not a verdict. The model does not accuse anyone of anything. It only helps to decide which payments deserve a human's time. In other words, most normal payments go through without delay, and the unusual ones get attention from someone who can judge them properly. That brings me to a question that comes up often, which is how to make this cheaper and faster in practice."
+      ]
+    },
+    {
+      "n": 12,
+      "title": "Fast first",
+      "time": "2 min",
+      "paragraphs": [
+        "A common pattern is to put the fast decision model in front. It answers most of the requests by itself, quickly and cheaply. Only the requests it is not sure about are passed on to a big language model, which is slower and more expensive but can think more carefully. You can see this on the slide. Most requests leave through the top, and only a few take the dashed path down to the big model.",
+        "I want to be careful here. I will not give you a percentage for how many requests stay at the first step. That number depends entirely on your data and on the thresholds you choose, and I do not have a verified figure for Jev. Other published work in this area, for example from Cloudflare and Unsloth, reports its own results, but those are claims from the vendors.",
+        "So if someone asks how much you would save, the honest answer is to measure it. Take a sample of your own traffic, try the approach, and look at the numbers. You may also notice that this brings us back to the two ways of thinking from earlier. The fast model plays the part of the quick instinct, and the big model plays the part of careful thought. Each one is used where it makes the most sense.",
+        "Now it is time to see this for real, so let me switch to the live example."
+      ]
+    },
+    {
+      "n": 13,
+      "title": "Live demo, request",
+      "time": "2 min",
+      "paragraphs": [
+        "*[switch to the terminal, in the workshop-lite folder]*",
+        "For the next five minutes, I will show you a real request and a real response. On the slide you can see the request, shortened so that it fits on the screen. It has two parts. The first is the state, which is the text to judge. Here it is a support ticket saying that an API integration has been returning errors for twenty minutes. The second part is the questions. I ask two of them. The first one is the department, which is a choice between billing, technical and sales. The second one asks whether the message is urgent, which is a yes or no question.",
+        "Before I run anything, I want to be honest about what is behind this demo. We did not have access to a real Jev key when I prepared this talk. So I will use a small local emulator. It is a free chat model sitting behind an endpoint that has the same request shape as Jev. It asks the free model the same question five times and reports the share of votes as if they were probabilities. So the request you see is the real shape, but the engine is different, and the numbers are not Jev's numbers. With a real key, the same code works by changing two settings.",
+        "*[start the emulator in the background]*",
+        "First, I start the emulator in the background by running the file called jev emulator dot py. It takes a second. Next I will run the client, and we will see the answer on the next slide."
+      ]
+    },
+    {
+      "n": 14,
+      "title": "Live demo, response",
+      "time": "3 min",
+      "paragraphs": [
+        "*[run the ticket example]*",
+        "I now run the client by typing python jev client dot py, followed by the word ticket, and here is what came back. The slide shows a saved run of the same thing, in case the network is slow, and it is labelled as emulator output so nobody mistakes it for the real model.",
+        "Let's read it together. The department answer says technical. Next to it you see the confidence, and below it a probability for each of the three options. The urgent question comes back as a single number, the probability of yes. In this run the emulator was completely sure, so you see ones and zeros. Please remember that these are vote shares from the emulator. Real Jev does not vote. It scores every option in a single pass, and its documentation says those probabilities are calibrated. That is a claim from the vendor about groups of answers, so you should always check it on your own data. Also, since language models vary a little between runs, your own run may differ slightly from the saved one.",
+        "Now look at the code on the right of the slide. This is the part I care about most. The model answers, and our code decides. If the confidence is high enough, we route the ticket to that team. If it is not, we ask a person. The threshold of zero point seven is simply the value I chose in the example, and you can pick any value that suits your case.",
+        "*[run the comment example]*",
+        "Let me run one more example, this time a moderation case. I type the same command, but with the word comment at the end. The comment is rude, but it is a borderline case. In the saved run, the emulator leans towards block, but it also gives some weight to review. That is exactly the kind of case where you would send the comment to a person.",
+        "I also want to point out the last line the program prints. It says what our code decides to do with the answer. That is the part you would replace with your own logic.",
+        "*[optional: show the plain curl script]*",
+        "And if you prefer, the same request can be sent with plain curl, because underneath it is just one web call with some JSON. That is all for the demo, so let me go back to the slides."
+      ]
+    },
+    {
+      "n": 15,
+      "title": "Use it, skip it",
+      "time": "1.5 min",
+      "paragraphs": [
+        "So when is a decision model the right tool, and when is it not? It is a good fit for sorting things into groups, for yes or no checks, for high volumes, and for situations where you need fast answers.",
+        "It is not the right tool for writing text. The Jev documentation says plainly that it does not write replies, code or explanations. It is also not for explaining why it decided something, for reasoning that takes many steps, or for open conversation. For those jobs, a large language model is the better choice.",
+        "Think of it as choosing between a sorting machine and a writer. The sorting machine is built to be fast and to handle a large volume, but it can only sort. The writer can explain, argue and create, but it is slower and more expensive for each answer. Many good systems use both, each for what it does well.",
+        "A simple way to remember this is that the decision model will tell you whether to open an email, but it will not write the reply for you. And like any tool, it has some limits that are worth knowing about."
+      ]
+    },
+    {
+      "n": 16,
+      "title": "Honest limits",
+      "time": "1.5 min",
+      "paragraphs": [
+        "I would like to be open about four limits. First, these models are text first. The documentation does not offer audio or video. Image input exists only behind an experimental setting, so I would treat it as not ready for real use.",
+        "Second, English works best. The documentation says that other languages are handled less well, so if your data is in another language, test it carefully before you rely on it.",
+        "Third, always test on your own data. The probabilities are only as trustworthy as the checks you run yourself.",
+        "And fourth, most of the speed and quality numbers you will read about come from the vendors, so please treat them as claims and not as proof. Independent evaluations are still thin. None of these limits is a reason to avoid the technology. They are simply reasons to try it carefully, on a small sample, before you build anything important on top of it. A short experiment with your own examples will tell you far more than any announcement can. With these limits in mind, let me pull the main points together."
+      ]
+    },
+    {
+      "n": 17,
+      "title": "Three takeaways",
+      "time": "1 min",
+      "paragraphs": [
+        "If you remember only three things from this talk, I hope they are these. First, choose the right model for the job. Use a decision model for quick judgement calls, and a language model for writing and reasoning.",
+        "Second, the model answers, and your code decides. The thresholds, the routing and the human review are all yours to design.",
+        "And third, go fast first, and use the big model only when the fast one is unsure. That is a simple pattern, and it works for many kinds of problems. If you forget everything else, remember that a decision model is a quick specialist, and that you are always the one in charge of what happens next."
+      ]
+    },
+    {
+      "n": 18,
+      "title": "Try it yourself",
+      "time": "1 min",
+      "paragraphs": [
+        "If you would like to try this yourself, everything is in a public repository on GitHub. You can see the address on the slide, and you can also scan the code with your phone. Look for the folder called system-one-models.",
+        "In that folder, you will find the research notes with their sources, a comparison of the different approaches, a hands-on workshop with code you can run, and the slides from this talk. I suggest you start by running the workshop, which takes about fifteen minutes and works for free with the emulator. Then try changing the questions and the options, and watch how the answers move. After that, compare the different approaches, and read the sources behind the claims I made today."
+      ]
+    },
+    {
+      "n": 19,
+      "title": "Questions",
+      "time": "2 min",
+      "paragraphs": [
+        "That brings me to the end. To sum it up, a System One model does not write, it decides, and it is best used for quick judgement calls, with your code in charge and with people handling the unclear cases.",
+        "Along the way, we looked at the two kinds of models, at what a call to Jev looks like, at three everyday use cases, and at the pattern of using a fast model first. We also saw an honest demo, and a list of limits worth keeping in mind. Thank you very much for listening. I would be happy to take your questions now. If I do not know the answer, I will say so and find out, rather than guess.",
+        "*[the rest of the two minutes is open for questions]*"
+      ]
+    }
+  ],
+  "qa": [
+    {
+      "q": "Is this just a classifier?",
+      "a": "It is a close cousin. Classic classifiers needed training data for every new task. A System One model is meant to work without that. You describe the options in plain words in the request, and it takes it from there."
+    },
+    {
+      "q": "Why not just ask a chatbot for a one word answer?",
+      "a": "You can, and for a small number of requests that is perfectly fine. Decision models aim to be faster and cheaper, they give you a number for every option along with a confidence, and you do not need to parse any text."
+    },
+    {
+      "q": "How fast and how cheap is it?",
+      "a": "The Jev documentation lists a price of four point two cents per million input tokens, with output being free. Speed numbers on the internet mostly come from the vendors or from unofficial sites, so my advice is to measure it yourself."
+    },
+    {
+      "q": "Can I run it on my own servers?",
+      "a": "Jev itself is hosted. But open-weights options exist, for example Cloudflare's Clef, and the Unsloth recipe lets you train your own. The quality differs between them, so please test before you decide."
+    },
+    {
+      "q": "Can I trust the percentages?",
+      "a": "They are designed to be calibrated, and the Jev documentation says so. That is a statement about large groups of answers, not a guarantee for each single answer. So check them against your own labelled examples."
+    },
+    {
+      "q": "Does it explain its answer?",
+      "a": "No, it does not. It returns the decision and the probabilities, but no reasoning. If you need to know why, you can pass those cases to a language model."
+    },
+    {
+      "q": "Does it work in other languages?",
+      "a": "The documentation says English works best and that other languages are handled less well. So test it before you rely on it."
+    },
+    {
+      "q": "What about private data?",
+      "a": "The documentation states that it is not trained on customer requests, and it mentions zero data retention for enterprise customers. I would still read the legal page and talk to your security team before sending real data."
+    },
+    {
+      "q": "Do I need a GPU or machine learning skills?",
+      "a": "No. It is one web call with some JSON, so any developer can use it."
+    },
+    {
+      "q": "Is it free to try?",
+      "a": "According to third-party trackers, new accounts currently get no free credits, so please check this in the console. For the workshop, we use a free emulator, so everyone can follow along at no cost."
+    }
+  ]
+}

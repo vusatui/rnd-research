@@ -1,0 +1,24 @@
+html, body, #root { margin: 0; height: 100%; background: #f1f3f7; overflow: hidden; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1c2b4a; }
+.app { position: fixed; inset: 0; display: flex; }
+.stage-wrap { flex: 1; display: flex; align-items: center; justify-content: center; min-width: 0; cursor: pointer; user-select: none; }
+.stage { width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16 / 9; background: #fff; box-shadow: 0 2px 24px rgba(28, 43, 74, 0.12); }
+.with-notes .stage { width: min(100%, calc(100vh * 16 / 9)); }
+.counter { position: fixed; left: 14px; bottom: 10px; font-size: 14px; color: #5b6b82; opacity: 0.75; transition: opacity 0.6s; pointer-events: none; display: flex; align-items: center; gap: 10px; font-variant-numeric: tabular-nums; }
+.counter.dim { opacity: 0.25; }
+.dots { display: inline-flex; gap: 4px; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid #5b6b82; display: inline-block; }
+.dots i.on { background: #e8590c; border-color: #e8590c; }
+.hint { position: fixed; left: 50%; bottom: 10px; transform: translateX(-50%); font-size: 13px; color: #5b6b82; background: rgba(255, 255, 255, 0.85); padding: 4px 12px; border-radius: 12px; transition: opacity 0.6s; pointer-events: none; white-space: nowrap; }
+.hint.hidden { opacity: 0; }
+.help { position: fixed; inset: 0; background: rgba(28, 43, 74, 0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 18px; z-index: 5; }
+.help td { padding: 4px 16px; }
+.help td:first-child { font-weight: 600; text-align: right; }
+.notes { width: 34vw; min-width: 320px; max-width: 640px; height: 100%; box-sizing: border-box; background: #fff; border-left: 1px solid #d7dde8; display: flex; flex-direction: column; line-height: 1.5; }
+.notes header { padding: 14px 20px 10px; border-bottom: 1px solid #e8edf4; font-size: 0.9em; }
+.notes header .meta { color: #5b6b82; font-size: 0.85em; margin-top: 4px; }
+.notes .body { padding: 6px 20px 30px; overflow-y: auto; }
+.notes p { margin: 0.8em 0; }
+.notes .stage-dir { color: #e8590c; }
+.notes em { color: #e8590c; }
+.notes h3 { margin: 1.4em 0 0.4em; font-size: 1em; color: #5b6b82; }

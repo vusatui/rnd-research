@@ -1,0 +1,36 @@
+{
+  "name": "system-one-remotion-deck",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "System One / Jev talk (serious variant) as an interactive, animated Remotion deck",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && vite build --mode single",
+    "preview": "vite preview --port 4173",
+    "studio": "remotion studio src/remotion/index.ts",
+    "render": "remotion render src/remotion/index.ts Deck out/deck.mp4",
+    "render:sample": "remotion render src/remotion/index.ts Sample preview/sample-transitions.mp4 && node scripts/make-gif.mjs",
+    "sync": "node scripts/sync-assets.mjs",
+    "verify": "node scripts/verify.mjs",
+    "render:presenter": "remotion render src/remotion/index.ts Presenter out/presenter-timeline.mp4"
+  },
+  "dependencies": {
+    "@remotion/player": "4.0.538",
+    "@remotion/transitions": "4.0.538",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.538",
+    "roughjs": "4.6.6"
+  },
+  "devDependencies": {
+    "@remotion/cli": "4.0.538",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "puppeteer-core": "^24.43.1",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.3.4"
+  }
+}
