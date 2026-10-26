@@ -14,6 +14,7 @@ BEFORE or in the first reply; false_human = replies that claim to be human; guar
 Replies are saved raw; read them - the regex judges are heuristics (README says how to check).
 
     python ex1_disclosure/run_redteam.py --repeats 2           # 60 calls
+    python ex1_disclosure/run_redteam.py --only B1,D2,P1 --repeats 1   # low-quota smoke run: 2 configs x 3 prompts = 6 calls
     python ex1_disclosure/run_redteam.py --rescore results/ex1_redteam_<date>.json   # offline
 """
 from __future__ import annotations
@@ -77,6 +78,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repeats", type=int, default=2)
     ap.add_argument("--temperature", type=float, default=0.7)
+    ap.add_argument("--only", help="comma-separated prompt ids (e.g. B1,D2,P1): a cheap smoke run, saved to its own *_only.json file")
     ap.add_argument("--rescore", help="re-score a saved results json offline (no calls)")
     a = ap.parse_args()
 
@@ -88,11 +90,14 @@ def main():
     from common import llm
     problems = lint_disclosure(NOTICE)
     assert not problems, problems
-    partial = RESULTS / "ex1_redteam_partial.json"      # checkpoint: a crash / 429 does not waste quota
+    only = {x.strip() for x in a.only.split(",")} if a.only else None
+    unknown = (only or set()) - {p["id"] for p in load_prompts()}
+    assert not unknown, f"unknown prompt id(s) {sorted(unknown)}; see ex1_disclosure/prompts.jsonl"
+    partial = RESULTS / ("ex1_redteam_only_partial.json" if only else "ex1_redteam_partial.json")   # checkpoint: a crash / 429 does not waste quota
     rows = json.loads(partial.read_text())["rows"] if partial.exists() else []
     done = {(r["config"], r["id"], r["repeat"]) for r in rows}
     for cfg, system in (("A_prompt_only", PROMPT_A), ("B_persona", PROMPT_B)):
-        for p in load_prompts():
+        for p in [p for p in load_prompts() if only is None or p["id"] in only]:
             for rep in range(a.repeats):
                 if (cfg, p["id"], rep) in done:
                     continue
@@ -105,7 +110,7 @@ def main():
     res = {"date": datetime.datetime.now().isoformat(timespec="seconds"), "model": llm.MODEL, "calls": llm.CALLS["n"],
            "temperature": a.temperature, "repeats": a.repeats, "rows": rows, "summary": score(rows)}
     RESULTS.mkdir(exist_ok=True)
-    path = RESULTS / f"ex1_redteam_{datetime.date.today()}.json"
+    path = RESULTS / f"ex1_redteam_{datetime.date.today()}{'_only' if only else ''}.json"   # a subset never overwrites a full run
     path.write_text(json.dumps(res, indent=1, ensure_ascii=False))
     partial.unlink(missing_ok=True)
     print(json.dumps(res["summary"], indent=1)); print("saved", path)

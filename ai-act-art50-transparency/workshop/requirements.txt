@@ -1,4 +1,7 @@
 # Core (ex1 chatbot disclosure + ex2 C2PA / watermark / fingerprint lab)
+# invisible-watermark depends on torch; without the lines below pip pulls the default CUDA build (~5 GB). CPU build = ~1.4 GB venv.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
 openai>=1.50
 python-dotenv>=1.0
 pytest>=8

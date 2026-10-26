@@ -132,7 +132,7 @@ def evaluate(path: Path, bits: list[int], registry: dict[str, np.ndarray], own: 
     acc = lab.bit_accuracy(got, bits)
     fp = lab.dhash(img)
     d_own = lab.hamming(fp, registry[own])
-    d_other = min(lab.hamming(fp, v) for k, v in registry.items() if k != own)
+    d_other = min((lab.hamming(fp, v) for k, v in registry.items() if k != own), default=256)   # one image only: nothing to confuse it with
     return {"c2pa": cred["state"], "c2pa_codes": cred.get("codes", []), "c2pa_manifests": cred.get("manifests"),
             "wm_acc": round(acc, 3), "wm_detected": lab.watermark_detected(got, bits),
             "fp_dist_own": d_own, "fp_dist_nearest_other": d_other, "fp_match": d_own <= FP_MATCH and d_own < d_other}
