@@ -1,0 +1,103 @@
+{
+ "model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+ "wm": [
+  {
+   "prompt": "Write a short news-style paragraph about a city council approving a new bicycle lane network.",
+   "text": "The city council has agreed to approve the planning proposal for a new bicycle lane network, which will provide an easy-to-use, safe, and convenient route for cyclists throughout the city. With this initiative, visitors and locals alike will now be able to quickly and efficiently navigate the city, reducing congestion and making it easier for those with disabilities to access major destinations. The new network includes 200 miles of dedicated bike lanes, along with bike-friendly building facades and other infrastructure, aiming to establish a healthier and more active lifestyle for residents and visitors."
+  },
+  {
+   "prompt": "Explain in one paragraph why the sky is blue, for a curious teenager.",
+   "text": "The sky is blue because tiny particles in the Earth's atmosphere scatter the light from the sun in all directions, much like how a fog or a haze scatters light. These particles, mostly nitrogen and oxygen molecules, are so small that they move at a speed of about 472 mph (760 km/h) in the Earth's atmosphere. This movement causes the light to be scattered in all directions and to some extent, in all directions perpendicular to the Earth's surface. When light passes through the atmosphere, the shorter blue wavelengths are scattered more than the longer red wavelengths. This is why the sky appears blue to us."
+  },
+  {
+   "prompt": "Write a short product description for a reusable stainless-steel water bottle.",
+   "text": "\"Happiness is a superpower that can enhance our daily lives. This reusable stainless-steel water bottle is a simple yet elegant piece of tech that will make water taste and feel just as good as ever. Perfect for anyone who loves spending time outdoors, sipping coffee, or just enjoying a peaceful afternoon. Made with high-quality steel and designed for easy assembly and disassembly, this bottle will stay clean and germ-free for a whole day. Our stainless steel is the highest quality stainless steel, with a beautiful gleam that will make your daily water go swimmingly. Plus, with a sleek design and adjustable water level, it's the perfect accessory for any outdoor enthusiast.\""
+  },
+  {
+   "prompt": "Write a paragraph from a travel blog about a rainy day in Lisbon.",
+   "text": "\"As the first light of dawn crept over the rolling hills of Lisbon, the city's lush green landscape was bathed in an ethereal glow. Luminous clouds drifted lazily across the sky, casting a mesmerizing shimmering effect that made the city's terracotta hue seem almost otherworldly. The air was filled with the sweet scent of fresh bread and the murmur of vendors calling out their latest creations, enticing passersby with enticing aromas.\n\nThe sun began to rise over the city, casting a warm orange glow over the streets. Strolling along the picturesque Douro River, one could feel the cool breeze caress the wet stone of the cobblestone cobblestones. Even the water looked different – its"
+  },
+  {
+   "prompt": "Describe in one paragraph how a bill becomes a law in a parliamentary system.",
+   "text": "Here is a possible one-paragraph description of the legislative process in a parliamentary system:\n\nIn parliamentary systems, a bill is introduced in the House of Commons or House of Lords, then debated and amended by members. Once the bill is finalized, it is considered by all members, with the most senior member of the government committee or the leader of the House or the governing party presenting a \"2 plus 2\" vote by each party to pass the bill. If a vote is not unanimous, a vote is then taken by all members, with the majority holding the majority vote. This leads to a 2-3 vote, and an amendment vote if necessary. If a bill is passed, it is presented to the Queen for royal assent"
+  },
+  {
+   "prompt": "Write a short paragraph welcoming new employees to a software company.",
+   "text": "Welcome to NovaTech, Inc. – a leading provider of cutting-edge technology solutions. We're excited to have you join our team and contribute to our mission of innovation and growth. As you step into our office, you'll discover a collaborative and dynamic environment where everyone shares a passion for delivering exceptional results. From the moment you arrive, you'll be surrounded by a team of talented individuals who are dedicated to creating software that makes a real difference in people's lives."
+  },
+  {
+   "prompt": "Write a paragraph about the benefits of regular sleep.",
+   "text": "Here is a paragraph about the benefits of regular sleep that might interest you: Regular sleep is essential for maintaining optimal physical and mental health. It plays a crucial role in physical recovery and the restoration of bodily functions, including the replenishment of cells and tissues. Sleep also helps in the consolidation of memory, allowing the brain to process and store new information and skills. Additionally, a well-rested brain can enhance cognitive functions such as attention, focus, and problem-solving. Moreover, adequate sleep is linked to better overall health, with studies showing that sleep deprivation can increase the risk of chronic diseases such as diabetes, cardiovascular disease, and obesity. Furthermore, sleep improves mood and emotional regulation, helping to reduce stress and anxiety. Finally, regular sleep promotes"
+  },
+  {
+   "prompt": "Write a short story opening about a lighthouse keeper who finds a message in a bottle.",
+   "text": "Here's a short story opening about a lighthouse keeper who finds a message in a bottle:\n\nAs the sun dipped into the horizon, casting a golden glow over the sleepy village of Ravenswood, a lone lighthouse keeper named Emilia stepped out into the fading light. She had been out on the pier for hours, scanning the sleepy waters, but the salty air had a way of putting thoughts to rest.\n\nThen, as she stood there, watching the waves gently lap against the pier, she noticed something peculiar. A small, half-empty bottle lay on the sand, near the pierhead. It was only half-empty, and the words on the lid were scribbled with a crude yet unmistakable handwriting.\n\nEm"
+  },
+  {
+   "prompt": "Summarise in one paragraph what a database index is and why it speeds up queries.",
+   "text": "A database index is a data structure used to speed up database queries by storing frequently accessed data in a contiguous block of rows. By creating such a block, a database can reduce the time it takes to access data, which can improve query performance. Indexes are typically stored in the heap storage area, but can be distributed across the database to improve query speed, especially in large databases."
+  },
+  {
+   "prompt": "Write a paragraph for a local newsletter about a community garden opening this weekend.",
+   "text": "Here is a possible paragraph for the local newsletter about a community garden opening this weekend:\n\n\"On Saturday, a community garden will be opening at Green Meadows Recreation Center, offering a space for residents to cultivate their own fruits, vegetables, and flowers. The garden will feature a variety of plots, as well as seating areas and educational signage, to foster a sense of community and connection among gardeners. This weekend park will be filled with the smell of fresh produce, the sound of laughter, and the sight of a vibrant green space where community members can thrive and enjoy the beauty of nature. For more information, please visit the Green Meadows Recreation Center's website or stop by the park at 10 am on Saturday.\""
+  },
+  {
+   "prompt": "Describe in one paragraph how to brew a good cup of tea.",
+   "text": "To brew a good cup of tea, start by selecting high-quality, loose-leaf tea leaves or tea bags. Place the selected tea leaves or tea bags into a tea infuser or tea infuser bag.  Fill a kettle with filtered water to a depth of 3 inches and bring to a boil. Pour the hot water over the tea infuser bag or tea leaves in a specific order to ensure even extraction. This is typically the 'tea pour' method but you can use a tea infuser. Allow the tea to steep for the appropriate amount of time as specified either on the tea bag or tea leaves, then strain out the tea leaves or tea bag and add sweeteners, milk, sugar or honey and stir to dissolve. The"
+  },
+  {
+   "prompt": "Write a short paragraph about why museums matter in the digital age.",
+   "text": "Here is a short paragraph on the importance of museums in the digital age:\n\nMuseums play a vital role in the digital age as they are hubs of human history, culture, and creativity. They provide a platform for individuals and organizations to share their experiences and knowledge with a global audience. They also offer a unique opportunity for people to connect with the past, explore art and artifacts, and engage with contemporary issues through exhibits and programs. Furthermore, museums are becoming increasingly relevant in shaping public discourse and social change. By collecting, preserving, and sharing cultural objects, they create a common history that transcends borders and encourages dialogue between people from different backgrounds. Their digital initiatives, like virtual exhibitions and online collections, are also playing a crucial role in reaching"
+  }
+ ],
+ "plain": [
+  {
+   "prompt": "Write a short news-style paragraph about a city council approving a new bicycle lane network.",
+   "text": "The city council has finally approved the new bicycle lane network, a key initiative aimed at improving the safety and mobility of residents and commuters. The new network, which will connect various intersections and will include bike lanes, will be completed by the end of the year, paving the way for more efficient and secure transportation in the city. With the new bike lanes, the city hopes to reduce traffic congestion, lower emissions, and enhance the overall quality of life for its citizens."
+  },
+  {
+   "prompt": "Explain in one paragraph why the sky is blue, for a curious teenager.",
+   "text": "The sky is indeed blue because of the way light interacts with the atmosphere.  When sunlight enters our atmosphere, it is made up of various colors of light, and each color has its own wavelength.  Blue light has a shorter wavelength and higher frequency, while red and orange light have longer wavelengths and lower frequencies.  As sunlight passes through the Earth's atmosphere, it is scattered in all directions by the tiny molecules of gases in the air.  This scattered light is mostly blue because, on a clear day, the sky contains a lot of molecules of gases that scatter the blue light the most.  This is why the sky appears blue to us."
+  },
+  {
+   "prompt": "Write a short product description for a reusable stainless-steel water bottle.",
+   "text": "As an AI assistant trained on Hugging Face data, I'm programmed to provide you with a high-quality product description. I'll use this data to craft a detailed and informative product description for your reusable stainless-steel water bottle, ensuring that you find it both informative and compelling.\n\nYour product description for the reusable stainless-steel water bottle should include:\n\n* A brief introduction to the product's design and features\n* Details about the material used (stainless steel) and its durability\n* Information about any certifications or ratings\n* Tips for using the product effectively\n* Any notable benefits or advantages of the product\n* Contact information for customer support or additional resources\n\nHere's an example of a short product"
+  },
+  {
+   "prompt": "Write a paragraph from a travel blog about a rainy day in Lisbon.",
+   "text": "Lisbon, a city that has been a favorite of mine for so long, has this day just like any other—a rainy day. The streets are quiet, the buses are empty, and the restaurants are closed, all in a manner so quiet that it makes one wonder if it will ever be empty. The rainy days in Portugal are always a bit of a mystery to me, but one thing I know is that it is in these conditions that I get to really experience Portugal's soul. The mist rolls in, it seeps into the buildings, and it slowly makes its way down the streets. The city seems to be pulsing with a melancholy undercurrent, and yet everything is somehow just a little brighter, a little more alive."
+  },
+  {
+   "prompt": "Describe in one paragraph how a bill becomes a law in a parliamentary system.",
+   "text": "In a parliamentary system, a bill that is introduced in both the House of Commons and the House of Lords undergoes a complex process before being approved by the monarch. The process begins with a bill being presented by a member of Parliament to the relevant committee for review and possible amendments. If the changes are deemed acceptable, the bill may then go to the House of Commons, where it is debated and voted on by the elected representatives. If a significant majority approves the changes, the bill goes to the House of Lords for further scrutiny. Ultimately, if the Lords agree with all changes, the bill is voted on by the elected representatives. If a majority approves the changes, the bill becomes law."
+  },
+  {
+   "prompt": "Write a short paragraph welcoming new employees to a software company.",
+   "text": "Welcome to our software company, where we believe in the power of innovation to drive success. We're looking forward to welcoming you to our vibrant company culture, filled with a diverse team of talented individuals who share our passion for delivering exceptional products and services. As you join our team, you'll discover a collaborative environment where your unique perspectives and ideas are valued and encouraged. We're eager to learn about your potential, explore new challenges together, and help drive our company forward. Let's make this exciting journey together."
+  },
+  {
+   "prompt": "Write a paragraph about the benefits of regular sleep.",
+   "text": "Regular sleep is crucial for maintaining a healthy and active body. It plays a vital role in the physical and mental health of an individual, and it plays a crucial role in the production of hormones that regulate growth and metabolism. Adequate sleep also helps to flush out toxins in the body, reducing the risk of diseases such as heart disease and diabetes. Additionally, sleep is essential for cognitive function and memory consolidation, which is vital for learning and retaining new information. Furthermore, it is important for physical fitness and overall well-being, helping to improve recovery times from physical activities and promoting muscle growth."
+  },
+  {
+   "prompt": "Write a short story opening about a lighthouse keeper who finds a message in a bottle.",
+   "text": "As I stood on the edge of the windswept rocks, I had been counting the days until the sun rose over the rocky coast and saw the lighthouse beckon me like a siren's call. My name was Jack, and I had been at the keeper's pass for three summers. I knew the lighthouse, the sea, and the solitude like the back of my hand. But today was different. Today, I found something that made my heart stop.\n\nI set up camp on the beach, feeling the warm sand beneath my feet in the chill of the night. The sky was a deep shade of indigo, and the stars twinkled like diamonds in the darkening sky. The sea was calm, with only a few sw"
+  },
+  {
+   "prompt": "Summarise in one paragraph what a database index is and why it speeds up queries.",
+   "text": "A database index is a data structure that allows efficient searching and sorting of data in a database. By creating an index on specific columns of a table, you can speed up queries by reducing the amount of data retrieved and processed, while maintaining query performance. An index can be thought of as a \"shadow\" of the original data, reducing the amount of disk I/O required for access. By reducing disk I/O, indexes can improve query performance, especially when the query involves frequently accessed data."
+  },
+  {
+   "prompt": "Write a paragraph for a local newsletter about a community garden opening this weekend.",
+   "text": "The first vibrant turn to a new community garden has arrived, and now we welcome you to the vibrant space that will provide a green space for all to enjoy and grow. Hosted by the community at Westwood Park, this beautiful green space is sure to be a hub for community gatherings, fun events, and a place to relax. With a carefully curated selection of plants, seating areas for picnics, and a stunning garden garden, this space will be a haven of both physical and mental well-being for the residents of Westwood. For those looking for a chance to connect with nature, this is the perfect place to do so with neighbors all around the park. The garden will be open to everyone in the community, and the first community"
+  },
+  {
+   "prompt": "Describe in one paragraph how to brew a good cup of tea.",
+   "text": "To brew a good cup of tea, start by gathering the essential tea leaves, tea bags, or loose tea fines. Choose a quality tea, taking into consideration the type and season of the tea leaves. The best tea is usually one that is picked earlier that day to enhance the flavors. Pour boiling water over the tea leaves in a teapot or just a pot. Allow the water to steep for about 3-5 minutes, depending on your preference for strength. The tea bag or loose tea fines should be steeped for 3-5 minutes as well. Remove the tea bag and strain the tea into a cup, add sugar or honey if desired, and enjoy your perfect cup of tea."
+  },
+  {
+   "prompt": "Write a short paragraph about why museums matter in the digital age.",
+   "text": "Museums play a vital role in the digital age by providing immersive and interactive experiences that transcend traditional boundaries. They offer a unique opportunity for people to engage with art, history, and culture in a highly personal and engaging way, often through digital platforms. This digital accessibility not only allows people to explore and interact with these collections at any time, but also enables new forms of storytelling, education, and community building. By leveraging technology, museums can reach a wider audience, provide real-time access to cultural heritage, and create engaging experiences that foster empathy, understanding, and a deeper connection to the past and present."
+  }
+ ]
+}

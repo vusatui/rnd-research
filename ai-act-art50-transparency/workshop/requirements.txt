@@ -1,0 +1,11 @@
+# Core (ex1 chatbot disclosure + ex2 C2PA / watermark / fingerprint lab)
+openai>=1.50
+python-dotenv>=1.0
+pytest>=8
+c2pa-python>=0.38        # Content Credentials (C2PA) signing/reading; Python >= 3.10
+cryptography>=41
+pillow>=10
+numpy>=1.26
+invisible-watermark>=0.2   # open DWT-DCT-SVD image watermark (the one used by early Stable Diffusion)
+opencv-python-headless>=4.8
+PyWavelets>=1.5

@@ -1,0 +1,109 @@
+{
+ "date": "2026-10-26T10:23:08",
+ "model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+ "tokens_per_text": 150,
+ "ngram_len": 5,
+ "detector": "mean g-value (30 layers), threshold = max over all null texts",
+ "threshold": 0.5152,
+ "n_null": 24,
+ "baseline": {
+  "watermarked (as generated)": {
+   "n": 12,
+   "mean_g": 0.5574,
+   "detected": "12/12"
+  },
+  "NULL: unwatermarked LLM text": {
+   "n": 12,
+   "mean_g": 0.5021,
+   "detected": "0/12"
+  },
+  "NULL: human text (public domain)": {
+   "n": 12,
+   "mean_g": 0.4957,
+   "detected": "0/12"
+  }
+ },
+ "length": {
+  "20": {
+   "wm_mean_g": 0.5354,
+   "null_mean_g": 0.5007,
+   "wm_detected_at_fixed_thr": "12/12",
+   "null_above_thr": "5/24"
+  },
+  "40": {
+   "wm_mean_g": 0.5491,
+   "null_mean_g": 0.5003,
+   "wm_detected_at_fixed_thr": "12/12",
+   "null_above_thr": "2/24"
+  },
+  "80": {
+   "wm_mean_g": 0.5555,
+   "null_mean_g": 0.4992,
+   "wm_detected_at_fixed_thr": "12/12",
+   "null_above_thr": "0/24"
+  },
+  "150": {
+   "wm_mean_g": 0.5574,
+   "null_mean_g": 0.4989,
+   "wm_detected_at_fixed_thr": "12/12",
+   "null_above_thr": "0/24"
+  }
+ },
+ "attacks": {
+  "drop 10% of words": {
+   "n": 12,
+   "mean_g": 0.5438,
+   "detected": "12/12"
+  },
+  "drop 30% of words": {
+   "n": 12,
+   "mean_g": 0.5241,
+   "detected": "10/12"
+  },
+  "swap 20% adjacent words": {
+   "n": 12,
+   "mean_g": 0.5289,
+   "detected": "12/12"
+  },
+  "hyphen typos in 30% of words": {
+   "n": 12,
+   "mean_g": 0.5185,
+   "detected": "8/12"
+  },
+  "first half only": {
+   "n": 12,
+   "mean_g": 0.5502,
+   "detected": "12/12"
+  },
+  "paraphrase (LLM)": {
+   "n": 6,
+   "mean_g": 0.5075,
+   "detected": "1/6",
+   "per_text_mean_g": [
+    0.495,
+    0.524,
+    0.498,
+    0.508,
+    0.506,
+    0.513
+   ],
+   "word_4gram_overlap_with_original": 0.011,
+   "sample": "The municipal government has sanctioned a planning proposal for an expansive new bicycle lane network. This development will offer cyclists an accessible, secure, and straightforward path across the urban area. By implementing this project, both tourists and residents can traverse the city more swif"
+  },
+  "translate EN->DE->EN (LLM)": {
+   "n": 6,
+   "mean_g": 0.5257,
+   "detected": "6/6",
+   "per_text_mean_g": [
+    0.524,
+    0.525,
+    0.522,
+    0.533,
+    0.516,
+    0.533
+   ],
+   "word_4gram_overlap_with_original": 0.408,
+   "sample": "The city council has approved the zoning plan for a new network of bike paths that will provide cyclists with an easy-to-use, safe, and convenient route throughout the city. With this initiative, visitors and residents can now navigate the city quickly and efficiently, relieving traffic and making i"
+  }
+ }
+}
