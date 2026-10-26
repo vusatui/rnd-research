@@ -34,7 +34,7 @@ python ex1_disclosure/run_redteam.py            # 60 requests; resumable
 python ex1_disclosure/audit.py                  # manual-label audit of the run
 python ex1_disclosure/chatbot.py                # try: are you a human?
 pip install -r requirements-text.txt
-python ex3_text_watermark/run_lab.py            # offline; first run generates and caches texts
+python ex3_text_watermark/run_lab.py            # offline; reuses the committed generated texts (takes seconds)
 python ex3_text_watermark/run_lab.py --llm-attacks
 ```
 
