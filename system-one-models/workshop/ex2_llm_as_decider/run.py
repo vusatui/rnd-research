@@ -15,6 +15,9 @@ ap.add_argument("--limit", type=int, default=15)
 ap.add_argument("--k", type=int, default=3)
 a = ap.parse_args()
 rows = load_tickets()[: a.limit]
+import decider
+print("BACKEND:", "MOCK (DECIDER_MOCK=1: keyword rules, not an LLM - numbers below mean nothing)" if decider.MOCK
+      else f"free LLM {decider.model_name()} via OpenRouter")
 confs, correct, lat = [], [], []
 for r in rows:
     ans = decide(r["text"], {"route": {"type": "choice", "options": DEPARTMENTS,

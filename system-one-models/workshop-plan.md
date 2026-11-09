@@ -1,6 +1,6 @@
 # Workshop plan (~90 min): build a System 1 / System 2 decision pipeline
 
-Free-tier friendly: exercises 1-3 need only a laptop and a free OpenRouter key. Code: `workshop/`.
+Free-tier friendly: exercises 1-3 need only a laptop and a free OpenRouter key. Code: `workshop/`. With Docker + make, nothing else to install: `make ex1` ... `make ex4` from `system-one-models/` (see [workshop/README.md](workshop/README.md)).
 
 | # | Time | Exercise | Needs | Goal |
 |---|---|---|---|---|

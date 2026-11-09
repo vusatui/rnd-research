@@ -42,10 +42,11 @@ def clef():
             "route": {"type": "choice", "instructions": "Which team should own this ticket?", "options": OPTS}}}).json()
 
 
-for name, fn, key in [("jev", jev, "TYPESAFE_API_KEY"), ("openai", openai_decisions, "OPENAI_API_KEY"),
-                      ("clef", clef, "CLOUDFLARE_API_TOKEN")]:
-    if not os.environ.get(key):
-        print(f"[skip] {name}: {key} not set"); continue
+for name, fn, keys in [("jev", jev, ["TYPESAFE_API_KEY"]), ("openai", openai_decisions, ["OPENAI_API_KEY"]),
+                       ("clef", clef, ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"])]:
+    missing = [k for k in keys if not os.environ.get(k)]
+    if missing:
+        print(f"[skip] {name}: {', '.join(missing)} not set"); continue
     try:
         print(f"== {name}\n" + json.dumps(fn(), indent=2)[:2000])
     except Exception as e:  # keep the workshop going if one provider fails

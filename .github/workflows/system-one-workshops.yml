@@ -1,0 +1,62 @@
+name: system-one-workshops
+
+# Builds the System One / Jev workshop image and runs the offline smoke tests (MOCK mode, no secrets).
+# Same commands as on a laptop: `make -C system-one-models test`.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "system-one-models/**"
+      - ".github/workflows/system-one-workshops.yml"
+  pull_request:
+    paths:
+      - "system-one-models/**"
+      - ".github/workflows/system-one-workshops.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: system-one-workshops-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: smoke (${{ matrix.arch }}, mock, no key)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: make -C system-one-models build
+      - name: Offline smoke tests (--network none, MOCK mode)
+        run: make -C system-one-models test
+
+  live:
+    # Optional: one real call through the free OpenRouter model. Runs only if the repository has an
+    # OPENROUTER_API_KEY secret (never on fork PRs). Free models get rate-limited, so it may not fail the run.
+    name: live (free OpenRouter model, optional)
+    needs: smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    continue-on-error: true
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        if: env.OPENROUTER_API_KEY != ''
+      - name: Live check
+        if: env.OPENROUTER_API_KEY != ''
+        run: make -C system-one-models test-live
+      - name: Skipped
+        if: env.OPENROUTER_API_KEY == ''
+        run: echo "No OPENROUTER_API_KEY secret, live check skipped."

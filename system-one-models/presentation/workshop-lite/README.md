@@ -2,7 +2,31 @@
 
 Goal: see with your own eyes what a **System One / decision model** call looks like: *text in, typed answer + probabilities out, no generated text*.
 
-You need Python 3.10+ and (for the free path) a free OpenRouter key. Nothing else.
+You need **Docker and make** (recommended, nothing else to install) or Python 3.10+. For the free path you also need a free OpenRouter key; without one the demo still runs in a clearly labelled offline MOCK mode.
+
+## Quick start with Docker
+
+Run from `system-one-models/` (two folders up from here):
+
+```bash
+cd system-one-models
+cp .env.example .env     # paste your free OPENROUTER_API_KEY (https://openrouter.ai/keys)
+make lite                # builds the image, starts the emulator, runs all 3 examples
+make lite EX=ticket      # just one: ticket | comment | approval
+make lite-mock           # fully offline: no key, no network (MOCK keyword rules, NOT an LLM)
+```
+
+The plain-curl example: `make emulator` in one terminal, `make curl` in another (curl also runs in Docker). `make help` lists every target.
+
+Which engine answered is always printed in `model=`:
+
+| `model=` says | What answered |
+|---|---|
+| `EMULATOR(<free model>)` | the free OpenRouter LLM, 5 votes per question (still **not** Jev) |
+| `EMULATOR(<free model>)+MOCK-FALLBACK` | the free LLM failed (rate limit, no network), so offline keyword rules answered; a `!!` line says which questions |
+| `MOCK-EMULATOR(offline keyword rules)` | `make lite-mock` / `MOCK=1`: no LLM at all, deterministic rules for demos and CI |
+
+`make lite` falls back to MOCK on failure so a live demo never dies on stage; use `make lite FALLBACK=` to get the error instead. The mock answers are hand-written keyword rules: they show the wire format and the "code decides" step, nothing about model quality.
 
 ## Which backend are you talking to? (read this first)
 
@@ -16,7 +40,7 @@ All three options use the **same client code** and the same Jev wire format (`PO
 
 What the emulator does (so nobody is misled): it asks a free LLM the same question 5 times, counts the answers and reports the vote shares as "probabilities". Real Jev instead scores every option in a single pass and is trained to give calibrated probabilities. The emulator's `confidence` is just the top vote share. The response says `"model": "EMULATOR(...)"` so it can never be confused with Jev. Numbers like `1.0` or `0.6` in the outputs below are vote shares, **not** Jev probabilities.
 
-## Run it (5 minutes, free path)
+## Run it without Docker (5 minutes, free path)
 
 ```bash
 cd system-one-models/presentation/workshop-lite
@@ -24,7 +48,7 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env          # then paste your free OPENROUTER_API_KEY (https://openrouter.ai/keys)
 
-python jev_emulator.py &      # terminal 1 (or background): the stand-in "Jev" server on :8787
+python jev_emulator.py &      # terminal 1 (or background): the stand-in "Jev" server on :8787 (EMULATOR_MOCK=1 = offline)
 python jev_client.py          # runs all 3 examples; or: python jev_client.py ticket|comment|approval
 bash curl_example.sh          # the same idea with plain curl
 ```

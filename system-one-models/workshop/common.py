@@ -34,4 +34,4 @@ def openrouter():
 
 
 def model_name():
-    return os.environ.get("OPENROUTER_MODEL", "nvidia/nemotron-3-super-120b-a12b:free")
+    return os.environ.get("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free")

@@ -1,0 +1,15 @@
+# Only docker/, workshop/ and presentation/workshop-lite/ are needed in the build context.
+**/.env
+**/.venv
+**/__pycache__
+presentation/remotion
+presentation/export
+presentation/images
+presentation/serious
+presentation/*.pdf
+presentation/*.png
+presentation/*.excalidraw
+slides
+*.md
+!workshop/README.md
+!presentation/workshop-lite/README.md

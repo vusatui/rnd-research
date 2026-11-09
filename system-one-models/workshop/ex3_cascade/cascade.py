@@ -21,6 +21,10 @@ train, test = rows[:24], rows[24:]
 clf = make_pipeline(TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True), LogisticRegression(max_iter=2000, C=10))
 clf.fit([r["text"] for r in train], [r["department"] for r in train])
 
+if not a.no_llm:
+    import decider
+    if decider.MOCK:
+        print("S2 BACKEND: MOCK (DECIDER_MOCK=1: keyword rules, not an LLM)")
 ok = esc = 0
 for r in test:
     p = clf.predict_proba([r["text"]])[0]
@@ -37,4 +41,4 @@ for r in test:
     ok += label == r["department"]
     print(f"{path:5} conf={conf:.2f} -> {label:9} (gold {r['department']})")
 print(f"\nthreshold {a.threshold}: accuracy {ok/len(test):.2%}, escalated {esc}/{len(test)}")
-print("Sweep it: for t in 0.3 0.5 0.7 0.9; do python cascade.py --no-llm --threshold $t | tail -1; done")
+print("Sweep it: for t in 0.3 0.5 0.7 0.9; do python cascade.py --no-llm --threshold $t | grep ^threshold; done")

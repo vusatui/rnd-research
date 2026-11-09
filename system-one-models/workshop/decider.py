@@ -7,9 +7,14 @@ count votes. Real decision models (Jev, Clef, Laya, OpenAI Decisions) instead sc
 option in a single forward pass and are trained for calibration - that is the point of
 the comparison in the workshop.
 """
-import json, re, time
+import json, os, re, time
 from collections import Counter
 from common import openrouter, model_name
+
+# DECIDER_MOCK=1: no LLM, no key, no network - deterministic keyword rules (mock_decider.py), labelled MOCK.
+MOCK = os.environ.get("DECIDER_MOCK", "").lower() in ("1", "true", "yes")
+if MOCK:
+    import mock_decider
 
 PROMPT = """You are a decision function. Read the STATE and answer the QUESTION.
 Reply with JSON only: {{"answer": <one of {options}>}}. No explanation.
@@ -28,8 +33,10 @@ def _options(q):
     return ["yes", "no"]  # noul / predicate
 
 
-def _ask_once(client, q, state, temperature):
+def _ask_once(client, q, state, temperature, i=0):
     opts = _options(q)
+    if MOCK:
+        return mock_decider.answer_once(q, state, opts, i)
     crit = f"CRITERIA: {q['criteria']}" if q.get("criteria") else ""
     if q["type"] == "score":
         crit += "\nLEVELS (answer with the index): " + "; ".join(f"{i}={l}" for i, l in enumerate(q["levels"]))
@@ -51,10 +58,10 @@ def _ask_once(client, q, state, temperature):
 
 def decide(state, questions, k=5, temperature=0.8):
     """questions: {name: {"type": "choice"|"score"|"noul", "instructions": ..., ...}}"""
-    client, out = openrouter(), {}
+    client, out = (None if MOCK else openrouter()), {}
     t0 = time.perf_counter()
     for name, q in questions.items():
-        votes = Counter(_ask_once(client, q, state, temperature) for _ in range(k))
+        votes = Counter(_ask_once(client, q, state, temperature, i) for i in range(k))
         valid = {o: votes.get(o, 0) / k for o in _options(q)}
         if q["type"] == "noul":
             out[name] = {"noul": valid["yes"] / max(valid["yes"] + valid["no"], 1e-9)}
@@ -69,6 +76,7 @@ def decide(state, questions, k=5, temperature=0.8):
             out[name] = {"choice": best, "probabilities": valid, "confidence": valid.get(best, 0.0),
                          "invalid": votes.get(None, 0)}
     out["_latency_ms"] = round((time.perf_counter() - t0) * 1000)
+    out["_backend"] = "MOCK(keyword rules, not an LLM)" if MOCK else f"LLM {model_name()} via OpenRouter"
     return out
 
 

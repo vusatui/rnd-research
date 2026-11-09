@@ -1,5 +1,26 @@
 # Workshop code: System One / decision models
 
+## Quick start with Docker
+
+Only Docker and make are needed. Run from `system-one-models/`:
+
+```bash
+cd system-one-models
+cp .env.example .env     # add a free OPENROUTER_API_KEY for ex2/ex3 (https://openrouter.ai/keys)
+make ex1                 # classic classifier baseline, no key
+make ex2 LIMIT=15 K=3    # free LLM forced into decision shape
+make ex3 THRESHOLD=0.6   # cascade: classifier first, LLM when unsure
+make ex3-sweep           # threshold sweep with a "human" queue, no key
+make ex4                 # real decision APIs, skips providers without keys
+make workshop            # ex1 + ex2 + ex3 in a row
+make models              # current free OpenRouter models (the list changes often)
+make shell               # a shell in the container
+```
+
+`MOCK=1` (for example `make workshop MOCK=1`) swaps the LLM for deterministic keyword rules (`mock_decider.py`), so everything runs offline without a key. Output then says `BACKEND: MOCK`; its accuracy numbers mean nothing. Your edits under `workshop/` (e.g. new rows in `data/tickets.jsonl`) are mounted into the container, no rebuild needed. `make test` runs the offline smoke tests that CI runs.
+
+## Without Docker
+
 ```bash
 cd system-one-models/workshop
 python -m venv .venv && . .venv/bin/activate

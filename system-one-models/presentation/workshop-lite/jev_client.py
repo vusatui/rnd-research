@@ -36,6 +36,8 @@ def show(title, state, questions):
     print(f"\n=== {title} ===\nSTATE: {state if isinstance(state, str) else json.dumps(state)}")
     resp, ms, base = ask(state, questions)
     print(f"BACKEND: {base}  model={resp['model']}  ({ms} ms)")
+    if "MOCK" in resp.get("model", ""):
+        print(f"!! {resp.get('_note', 'MOCK answer')}")
     print(json.dumps(resp["answers"], indent=2))
     return resp["answers"]
 
