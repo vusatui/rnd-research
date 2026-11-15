@@ -94,6 +94,13 @@ def _votes(scores):
     return {o: round(v / K, 2) for o, v in votes.items()}
 
 
+def _score_conf(probs):
+    p = [probs[str(i)] for i in range(len(probs))]
+    n, m = len(p), max(range(len(p)), key=lambda i: p[i])
+    mad = sum(abs(i - (n - 1) / 2) for i in range(n)) / n
+    return max(0.0, 1 - sum(pi * abs(i - m) for i, pi in enumerate(p)) / mad)
+
+
 def answer(q, state):
     words = _words(state)
     typ, crit = q["type"], q.get("criteria") or {}
@@ -105,7 +112,8 @@ def answer(q, state):
     if typ == "choice":
         probs = _votes({o: _score_option(o, d, state, words) for o, d in crit.items()})
         top = max(probs, key=probs.get)
-        return {"type": "choice", "choice": top, "confidence": probs[top], "probabilities": probs}
+        n = len(probs)  # Jev's documented Choice confidence formula
+        return {"type": "choice", "choice": top, "confidence": round((probs[top] - 1 / n) / (1 - 1 / n), 2), "probabilities": probs}
     # score: ordered levels; pick the level whose description matches best, default the middle
     levels = list(crit)
     scores = {str(i): _hits(_topic_of("", lvl), state, words) for i, lvl in enumerate(levels)}
@@ -114,4 +122,4 @@ def answer(q, state):
     probs = _votes(scores)
     top = max(probs, key=probs.get)
     return {"type": "score", "score": round(sum(int(i) * p for i, p in probs.items()), 2),
-            "confidence": probs[top], "legend": {str(i): v for i, v in enumerate(levels)}, "probabilities": probs}
+            "confidence": round(_score_conf(probs), 2), "legend": {str(i): v for i, v in enumerate(levels)}, "probabilities": probs}

@@ -1,37 +1,46 @@
-"""Shared helpers: dataset loading, metrics (accuracy + Expected Calibration Error), OpenRouter client."""
+"""Shared bits for every exercise: the dataset, the label set and its descriptions.
+
+Every method in the workshop sees the SAME department descriptions, so the comparison is about
+how each method produces an answer and its confidence, not about who got the better prompt.
+"""
 import json, os, pathlib
-from dotenv import load_dotenv
 
 ROOT = pathlib.Path(__file__).parent
-load_dotenv(ROOT / ".env")
-DEPARTMENTS = ["billing", "technical", "account", "sales", "other"]
-URGENCY = ["low", "medium", "high"]
+RESULTS = ROOT / "results"
 
 
-def load_tickets():
-    return [json.loads(l) for l in open(ROOT / "data" / "tickets.jsonl")]
+def _load_env():
+    for p in (ROOT / ".env", ROOT.parent / ".env"):
+        if p.exists():
+            for line in open(p):
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    if v.strip():
+                        os.environ.setdefault(k.strip(), v.strip())
 
 
-def ece(confidences, correct, bins=5):
-    """Expected Calibration Error: |accuracy - confidence| averaged over confidence bins."""
-    n, total = len(confidences), 0.0
-    for b in range(bins):
-        lo, hi = b / bins, (b + 1) / bins
-        idx = [i for i, c in enumerate(confidences) if lo < c <= hi or (b == 0 and c == 0)]
-        if idx:
-            acc = sum(correct[i] for i in idx) / len(idx)
-            conf = sum(confidences[i] for i in idx) / len(idx)
-            total += len(idx) / n * abs(acc - conf)
-    return total
+_load_env()
+
+DEPARTMENTS = {
+    "billing": "Invoices, charges, refunds, payment methods, VAT, renewals of an existing subscription",
+    "technical": "Bugs, errors, outages, API or integration problems, data not syncing, product not working",
+    "account": "Login, passwords, 2FA, user seats and roles, workspace ownership, profile or email changes",
+    "sales": "Buying more: pricing questions, quotes, upgrades, demos, contracts, procurement for new purchases",
+    "other": "Anything else: partnerships, press, job applications, feedback with no request, spam",
+}
+URGENCY = {
+    "low": "Can wait days: questions, nice-to-haves, no business impact",
+    "medium": "Should be handled within a day: something is degraded or a deadline is near",
+    "high": "Needs attention now: outage, blocked work, money or security at risk",
+}
 
 
-def openrouter():
-    from openai import OpenAI
-    key = os.environ.get("OPENROUTER_API_KEY")
-    if not key:
-        raise SystemExit("Set OPENROUTER_API_KEY in workshop/.env (free key: https://openrouter.ai/keys)")
-    return OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key)
+def load_tickets(split=None):
+    """split: None (all), 'train' (for the classic classifier only) or 'test' (what every method is scored on)."""
+    rows = [json.loads(l) for l in open(ROOT / "data" / "tickets.jsonl")]
+    return [r for r in rows if split is None or r["split"] == split]
 
 
-def model_name():
-    return os.environ.get("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free")
+def mock_mode():
+    return os.environ.get("WORKSHOP_MOCK", "").lower() in ("1", "true", "yes")

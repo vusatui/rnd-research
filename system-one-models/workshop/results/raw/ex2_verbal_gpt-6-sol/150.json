@@ -1,0 +1,1 @@
+{"id": 150, "gold_department": "sales", "gold_urgency": "high", "ambiguous": false, "in_tok": 358, "out_tok": 67, "cost": 0.001386, "ms": 2357, "calls": 1, "method_label": "A verbal  gpt-6-sol", "department": "sales", "department_p": 0.94, "department_probs": null, "urgency": "medium", "urgency_p": 0.85, "urgency_probs": null}

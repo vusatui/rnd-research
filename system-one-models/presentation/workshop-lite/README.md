@@ -1,4 +1,4 @@
-# Workshop-lite: call Jev in 15 minutes
+# Workshop-lite = Exercise 1: one call, several questions, your code decides
 
 Goal: see with your own eyes what a **System One / decision model** call looks like: *text in, typed answer + probabilities out, no generated text*.
 
@@ -22,7 +22,8 @@ Which engine answered is always printed in `model=`:
 
 | `model=` says | What answered |
 |---|---|
-| `EMULATOR(<free model>)` | the free OpenRouter LLM, 5 votes per question (still **not** Jev) |
+| `EMULATOR(<free model>, 5 votes)` | the free OpenRouter LLM, 5 calls, each answering **all** questions of the request (still **not** Jev) |
+| `typesafe/jev-1.14-…` | **real Jev** (`make lite-jev`, via OpenRouter) |
 | `EMULATOR(<free model>)+MOCK-FALLBACK` | the free LLM failed (rate limit, no network), so offline keyword rules answered; a `!!` line says which questions |
 | `MOCK-EMULATOR(offline keyword rules)` | `make lite-mock` / `MOCK=1`: no LLM at all, deterministic rules for demos and CI |
 
@@ -35,10 +36,12 @@ All three options use the **same client code** and the same Jev wire format (`PO
 | # | Backend | Cost | `JEV_BASE_URL` | `JEV_API_KEY` | Status for this workshop |
 |---|---|---|---|---|---|
 | A | **Local emulator** (default): a free chat LLM on OpenRouter behind a Jev-shaped endpoint. **This is NOT Jev.** | free | `http://127.0.0.1:8787` | anything | ✅ tested, outputs below |
-| B | **Real Jev** at TypeSafe | paid, [$0.042 / 1M input tokens, output free](https://docs.typesafe.ai/models.md) | `https://api.typesafe.ai` | key from [console.typesafe.ai/keys](https://console.typesafe.ai/keys) | ⛔ not tested: we have no key (see below) |
-| C | **Real Jev via OpenRouter** (billed to your OpenRouter account) | paid | `https://openrouter.ai/api` | an OpenRouter key **with credits and no $0 key limit** | ⛔ not tested: our key is capped at $0 (see below) |
+| B | **Real Jev** at TypeSafe | paid, [$0.042 / 1M input tokens, output free](https://docs.typesafe.ai/models.md) | `https://api.typesafe.ai` | key from [console.typesafe.ai/keys](https://console.typesafe.ai/keys) | not tested (no TypeSafe key); same wire format as C |
+| C | **Real Jev via OpenRouter** (billed to your OpenRouter account, `model: jev-latest`) | paid, same price | `https://openrouter.ai/api` | an OpenRouter key with credits | ✅ tested 2026-11-15: `make lite-jev`, ~150 ms and ~$0.000016 per request ([recorded run](../serious/demo/runs/ex1-real-jev.txt)) |
 
-What the emulator does (so nobody is misled): it asks a free LLM the same question 5 times, counts the answers and reports the vote shares as "probabilities". Real Jev instead scores every option in a single pass and is trained to give calibrated probabilities. The emulator's `confidence` is just the top vote share. The response says `"model": "EMULATOR(...)"` so it can never be confused with Jev. Numbers like `1.0` or `0.6` in the outputs below are vote shares, **not** Jev probabilities.
+What the emulator does (so nobody is misled): it calls a free LLM 5 times; each call answers **all** questions of the request at once (one JSON object), and the vote shares become the "probabilities". `confidence` is then computed with Jev's documented formulas: Choice `(p_max − 1/n) / (1 − 1/n)`, Score `1 − (expected distance from the peak level) / (same for a uniform spread)`; a Noul has no confidence, its value is P(yes). Real Jev computes the distribution over every option in one call, bills input tokens only, and is trained for calibration. The response says `"model": "EMULATOR(...)"` so it can never be confused with Jev, and reports the LLM's real token usage.
+
+**Your code decides, with a threshold per action** (`jev_client.py`, following the Jev docs on [confidence](https://docs.typesafe.ai/confidence.md) and [routing by probability](https://docs.typesafe.ai/patterns/probability-routing.md)): act on the probability of the chosen option; Noul: ≥ 0.7 yes, ≤ 0.3 no, the band between gets its own outcome; risky actions need more (block a comment ≥ 0.9, approve an expense ≥ 0.9 and within policy). With real Jev the expense example ends in ESCALATE: Jev gave "approve" only 0.68-0.70, below the 0.9 bar, which is exactly what the threshold is for.
 
 ## Run it without Docker (5 minutes, free path)
 
@@ -99,11 +102,11 @@ Example 2 (comment moderation) came back `block` with vote shares `allow 0.0 / r
 
 ## What was tested and what was not
 
-- ✅ Emulator + `jev_client.py` (all 3 examples) + `curl_example.sh`: run for real on 2026-10-24.
-- ✅ Client against real Jev **without a key**: `HTTP 401 authentication_error` from `api.typesafe.ai`, so the URL and wire format are right, but **no real Jev answer was obtained**.
-- ✅ Client against OpenRouter's Jev endpoint with our key: `HTTP 403 Key limit exceeded ($0.00 of $0.00)`: the key we have is capped at zero spend (set up for free models only). **No real Jev answer was obtained.**
-- ⛔ We did **not** fabricate any Jev response. Everything above comes from the emulator.
-- Request/response shapes follow the [official API reference](https://docs.typesafe.ai/api/system-one.md) and [quick start](https://docs.typesafe.ai/introduction/quickstart.md). Note: Jev uses `criteria` (not `options`) for choices and score levels; the older `../../workshop/ex4_decision_apis/compare.py` uses `options` and should be fixed before it is used against real Jev.
+- ✅ Emulator + `jev_client.py` (all 3 examples) + `curl_example.sh`, offline MOCK and with a free model (one call per vote answering all questions): 2026-11-15.
+- ✅ **Real Jev via OpenRouter** (`make lite-jev`), all 3 examples: 2026-11-15, [recorded output](../serious/demo/runs/ex1-real-jev.txt). Ticket → technical, P(urgent) 0.99; comment → block 0.91-0.93 (passes the 0.9 bar); expense → approve only 0.68-0.70, so the code escalates. 130-240 ms and about $0.000016 per request; `usage` shows ~55 output tokens that are not billed.
+- Not tested: a direct TypeSafe key (`api.typesafe.ai` answered `401` without a key, so URL and wire format are right).
+- Older outputs further up in this README come from the emulator and are vote shares, not Jev probabilities.
+- Request/response shapes follow the [official API reference](https://docs.typesafe.ai/api/system-one.md). Jev uses `criteria` (not `options`) for choices and score levels.
 
 ## Switching to real Jev
 

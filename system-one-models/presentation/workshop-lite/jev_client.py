@@ -4,6 +4,9 @@
    python jev_client.py            # run all three examples
    python jev_client.py ticket     # or: ticket | comment | approval
 Config (env or .env): JEV_BASE_URL, JEV_API_KEY, JEV_MODEL  - see .env.example
+  local emulator (default)  JEV_BASE_URL=http://127.0.0.1:8787
+  real Jev via OpenRouter   JEV_BASE_URL=https://openrouter.ai/api  JEV_API_KEY=<OpenRouter key>  JEV_MODEL=jev-latest
+  real Jev direct           JEV_BASE_URL=https://api.typesafe.ai    JEV_API_KEY=<TypeSafe key>
 Wire format: https://docs.typesafe.ai/api/system-one.md
 """
 import json, os, sys, time
@@ -34,12 +37,25 @@ def ask(state, questions):
 
 def show(title, state, questions):
     print(f"\n=== {title} ===\nSTATE: {state if isinstance(state, str) else json.dumps(state)}")
+    print(f"QUESTIONS in ONE request: {', '.join(questions)}")
     resp, ms, base = ask(state, questions)
-    print(f"BACKEND: {base}  model={resp['model']}  ({ms} ms)")
-    if "MOCK" in resp.get("model", ""):
-        print(f"!! {resp.get('_note', 'MOCK answer')}")
+    u = resp.get("usage") or {}
+    cost = f"  ${u['cost']:.6f}" if u.get("cost") is not None else ""
+    print(f"BACKEND: {base}  model={resp['model']}  ({ms} ms, tokens in/out {u.get('input_tokens')}/{u.get('output_tokens')}{cost})")
+    if "MOCK" in resp.get("model", "") or "EMULATOR" in resp.get("model", ""):
+        print(f"!! {resp.get('_note', 'not Jev')}")
     print(json.dumps(resp["answers"], indent=2))
     return resp["answers"]
+
+
+def p_of(a):
+    """The probability to act on: the chosen option's probability (Choice/Score) or P(yes) (Noul)."""
+    return a["noul"] if a["type"] == "noul" else a["probabilities"][str(a.get("choice", max(a["probabilities"], key=a["probabilities"].get)))]
+
+
+def noul_band(p, yes=0.7, no=0.3):
+    """Jev docs: start with 0.7 / 0.3 and give the band in between its own outcome."""
+    return "yes" if p >= yes else "no" if p <= no else "unsure"
 
 
 def ticket():
@@ -51,8 +67,10 @@ def ticket():
                                      "technical": "Bugs or integration problems",
                                      "sales": "Pricing or account questions"}},
          "urgent": {"type": "noul", "instructions": "The message conveys urgency or time-sensitivity"}})
-    d = a["department"]
-    print(f"-> CODE decides: send to '{d['choice']}'" + ("" if d["confidence"] >= 0.7 else "  (low confidence -> ask a human)"))
+    d, u = a["department"], noul_band(a["urgent"]["noul"])
+    route = f"send to '{d['choice']}'" if p_of(d) >= 0.7 else "low probability -> a human picks the team"
+    page = {"yes": "page the on-call engineer", "no": "normal queue", "unsure": "flag for a quick human look"}[u]
+    print(f"-> CODE decides: {route}; urgency {u} -> {page}")
 
 
 def comment():
@@ -62,7 +80,11 @@ def comment():
          "action": {"type": "choice", "instructions": "What should the moderator do?",
                     "criteria": {"allow": "Fine to publish", "review": "Borderline, a human should look",
                                  "block": "Clearly breaks the rules"}}})
-    print(f"-> CODE decides: {a['action']['choice'].upper()}")
+    act, p = a["action"]["choice"], p_of(a["action"])
+    # thresholds scale with risk: blocking a user's post needs more certainty than publishing it
+    need = {"block": 0.9, "allow": 0.7, "review": 0.0}[act]
+    final = act if p >= need else "review"
+    print(f"-> CODE decides: {final.upper()}  (model said {act} with p={p:.2f}, '{act}' needs >= {need})")
 
 
 def approval():
@@ -72,7 +94,10 @@ def approval():
          "decision": {"type": "choice", "instructions": "What should happen to this expense?",
                       "criteria": {"approve": "Within policy", "reject": "Breaks the policy",
                                    "escalate": "Unclear, a manager should decide"}}})
-    print(f"-> CODE decides: {a['decision']['choice'].upper()}")
+    dec, p, pol = a["decision"]["choice"], p_of(a["decision"]), noul_band(a["within_policy"]["noul"])
+    # moving money is the risky action: approve only when both answers agree and are clear
+    final = "approve" if dec == "approve" and p >= 0.9 and pol == "yes" else "reject" if dec == "reject" and p >= 0.9 else "escalate"
+    print(f"-> CODE decides: {final.upper()}  (decision {dec} p={p:.2f}, within policy: {pol})")
 
 
 if __name__ == "__main__":

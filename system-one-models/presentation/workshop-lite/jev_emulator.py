@@ -3,8 +3,10 @@
 
 It speaks the same wire format as POST https://api.typesafe.ai/v1/systemone
 (state + typed questions -> typed answers with probabilities), but the "model" behind it is
-a free chat LLM on OpenRouter. Probabilities are estimated by asking the LLM several times and
-counting votes - real Jev instead scores every option in one pass and is trained for calibration.
+a chat LLM on OpenRouter. Each vote is ONE call that answers ALL questions of the request; we ask
+EMULATOR_SAMPLES times and count votes, then compute `confidence` with Jev's documented formulas.
+Real Jev instead computes the distribution over every option in one pass and is trained for
+calibration; you pay only for input tokens.
 
 Use it to learn the API shape for free. Point the client at real Jev by changing JEV_BASE_URL.
 Run:  python jev_emulator.py      (listens on 127.0.0.1:8787)
@@ -26,15 +28,15 @@ MODEL = os.environ.get("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free")
 PORT = int(os.environ.get("EMULATOR_PORT", "8787"))
 HOST = os.environ.get("EMULATOR_HOST", "127.0.0.1")  # the Docker image sets 0.0.0.0
 
-PROMPT = """You are a decision function. Read the STATE and answer the QUESTION.
-Reply with JSON only: {{"answer": <one of {options}>}}. No explanation.
+PROMPT = """You are a decision function. Read the STATE and answer EVERY question below.
+Reply with JSON only, one key per question, each value one of that question's options. No explanation.
 
-QUESTION: {instructions}
-OPTIONS:
-{described}
+{questions}
 
 STATE:
-{state}"""
+{state}
+
+JSON with keys {keys}:"""
 
 
 def _load_env():
@@ -48,6 +50,7 @@ def _load_env():
 
 
 def _llm(prompt, temperature):
+    """One chat completion. Returns (text, input_tokens, output_tokens)."""
     key = os.environ.get("OPENROUTER_API_KEY")
     if not key:
         raise RuntimeError("Set OPENROUTER_API_KEY (free key: https://openrouter.ai/keys)")
@@ -55,85 +58,110 @@ def _llm(prompt, temperature):
         r = requests.post("https://openrouter.ai/api/v1/chat/completions", timeout=60,
             headers={"Authorization": f"Bearer {key}"},
             json={"model": os.environ.get("OPENROUTER_MODEL", MODEL), "temperature": temperature,
-                  "max_tokens": 300, "reasoning": {"enabled": False},
+                  "max_tokens": 400, "reasoning": {"enabled": False},
                   "messages": [{"role": "user", "content": prompt}]})
         if r.status_code == 200:
-            return r.json()["choices"][0]["message"].get("content") or ""
+            j = r.json()
+            u = j.get("usage") or {}
+            return (j["choices"][0]["message"].get("content") or ""), u.get("prompt_tokens", 0), u.get("completion_tokens", 0)
         if r.status_code in (400, 401, 402, 403, 404):  # bad key/model: retrying will not help
             raise RuntimeError(f"OpenRouter HTTP {r.status_code}: {r.text[:200]}")
         time.sleep(1.5 * (attempt + 1))
-    return ""
+    return "", 0, 0
 
 
-def _sample(q, state, options, described):
-    text = _llm(PROMPT.format(options=json.dumps(options), instructions=q.get("instructions", ""),
-                              described=described, state=state), 0.8)
-    m = re.search(r'"answer"\s*:\s*"?([^"}\n]+?)"?\s*[},]', text + "}")
-    val = (m.group(1) if m else text).strip().lower()
-    for o in options:
-        if str(o).lower() == val:
-            return o
-    return None
+def _options(q):
+    """(options, text shown to the LLM) for one question."""
+    typ, crit = q["type"], q.get("criteria")
+    if typ == "choice":
+        return list(crit), "\n".join(f"  - {k}: {v}" for k, v in crit.items())
+    if typ == "score":
+        return [str(i) for i in range(len(crit))], "\n".join(f"  - {i}: {v}" for i, v in enumerate(crit)) + "\n  (answer with the level number)"
+    return ["yes", "no"], "  - yes\n  - no" + (f"\n  (criteria: {crit})" if crit else "")
 
 
 def _mock_on():
     return os.environ.get("EMULATOR_MOCK", "").lower() in ("1", "true", "yes")
 
 
-def _answer_any(q, state):
-    """Returns (answer, source) where source is 'llm' or 'mock'."""
-    if _mock_on():
-        return mock_rules.answer(q, state), "mock"
+def choice_confidence(probs):
+    """Jev's documented Choice formula: how far the top probability is above an even split (0 = even, 1 = certain)."""
+    n = len(probs)
+    return (max(probs.values()) - 1 / n) / (1 - 1 / n)
+
+
+def score_confidence(probs):
+    """Jev's documented Score formula: 1 - (expected distance from the peak level) / (same for a uniform spread)."""
+    p = [probs[str(i)] for i in range(len(probs))]
+    n, m = len(p), max(range(len(p)), key=lambda i: p[i])
+    mad_unif = sum(abs(i - (n - 1) / 2) for i in range(n)) / n
+    return max(0.0, 1 - sum(pi * abs(i - m) for i, pi in enumerate(p)) / mad_unif)
+
+
+def _vote(questions, state):
+    """ONE LLM call answering ALL questions. Returns ({name: option or None}, in_tok, out_tok)."""
+    blocks, opts = [], {}
+    for name, q in questions.items():
+        opts[name], described = _options(q)
+        blocks.append(f"{name}: {q.get('instructions', '')}\n{described}")
+    text, tin, tout = _llm(PROMPT.format(questions="\n\n".join(blocks), state=state, keys=json.dumps(list(questions))), 0.8)
     try:
-        return _answer(q, state), "llm"
-    except Exception:
-        if os.environ.get("EMULATOR_FALLBACK", "").lower() == "mock":
-            return mock_rules.answer(q, state), "mock"
-        raise
+        raw = json.loads(text[text.find("{"): text.rfind("}") + 1])
+    except ValueError:
+        raw = {}
+    picks = {}
+    for name, options in opts.items():
+        val = str(raw.get(name, "")).strip().lower()
+        picks[name] = next((o for o in options if str(o).lower() == val), None)
+    return picks, tin, tout
 
 
-def _answer(q, state):
-    typ, crit = q["type"], q.get("criteria")
-    if typ == "choice":
-        options = list(crit)
-        described = "\n".join(f"- {k}: {v}" for k, v in crit.items())
-    elif typ == "score":
-        options = [str(i) for i in range(len(crit))]
-        described = "\n".join(f"- {i}: {v}" for i, v in enumerate(crit)) + "\n(answer with the level number)"
-    else:  # noul
-        options = ["yes", "no"]
-        described = "- yes\n- no"
-    with ThreadPoolExecutor(K) as ex:
-        votes = Counter(ex.map(lambda _: _sample(q, state, options, described), range(K)))
-    valid = sum(v for o, v in votes.items() if o is not None)
-    if not valid:
-        raise RuntimeError("the free LLM returned no usable answers (rate limit or bad model?) - try another OPENROUTER_MODEL")
-    probs = {o: round(votes.get(o, 0) / valid, 2) for o in options}
-    if typ == "noul":
-        return {"type": "noul", "noul": probs["yes"]}
-    top = max(probs, key=probs.get)
-    if typ == "choice":
-        return {"type": "choice", "choice": top, "confidence": probs[top], "probabilities": probs}
-    return {"type": "score", "score": round(sum(int(i) * p for i, p in probs.items()), 2),
-            "confidence": probs[top], "legend": {str(i): v for i, v in enumerate(crit)}, "probabilities": probs}
+def _answers_from_votes(questions, votes):
+    answers = {}
+    for name, q in questions.items():
+        options, _ = _options(q)
+        c = Counter(v[name] for v in votes if v[name] is not None)
+        valid = sum(c.values())
+        if not valid:
+            raise RuntimeError(f"the LLM returned no usable answer for '{name}' (rate limit or bad model?)")
+        probs = {o: round(c.get(o, 0) / valid, 2) for o in options}
+        if q["type"] == "noul":
+            answers[name] = {"type": "noul", "noul": probs["yes"]}
+            continue
+        top = max(probs, key=probs.get)
+        if q["type"] == "choice":
+            answers[name] = {"type": "choice", "choice": top, "probabilities": probs,
+                             "confidence": round(choice_confidence(probs), 2)}
+        else:
+            answers[name] = {"type": "score", "score": round(sum(int(i) * p for i, p in probs.items()), 2),
+                             "probabilities": probs, "confidence": round(score_confidence(probs), 2),
+                             "legend": {str(i): v for i, v in enumerate(q["criteria"])}}
+    return answers
 
 
 def handle(body):
     state = body["state"] if isinstance(body["state"], str) else json.dumps(body["state"], ensure_ascii=False)
-    items = list(body["questions"].items())
-    with ThreadPoolExecutor(len(items)) as ex:
-        results = list(ex.map(lambda nq: _answer_any(nq[1], state), items))
-    answers = {n: a for (n, _), (a, _) in zip(items, results)}
-    mocked = [n for (n, _), (_, src) in zip(items, results) if src == "mock"]
+    questions = body["questions"]
     if _mock_on():
-        model, note = "MOCK-EMULATOR(offline keyword rules)", "NOT Jev and NOT an LLM: deterministic keyword rules, same wire format"
-    elif mocked:
-        model = f"EMULATOR({MODEL})+MOCK-FALLBACK"
-        note = f"NOT Jev: free LLM + vote counting; the LLM failed for {mocked}, answered by offline keyword rules (MOCK)"
-    else:
-        model, note = f"EMULATOR({MODEL})", "NOT Jev: free LLM + vote counting, same wire format"
-    return {"model": model, "answers": answers,
-            "usage": {"input_tokens": None, "output_tokens": None}, "_note": note}
+        answers = {n: mock_rules.answer(q, state) for n, q in questions.items()}
+        return {"model": "MOCK-EMULATOR(offline keyword rules)", "answers": answers,
+                "usage": {"input_tokens": None, "output_tokens": None},
+                "_note": "NOT Jev and NOT an LLM: deterministic keyword rules, same wire format"}
+    try:
+        with ThreadPoolExecutor(K) as ex:  # K votes in parallel, each vote is ONE call for ALL questions
+            votes = list(ex.map(lambda _: _vote(questions, state), range(K)))
+        answers = _answers_from_votes(questions, [v[0] for v in votes])
+    except Exception:
+        if os.environ.get("EMULATOR_FALLBACK", "").lower() != "mock":
+            raise
+        answers = {n: mock_rules.answer(q, state) for n, q in questions.items()}
+        return {"model": f"EMULATOR({MODEL})+MOCK-FALLBACK", "answers": answers,
+                "usage": {"input_tokens": None, "output_tokens": None},
+                "_note": "NOT Jev: the LLM failed, every question answered by offline keyword rules (MOCK)"}
+    return {"model": f"EMULATOR({MODEL}, {K} votes)", "answers": answers,
+            "usage": {"input_tokens": sum(v[1] for v in votes), "output_tokens": sum(v[2] for v in votes), "llm_calls": K},
+            "_note": f"NOT Jev: {K} calls to a chat LLM (each answers all {len(questions)} questions), votes counted. "
+                     "Real Jev: 1 call, a computed distribution, input-only pricing."}
 
 
 class H(BaseHTTPRequestHandler):

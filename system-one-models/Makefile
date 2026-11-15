@@ -11,9 +11,17 @@ FALLBACK ?= mock
 # MOUNT=1 (default) mounts workshop/ and workshop-lite/ read-only, so your edits apply without a rebuild.
 MOUNT    ?= 1
 EX       ?=
-LIMIT    ?= 15
-K        ?= 3
-THRESHOLD ?= 0.6
+# ex2: METHOD=all|jev|verbal|logprobs|votes|classic|strong  MODEL=<OpenRouter id>  LIMIT=<n tickets>
+METHOD   ?= all
+MODEL    ?=
+LIMIT    ?=
+# ex3 economics: S1/S2 = an ex2 result name (or S2=human), ERROR_COST/REVIEW in $
+S1       ?= jev
+S2       ?= human
+ERROR_COST ?= 5
+REVIEW   ?= 0.5
+# budget guard for every paid run (stops the run when exceeded)
+MAX_SPEND_USD ?= 0.05
 PLATFORM ?=
 CURL_IMAGE ?= curlimages/curl:8.17.0
 EMU_NAME ?= s1-jev-emulator
@@ -25,22 +33,23 @@ ENV_FILE := $(firstword $(wildcard $(ROOT)/.env $(ROOT)/presentation/workshop-li
 DOCKER_ENV := $(if $(ENV_FILE),--env-file "$(ENV_FILE)") \
   -e OPENROUTER_API_KEY -e OPENROUTER_MODEL -e JEV_BASE_URL -e JEV_API_KEY -e JEV_MODEL \
   -e TYPESAFE_API_KEY -e OPENAI_API_KEY -e CLOUDFLARE_ACCOUNT_ID -e CLOUDFLARE_API_TOKEN \
-  $(if $(MOCK),-e EMULATOR_MOCK=1 -e DECIDER_MOCK=1)
-MOUNTS := $(if $(filter 1,$(MOUNT)),-v "$(ROOT)/workshop:/app/workshop:ro" -v "$(ROOT)/presentation/workshop-lite:/app/workshop-lite:ro")
+  -e MAX_SPEND_USD=$(MAX_SPEND_USD) \
+  $(if $(MOCK),-e EMULATOR_MOCK=1 -e WORKSHOP_MOCK=1)
+MOUNTS := $(if $(filter 1,$(MOUNT)),-v "$(ROOT)/workshop:/app/workshop:ro" -v "$(ROOT)/workshop/results:/app/workshop/results" -v "$(ROOT)/presentation/workshop-lite:/app/workshop-lite:ro")
 TTY := $(shell [ -t 0 ] && echo -it)
 RUN := docker run --rm --init $(TTY) $(DOCKER_ENV) $(MOUNTS)
 WS  := $(RUN) -w /app/workshop $(IMAGE)
 
 .DEFAULT_GOAL := help
-.PHONY: help build image lite lite-mock emulator curl workshop ex1 ex2 ex3 ex3-sweep ex4 decider models shell test test-live ci clean
+.PHONY: help build image lite lite-mock lite-jev ex1 emulator curl workshop ex2 ex2-estimate eval ex3 homework dataset models shell test test-live ci clean
 
 help: ## Show this help
 	@echo "System One / Jev workshops (Docker + make only)"
 	@echo
 	@awk 'BEGIN{FS=":.*## "} /^[a-z0-9-]+:.*## /{printf "  make %-10s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo
-	@echo "Options: MOCK=1 (offline, no key)  FALLBACK= (no mock fallback)  EX=ticket|comment|approval"
-	@echo "         LIMIT=15 K=3 (ex2)  THRESHOLD=0.6 (ex3)  PORT=8787 (emulator)  MOUNT=0 (use code baked in image)"
+	@echo "Options: MOCK=1 (offline, no key; ex2 re-scores the committed results)  EX=ticket|comment|approval"
+	@echo "         METHOD=all MODEL= LIMIT= (ex2)  S1=jev S2=human ERROR_COST=5 REVIEW=0.5 (ex3)  MAX_SPEND_USD=0.05"
 	@echo "Env file: $(if $(ENV_FILE),$(ENV_FILE),none found - copy .env.example to .env)"
 
 BUILD_CMD := docker build $(if $(PLATFORM),--platform $(PLATFORM)) -f "$(ROOT)/docker/Dockerfile" -t $(IMAGE) "$(ROOT)"
@@ -58,6 +67,11 @@ lite: image ## Talk demo: Jev emulator + 3 examples (EX=ticket|comment|approval)
 lite-mock: ## Talk demo fully offline (MOCK rules, no key, no network)
 	@$(MAKE) --no-print-directory lite MOCK=1
 
+lite-jev: image ## Ex1 against REAL Jev via OpenRouter (same client, paid, ~$0.00002/request)
+	$(RUN) -e JEV_BASE_URL=https://openrouter.ai/api -e JEV_MODEL=jev-latest $(IMAGE) sh -c 'JEV_API_KEY=$$OPENROUTER_API_KEY /app/bin/lite.sh $(EX)'
+
+ex1: lite ## Exercise 1 = the lite demo: one request, several questions, thresholds per action
+
 emulator: image ## Run only the Jev emulator on http://127.0.0.1:8787 (Ctrl+C stops)
 	@echo "Emulator on http://127.0.0.1:$(PORT)/v1/systemone  (NOT Jev; MOCK=1 for offline rules)"
 	$(RUN) --name $(EMU_NAME) -p 127.0.0.1:$(PORT):8787 $(if $(FALLBACK),-e EMULATOR_FALLBACK=$(FALLBACK)) $(IMAGE) python /app/workshop-lite/jev_emulator.py
@@ -66,26 +80,26 @@ curl: ## Plain-curl request to a running `make emulator` (curl runs in Docker)
 	docker run --rm --network container:$(EMU_NAME) -v "$(ROOT)/presentation/workshop-lite/curl_example.sh:/curl_example.sh:ro" \
 	  -e JEV_BASE_URL=http://127.0.0.1:8787 --entrypoint sh $(CURL_IMAGE) /curl_example.sh
 
-workshop: image ## Deep dive: ex1, ex2, ex3 in a row (MOCK=1 for offline)
-	$(WS) sh -c 'python ex1_classic_baseline/baseline.py && echo && python ex2_llm_as_decider/run.py --limit $(LIMIT) --k $(K) && echo && python ex3_cascade/cascade.py --threshold $(THRESHOLD)'
+workshop: image ## Exercises 2 + 3 from the committed results (no key needed)
+	$(WS) sh -c 'WORKSHOP_MOCK=1 python ex2_confidence/run.py && echo && python eval.py --reliability && echo && python ex3_fast_first/economics.py'
 
-ex1: image ## Deep dive ex1: classic classifier baseline (no LLM, no key)
-	$(WS) python ex1_classic_baseline/baseline.py
+ex2-estimate: image ## Ex2: $ estimate for METHOD/LIMIT, no calls
+	$(WS) python ex2_confidence/run.py --method $(METHOD) $(if $(MODEL),--model $(MODEL)) $(if $(LIMIT),--limit $(LIMIT)) --estimate
 
-ex2: image ## Deep dive ex2: free LLM forced into decision shape (LIMIT, K)
-	$(WS) python ex2_llm_as_decider/run.py --limit $(LIMIT) --k $(K)
+ex2: image ## Ex2: verbalized vs computed confidence on 150 tickets (paid, ~$0.03; MOCK=1 replays)
+	$(WS) python ex2_confidence/run.py --method $(METHOD) $(if $(MODEL),--model $(MODEL)) $(if $(LIMIT),--limit $(LIMIT))
 
-ex3: image ## Deep dive ex3: confidence-gated cascade, LLM as System 2 (THRESHOLD)
-	$(WS) python ex3_cascade/cascade.py --threshold $(THRESHOLD)
+eval: image ## Score every results/ex2_*.jsonl: accuracy, ECE, reliability, auto@95, cost
+	$(WS) python eval.py --reliability
 
-ex3-sweep: image ## Deep dive ex3: threshold sweep with a human queue (no LLM)
-	$(WS) sh -c 'for t in 0.3 0.5 0.7 0.9; do python ex3_cascade/cascade.py --no-llm --threshold $$t | grep "^threshold"; done'
+ex3: image ## Ex3: fast-first economics, threshold sweep (S1, S2, ERROR_COST, REVIEW)
+	$(WS) python ex3_fast_first/economics.py --s1 $(S1) --s2 $(S2) --error-cost $(ERROR_COST) --review $(REVIEW)
 
-ex4: image ## Deep dive ex4: real decision APIs (skips providers without keys)
-	$(WS) python ex4_decision_apis/compare.py
+homework: image ## Homework: same ticket to every decision API you have a key for
+	$(WS) python homework/compare_apis.py
 
-decider: image ## Deep dive: one decider.py call (choice + noul + score)
-	$(WS) python decider.py
+dataset: image ## Regenerate data/tickets.jsonl (free generator + labellers; see data/DATASET.md)
+	$(RUN) -v "$(ROOT)/workshop/data:/app/workshop/data" -w /app/workshop $(IMAGE) python data/make_dataset.py
 
 models: image ## List current free OpenRouter models (needs network)
 	$(WS) python list_free_models.py

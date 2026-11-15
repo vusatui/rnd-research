@@ -1,0 +1,270 @@
+{
+ "generator": "baidu/ernie-5.5-flash-preview:free",
+ "labellers": [
+  "particle-ai/particle-1:free",
+  "openai/gpt-6-luna"
+ ],
+ "started": "2026-11-15T20:05:17+0300",
+ "calls": [
+  {
+   "step": "generate",
+   "batch": 0,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 784,
+   "out_tok": 15254,
+   "cost": 0.0,
+   "ms": 61954
+  },
+  {
+   "step": "generate",
+   "batch": 1,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 783,
+   "out_tok": 12877,
+   "cost": 0.0,
+   "ms": 55502
+  },
+  {
+   "step": "generate",
+   "batch": 2,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 779,
+   "out_tok": 6812,
+   "cost": 0.0,
+   "ms": 29937
+  },
+  {
+   "step": "generate",
+   "batch": 3,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 783,
+   "out_tok": 15300,
+   "cost": 0.0,
+   "ms": 63299
+  },
+  {
+   "step": "generate",
+   "batch": 4,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 785,
+   "out_tok": 15524,
+   "cost": 0.0,
+   "ms": 66425
+  },
+  {
+   "step": "generate",
+   "batch": 5,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 783,
+   "out_tok": 8433,
+   "cost": 0.0,
+   "ms": 35974
+  },
+  {
+   "step": "generate",
+   "batch": 6,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 786,
+   "out_tok": 13811,
+   "cost": 0.0,
+   "ms": 58186
+  },
+  {
+   "step": "generate",
+   "batch": 7,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 781,
+   "out_tok": 15281,
+   "cost": 0.0,
+   "ms": 69740
+  },
+  {
+   "step": "generate",
+   "batch": 8,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 780,
+   "out_tok": 5340,
+   "cost": 0.0,
+   "ms": 24480
+  },
+  {
+   "step": "generate",
+   "batch": 9,
+   "model": "baidu/ernie-5.5-flash-preview:free",
+   "in_tok": 783,
+   "out_tok": 12399,
+   "cost": 0.0,
+   "ms": 56438
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2304,
+   "out_tok": 3857,
+   "cost": 0.0,
+   "ms": 27100
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2102,
+   "out_tok": 3108,
+   "cost": 0.0,
+   "ms": 22397
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 1920,
+   "out_tok": 3986,
+   "cost": 0.0,
+   "ms": 22306
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2250,
+   "out_tok": 2201,
+   "cost": 0.0,
+   "ms": 11838
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 1952,
+   "out_tok": 3721,
+   "cost": 0.0,
+   "ms": 17988
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2063,
+   "out_tok": 3737,
+   "cost": 0.0,
+   "ms": 36900
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2020,
+   "out_tok": 3158,
+   "cost": 0.0,
+   "ms": 21867
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2085,
+   "out_tok": 3705,
+   "cost": 0.0,
+   "ms": 23088
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2087,
+   "out_tok": 3905,
+   "cost": 0.0,
+   "ms": 31191
+  },
+  {
+   "step": "label",
+   "model": "particle-ai/particle-1:free",
+   "in_tok": 2128,
+   "out_tok": 2570,
+   "cost": 0.0,
+   "ms": 13138
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2262,
+   "out_tok": 940,
+   "cost": 0.000752675,
+   "ms": 11543
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2053,
+   "out_tok": 337,
+   "cost": 0.00042505,
+   "ms": 3734
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 1886,
+   "out_tok": 883,
+   "cost": 0.000677175,
+   "ms": 11157
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2198,
+   "out_tok": 337,
+   "cost": 0.000443175,
+   "ms": 3343
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 1902,
+   "out_tok": 819,
+   "cost": 0.000647175,
+   "ms": 9985
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2018,
+   "out_tok": 337,
+   "cost": 0.000420675,
+   "ms": 3417
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 1975,
+   "out_tok": 725,
+   "cost": 0.0006093,
+   "ms": 8143
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2039,
+   "out_tok": 878,
+   "cost": 0.0006938,
+   "ms": 10241
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2022,
+   "out_tok": 652,
+   "cost": 0.000578675,
+   "ms": 7265
+  },
+  {
+   "step": "label",
+   "model": "openai/gpt-6-luna",
+   "in_tok": 2075,
+   "out_tok": 337,
+   "cost": 0.0004278,
+   "ms": 3033
+  }
+ ],
+ "stats": {
+  "n": 250,
+  "train": 100,
+  "test": 150,
+  "ambiguous": 6,
+  "dept_agree_labellers": 0.976,
+  "dept_agree_intent_vs_gold": 0.936,
+  "urgency_agree_labellers": 0.9,
+  "total_cost_usd": 0.0057
+ }
+}

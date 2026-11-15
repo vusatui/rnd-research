@@ -1,0 +1,1 @@
+{"id": 133, "gold_department": "sales", "gold_urgency": "medium", "ambiguous": false, "in_tok": 819, "out_tok": 41, "cost": 0.002048, "ms": 1011, "calls": 1, "method_label": "A verbal  claude-sonnet-5.5", "department": "sales", "department_p": 0.5, "department_probs": null, "urgency": "medium", "urgency_p": 0.55, "urgency_probs": null}
