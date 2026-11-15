@@ -1,0 +1,97 @@
+{
+ "cmd": "make -s lite-jev EX=comment",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T21:20:40+03:00",
+ "duration_ms": 2925,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 2635,
+   "text": ""
+  },
+  {
+   "t": 2635,
+   "text": "=== 2. Moderate a comment ==="
+  },
+  {
+   "t": 2635,
+   "text": "STATE: You are all idiots. Go read the docs before posting garbage."
+  },
+  {
+   "t": 2635,
+   "text": "QUESTIONS in ONE request: toxic, action"
+  },
+  {
+   "t": 2801,
+   "text": "BACKEND: https://openrouter.ai/api  model=typesafe/jev-1.14-20261014  (165 ms, tokens in/out 357/55  $0.000015)"
+  },
+  {
+   "t": 2801,
+   "text": "{"
+  },
+  {
+   "t": 2801,
+   "text": "  \"toxic\": {"
+  },
+  {
+   "t": 2801,
+   "text": "    \"type\": \"noul\","
+  },
+  {
+   "t": 2801,
+   "text": "    \"noul\": 0.99"
+  },
+  {
+   "t": 2801,
+   "text": "  },"
+  },
+  {
+   "t": 2801,
+   "text": "  \"action\": {"
+  },
+  {
+   "t": 2801,
+   "text": "    \"type\": \"choice\","
+  },
+  {
+   "t": 2801,
+   "text": "    \"choice\": \"block\","
+  },
+  {
+   "t": 2801,
+   "text": "    \"probabilities\": {"
+  },
+  {
+   "t": 2801,
+   "text": "      \"allow\": 0,"
+  },
+  {
+   "t": 2801,
+   "text": "      \"review\": 0.08,"
+  },
+  {
+   "t": 2801,
+   "text": "      \"block\": 0.92"
+  },
+  {
+   "t": 2801,
+   "text": "    },"
+  },
+  {
+   "t": 2801,
+   "text": "    \"confidence\": 0.88"
+  },
+  {
+   "t": 2801,
+   "text": "  }"
+  },
+  {
+   "t": 2801,
+   "text": "}"
+  },
+  {
+   "t": 2801,
+   "text": "-> CODE decides: BLOCK  (model said block with p=0.92, 'block' needs >= 0.9)"
+  }
+ ]
+}

@@ -41,7 +41,7 @@ All three options use the **same client code** and the same Jev wire format (`PO
 
 What the emulator does (so nobody is misled): it calls a free LLM 5 times; each call answers **all** questions of the request at once (one JSON object), and the vote shares become the "probabilities". `confidence` is then computed with Jev's documented formulas: Choice `(p_max − 1/n) / (1 − 1/n)`, Score `1 − (expected distance from the peak level) / (same for a uniform spread)`; a Noul has no confidence, its value is P(yes). Real Jev computes the distribution over every option in one call, bills input tokens only, and is trained for calibration. The response says `"model": "EMULATOR(...)"` so it can never be confused with Jev, and reports the LLM's real token usage.
 
-**Your code decides, with a threshold per action** (`jev_client.py`, following the Jev docs on [confidence](https://docs.typesafe.ai/confidence.md) and [routing by probability](https://docs.typesafe.ai/patterns/probability-routing.md)): act on the probability of the chosen option; Noul: ≥ 0.7 yes, ≤ 0.3 no, the band between gets its own outcome; risky actions need more (block a comment ≥ 0.9, approve an expense ≥ 0.9 and within policy). With real Jev the expense example ends in ESCALATE: Jev gave "approve" only 0.68-0.70, below the 0.9 bar, which is exactly what the threshold is for.
+**Your code decides, with a threshold per action** (`jev_client.py`, following the Jev docs on [confidence](https://docs.typesafe.ai/confidence.md) and [routing by probability](https://docs.typesafe.ai/patterns/probability-routing.md)): act on the probability of the chosen option; Noul: ≥ 0.7 yes, ≤ 0.3 no, the band between gets its own outcome; risky actions need more (block a comment ≥ 0.9, approve an expense ≥ 0.9 and within policy). With real Jev the expense example ends in ESCALATE: Jev gave "approve" only 0.67-0.70, below the 0.9 bar, which is exactly what the threshold is for.
 
 ## Run it without Docker (5 minutes, free path)
 
@@ -103,7 +103,7 @@ Example 2 (comment moderation) came back `block` with vote shares `allow 0.0 / r
 ## What was tested and what was not
 
 - ✅ Emulator + `jev_client.py` (all 3 examples) + `curl_example.sh`, offline MOCK and with a free model (one call per vote answering all questions): 2026-11-15.
-- ✅ **Real Jev via OpenRouter** (`make lite-jev`), all 3 examples: 2026-11-15, [recorded output](../serious/demo/runs/ex1-real-jev.txt). Ticket → technical, P(urgent) 0.99; comment → block 0.91-0.93 (passes the 0.9 bar); expense → approve only 0.68-0.70, so the code escalates. 130-240 ms and about $0.000016 per request; `usage` shows ~55 output tokens that are not billed.
+- ✅ **Real Jev via OpenRouter** (`make lite-jev`), all 3 examples: 2026-11-15, [recorded output](../serious/demo/runs/ex1-real-jev.txt). Ticket → technical, P(urgent) 0.99; comment → block 0.91-0.93 (passes the 0.9 bar); expense → approve only 0.67-0.70, so the code escalates. 130-260 ms and about $0.000016 per request; `usage` shows ~55 output tokens that are not billed.
 - Not tested: a direct TypeSafe key (`api.typesafe.ai` answered `401` without a key, so URL and wire format are right).
 - Older outputs further up in this README come from the emulator and are vote shares, not Jev probabilities.
 - Request/response shapes follow the [official API reference](https://docs.typesafe.ai/api/system-one.md). Jev uses `criteria` (not `options`) for choices and score levels.

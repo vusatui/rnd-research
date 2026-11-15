@@ -7,11 +7,11 @@ The Remotion composition in ../remotion replays these files verbatim (typing the
 printing the lines with the recorded timing, long waits capped). Nothing is edited except:
   * the absolute repo path is shown as ~/rnd-research (privacy, shorter lines),
   * if a secret from the environment ever appears in the output, the capture aborts.
-For `make lite` runs the capture is repeated (up to 3x) if any answer came from the MOCK fallback,
-so the videos show the free LLM behind the emulator, never the offline keyword rules.
+For the `make lite-jev` runs the capture is repeated (up to 3x) unless every answer came from real Jev
+(typesafe/jev-* via OpenRouter); eval/ex3 only re-score the committed results (no API calls).
 
    python3 capture.py            # all runs
-   python3 capture.py lite-ticket ex3-sweep
+   python3 capture.py jev-ticket ex3
 """
 import datetime, json, os, subprocess, sys, time
 
@@ -20,12 +20,13 @@ S1 = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))          # syst
 REPO = os.path.dirname(S1)
 OUT = os.path.join(HERE, "..", "runs")
 
-RUNS = {
-    "make-help":     "make -s help",
-    "lite-ticket":   "make -s lite EX=ticket",
-    "lite-comment":  "make -s lite EX=comment",
-    "lite-approval": "make -s lite EX=approval",
-    "ex3-sweep":     "make -s ex3-sweep",
+RUNS = {   # the three re-recorded clips (STORYBOARD v4). Only the jev-* runs call a paid API (~$0.000016 each).
+    "jev-ticket":   "make -s lite-jev EX=ticket",
+    "jev-comment":  "make -s lite-jev EX=comment",
+    "jev-approval": "make -s lite-jev EX=approval",
+    "eval":         "make -s eval",
+    "eval-urgency": "make -s eval QUESTION=urgency",
+    "ex3":          "make -s ex3",
 }
 SECRETS = [v for k, v in os.environ.items() if any(s in k for s in ("KEY", "TOKEN", "SECRET")) and len(v) >= 12]
 
@@ -52,8 +53,9 @@ def main():
     for rid in sys.argv[1:] or RUNS:
         for attempt in range(3):
             r = run(RUNS[rid])
-            mock = any("MOCK" in l["text"] for l in r["lines"] if l["text"].startswith("BACKEND"))
-            if r["exit_code"] == 0 and not (rid.startswith("lite") and mock):
+            backend = [l["text"] for l in r["lines"] if l["text"].startswith("BACKEND")]
+            mock = rid.startswith("jev") and not (backend and all("typesafe/jev" in b for b in backend))
+            if r["exit_code"] == 0 and not mock:
                 break
             print(f"{rid}: attempt {attempt + 1} not usable (exit {r['exit_code']}, mock={mock}); retrying", file=sys.stderr)
             time.sleep(5)

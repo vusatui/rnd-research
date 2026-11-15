@@ -1,0 +1,97 @@
+{
+ "cmd": "make -s lite-jev EX=approval",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T21:20:43+03:00",
+ "duration_ms": 2797,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 2529,
+   "text": ""
+  },
+  {
+   "t": 2529,
+   "text": "=== 3. Approve or reject an expense ==="
+  },
+  {
+   "t": 2529,
+   "text": "STATE: {\"item\": \"Team lunch\", \"amount_usd\": 42, \"policy\": \"Meals up to $60 per person are fine.\", \"people\": 4}"
+  },
+  {
+   "t": 2529,
+   "text": "QUESTIONS in ONE request: within_policy, decision"
+  },
+  {
+   "t": 2686,
+   "text": "BACKEND: https://openrouter.ai/api  model=typesafe/jev-1.14-20261014  (157 ms, tokens in/out 389/57  $0.000016)"
+  },
+  {
+   "t": 2686,
+   "text": "{"
+  },
+  {
+   "t": 2686,
+   "text": "  \"within_policy\": {"
+  },
+  {
+   "t": 2686,
+   "text": "    \"type\": \"noul\","
+  },
+  {
+   "t": 2686,
+   "text": "    \"noul\": 0.76"
+  },
+  {
+   "t": 2686,
+   "text": "  },"
+  },
+  {
+   "t": 2686,
+   "text": "  \"decision\": {"
+  },
+  {
+   "t": 2686,
+   "text": "    \"type\": \"choice\","
+  },
+  {
+   "t": 2686,
+   "text": "    \"choice\": \"approve\","
+  },
+  {
+   "t": 2686,
+   "text": "    \"probabilities\": {"
+  },
+  {
+   "t": 2686,
+   "text": "      \"approve\": 0.67,"
+  },
+  {
+   "t": 2686,
+   "text": "      \"reject\": 0.22,"
+  },
+  {
+   "t": 2686,
+   "text": "      \"escalate\": 0.11"
+  },
+  {
+   "t": 2686,
+   "text": "    },"
+  },
+  {
+   "t": 2686,
+   "text": "    \"confidence\": 0.5"
+  },
+  {
+   "t": 2686,
+   "text": "  }"
+  },
+  {
+   "t": 2686,
+   "text": "}"
+  },
+  {
+   "t": 2686,
+   "text": "-> CODE decides: ESCALATE  (decision approve p=0.67, within policy: yes)"
+  }
+ ]
+}

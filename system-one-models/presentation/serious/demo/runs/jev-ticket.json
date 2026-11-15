@@ -1,0 +1,97 @@
+{
+ "cmd": "make -s lite-jev EX=ticket",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T21:20:37+03:00",
+ "duration_ms": 3146,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 2768,
+   "text": ""
+  },
+  {
+   "t": 2768,
+   "text": "=== 1. Route a support ticket ==="
+  },
+  {
+   "t": 2768,
+   "text": "STATE: Our API integration started returning 500 errors on every request 20 minutes ago. We can't process any customer orders until this is fixed."
+  },
+  {
+   "t": 2768,
+   "text": "QUESTIONS in ONE request: department, urgent"
+  },
+  {
+   "t": 3023,
+   "text": "BACKEND: https://openrouter.ai/api  model=typesafe/jev-1.14-20261014  (255 ms, tokens in/out 378/55  $0.000016)"
+  },
+  {
+   "t": 3023,
+   "text": "{"
+  },
+  {
+   "t": 3023,
+   "text": "  \"department\": {"
+  },
+  {
+   "t": 3023,
+   "text": "    \"type\": \"choice\","
+  },
+  {
+   "t": 3023,
+   "text": "    \"choice\": \"technical\","
+  },
+  {
+   "t": 3023,
+   "text": "    \"probabilities\": {"
+  },
+  {
+   "t": 3023,
+   "text": "      \"billing\": 0,"
+  },
+  {
+   "t": 3023,
+   "text": "      \"technical\": 1,"
+  },
+  {
+   "t": 3023,
+   "text": "      \"sales\": 0"
+  },
+  {
+   "t": 3023,
+   "text": "    },"
+  },
+  {
+   "t": 3023,
+   "text": "    \"confidence\": 1"
+  },
+  {
+   "t": 3023,
+   "text": "  },"
+  },
+  {
+   "t": 3023,
+   "text": "  \"urgent\": {"
+  },
+  {
+   "t": 3023,
+   "text": "    \"type\": \"noul\","
+  },
+  {
+   "t": 3023,
+   "text": "    \"noul\": 0.99"
+  },
+  {
+   "t": 3023,
+   "text": "  }"
+  },
+  {
+   "t": 3023,
+   "text": "}"
+  },
+  {
+   "t": 3023,
+   "text": "-> CODE decides: send to 'technical'; urgency yes -> page the on-call engineer"
+  }
+ ]
+}

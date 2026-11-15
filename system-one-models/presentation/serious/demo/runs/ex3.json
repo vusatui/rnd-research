@@ -1,0 +1,121 @@
+{
+ "cmd": "make -s ex3",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T21:20:50+03:00",
+ "duration_ms": 2368,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 2260,
+   "text": "S1 = jev   S2 = human   error $5.00   review $0.50   (150 test tickets, scaled to 1,000)"
+  },
+  {
+   "t": 2260,
+   "text": ""
+  },
+  {
+   "t": 2260,
+   "text": "threshold automated  errors to human to S2 LLM  total $"
+  },
+  {
+   "t": 2260,
+   "text": "     0.00      100%      67        0         0      333"
+  },
+  {
+   "t": 2260,
+   "text": "     0.30      100%      67        0         0      333"
+  },
+  {
+   "t": 2260,
+   "text": "     0.40      100%      67        0         0      333"
+  },
+  {
+   "t": 2260,
+   "text": "     0.50      100%      67        0         0      333"
+  },
+  {
+   "t": 2260,
+   "text": "     0.60       95%      60       47         0      323"
+  },
+  {
+   "t": 2260,
+   "text": "     0.70       93%      47       73         0      270"
+  },
+  {
+   "t": 2260,
+   "text": "     0.80       83%      27      167         0      217"
+  },
+  {
+   "t": 2260,
+   "text": "     0.85       83%      27      173         0      220"
+  },
+  {
+   "t": 2260,
+   "text": "     0.90       79%      20      213         0      207"
+  },
+  {
+   "t": 2260,
+   "text": "     0.95       75%       0      253         0      127  <- cheapest"
+  },
+  {
+   "t": 2260,
+   "text": "     0.99       63%       0      367         0      183"
+  },
+  {
+   "t": 2260,
+   "text": "    never        0%       0     1000         0      500"
+  },
+  {
+   "t": 2260,
+   "text": ""
+  },
+  {
+   "t": 2260,
+   "text": "(threshold 0 = automate everything, 'never' = everything goes to S2)"
+  },
+  {
+   "t": 2260,
+   "text": ""
+  },
+  {
+   "t": 2260,
+   "text": "Same economics, best threshold for every S1 method from Exercise 2:"
+  },
+  {
+   "t": 2260,
+   "text": "S1 method                          best t automated  errors  total $"
+  },
+  {
+   "t": 2261,
+   "text": "classic                              0.40       39%       7      337"
+  },
+  {
+   "t": 2262,
+   "text": "jev                                  0.95       75%       0      127"
+  },
+  {
+   "t": 2263,
+   "text": "logprobs_deepseek-v4.1-flash-1017    0.90       93%      13      103"
+  },
+  {
+   "t": 2264,
+   "text": "verbal_claude-haiku-5.5              0.85       73%       0      137"
+  },
+  {
+   "t": 2265,
+   "text": "verbal_claude-sonnet-5.5             0.80       73%       0      135"
+  },
+  {
+   "t": 2266,
+   "text": "verbal_deepseek-v4.1-flash-1017      0.85       75%       0      127"
+  },
+  {
+   "t": 2267,
+   "text": "verbal_gpt-6-sol                     0.90       79%       7      138"
+  },
+  {
+   "t": 2268,
+   "text": "votes_deepseek-v4.1-flash-1017       0.85       94%      20      130"
+  }
+ ]
+}

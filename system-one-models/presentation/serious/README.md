@@ -6,7 +6,7 @@ Second variant of the light talk in [`../`](../README.md): same content base, **
 |---|---|
 | **Presenter with the recorded demo (open this to present)** | [`present.html`](present.html) |
 | Deck (Excalidraw, 24 frames) | [`presentation.excalidraw`](presentation.excalidraw) |
-| Recorded demo clips (3 × mp4, no audio; being re-recorded per [`demo/STORYBOARD.md`](demo/STORYBOARD.md)) and their reproducible source | [`demo/`](demo/README.md) |
+| Recorded demo clips (3 × mp4, 2560×1440, no audio; plan in [`demo/STORYBOARD.md`](demo/STORYBOARD.md)) and their reproducible source | [`demo/`](demo/README.md) |
 | PDF / PNG / SVG per slide / overview | [`presentation.pdf`](presentation.pdf), [`export/`](export/), [`contact-sheet.png`](contact-sheet.png) |
 | Read-aloud script (full sentences, about 130 words per minute, ~32 min incl. 2 min questions) with slide times, stage directions in italic brackets, and 11 spoken Q&As with our measured numbers | [`speaker-notes.md`](speaker-notes.md) |
 | Demo code (request → response) | [`../workshop-lite/`](../workshop-lite/README.md) |
@@ -15,7 +15,7 @@ Second variant of the light talk in [`../`](../README.md): same content base, **
 Slides: 1 Title · 2 Two kinds of models · 3 Fast and slow · 4 What is Jev · 5 One call, one decision · 6 Three kinds of questions · 7 Not only Jev · 8 Where it fits · 9 Routing · 10 Fast first · **11-15 Why not structured output + confidence?** (11 The real alternative · 12 Where the number comes from · 13 How we tested · 14 Same 150 tickets · 15 What the numbers say) · 16 Demo: the request · 17-19 Recorded demo (1 One call · 2 Same tickets · 3 The threshold) · 20 Use it / skip it · 21 Honest limits · 22 Takeaways · 23 Try it yourself (repo link + QR) · 24 Questions.
 
 ## Present (nothing runs live)
-Open [`present.html`](present.html) in Chrome (double-click, works offline from `file://`). It shows the exported slides and plays the recorded demo clips inside slides 17–19 (until the clips are re-rendered, those slides show a placeholder), so you only talk over them.
+Open [`present.html`](present.html) in Chrome (double-click, works offline from `file://`). It shows the exported slides and plays the recorded demo clips inside slides 17–19 (autoplay; K pauses, R restarts), so you only talk over them.
 
 | Key | Action |
 |---|---|

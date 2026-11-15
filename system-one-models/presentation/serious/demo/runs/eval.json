@@ -1,0 +1,285 @@
+{
+ "cmd": "make -s eval",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T21:20:46+03:00",
+ "duration_ms": 2371,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Question: department   (same 150 test tickets for every method)"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "method                               acc clear  conf   ECE  auto@95  auto@98 distinct  tok in/out  p50 ms    $/1k"
+  },
+  {
+   "t": 2271,
+   "text": "-----------------------------------------------------------------------------------------------------------------"
+  },
+  {
+   "t": 2271,
+   "text": "D classic TF-IDF+logreg (100 train   72%   72%  0.39 0.329      43%      39%      146     0/0           1   0.000"
+  },
+  {
+   "t": 2271,
+   "text": "E jev (typesafe/jev-1.14-20261014)   93%   95%  0.93 0.042      87%      77%       35   596/88        161   0.025"
+  },
+  {
+   "t": 2271,
+   "text": "B logprobs deepseek-v4.1-flash-101   95%   96%  0.97 0.032      99%      93%       31   554/2         433   0.037"
+  },
+  {
+   "t": 2271,
+   "text": "A verbal  claude-haiku-5.5           92%   94%  0.86 0.069      92%      73%       14   799/40        815   0.100"
+  },
+  {
+   "t": 2271,
+   "text": "A verbal  claude-sonnet-5.5          94%   95%  0.83 0.113      94%      83%       17   800/40       1020   2.001"
+  },
+  {
+   "t": 2271,
+   "text": "A verbal  deepseek-v4.1-flash-1017   95%   97%  0.89 0.067     100%      81%       12   354/34        540   0.046"
+  },
+  {
+   "t": 2271,
+   "text": "A verbal  gpt-6-sol                  93%   95%  0.95 0.039      97%      87%       19   382/58       2108   1.340"
+  },
+  {
+   "t": 2271,
+   "text": "C votes k=5 deepseek-v4.1-flash-10   97%   98%  0.98 0.024     100%       0%        3  1403/75        756   0.153"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - D classic TF-IDF+logreg (100 train): confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.00-0.50  n=128  said 0.36  was right  67%  #############"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n= 19  said 0.58  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n=  3  said 0.74  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - E jev (typesafe/jev-1.14-20261014): confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n= 11  said 0.58  was right  73%  ###############"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n= 14  said 0.75  was right  79%  ################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n=  7  said 0.86  was right  86%  #################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.90-0.95  n=  6  said 0.92  was right  50%  ##########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.95-0.99  n= 17  said 0.97  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.99-1.00  n= 95  said 1.00  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - B logprobs deepseek-v4.1-flash-1017: confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n=  4  said 0.58  was right  50%  ##########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n=  3  said 0.73  was right  33%  #######"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n=  4  said 0.85  was right  50%  ##########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.90-0.95  n=  7  said 0.92  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.95-0.99  n=  3  said 0.96  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.99-1.00  n=129  said 1.00  was right  98%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - A verbal  claude-haiku-5.5: confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n= 12  said 0.60  was right  50%  ##########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n=  7  said 0.72  was right  57%  ###########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n= 37  said 0.82  was right  92%  ##################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.90-0.95  n= 74  said 0.92  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.95-0.99  n= 20  said 0.96  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - A verbal  claude-sonnet-5.5: confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.00-0.50  n=  2  said 0.43  was right  50%  ##########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n= 29  said 0.57  was right  76%  ###############"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n=  9  said 0.72  was right  89%  ##################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n= 28  said 0.84  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.90-0.95  n= 49  said 0.92  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.95-0.99  n= 33  said 0.96  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - A verbal  deepseek-v4.1-flash-1017: confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n=  3  said 0.55  was right  67%  #############"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n= 27  said 0.72  was right  81%  ################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n= 16  said 0.83  was right  94%  ###################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.90-0.95  n= 37  said 0.91  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.95-0.99  n= 64  said 0.96  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.99-1.00  n=  3  said 0.99  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - A verbal  gpt-6-sol: confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.70-0.80  n= 12  said 0.75  was right  50%  ##########"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n= 19  said 0.86  was right  84%  #################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.90-0.95  n= 10  said 0.91  was right  90%  ##################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.95-0.99  n= 22  said 0.97  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.99-1.00  n= 87  said 0.99  was right 100%  ####################"
+  },
+  {
+   "t": 2271,
+   "text": ""
+  },
+  {
+   "t": 2271,
+   "text": "Reliability - C votes k=5 deepseek-v4.1-flash-1017: confidence bin -> how often it was right"
+  },
+  {
+   "t": 2271,
+   "text": "  0.50-0.70  n=  4  said 0.60  was right  75%  ###############"
+  },
+  {
+   "t": 2271,
+   "text": "  0.80-0.90  n=  5  said 0.80  was right  80%  ################"
+  },
+  {
+   "t": 2271,
+   "text": "  0.99-1.00  n=141  said 1.00  was right  98%  ####################"
+  }
+ ]
+}

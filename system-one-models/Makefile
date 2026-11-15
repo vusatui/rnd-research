@@ -20,6 +20,7 @@ S1       ?= jev
 S2       ?= human
 ERROR_COST ?= 5
 REVIEW   ?= 0.5
+QUESTION ?= department
 # budget guard for every paid run (stops the run when exceeded)
 MAX_SPEND_USD ?= 0.05
 PLATFORM ?=
@@ -89,8 +90,8 @@ ex2-estimate: image ## Ex2: $ estimate for METHOD/LIMIT, no calls
 ex2: image ## Ex2: verbalized vs computed confidence on 150 tickets (paid, ~$0.03; MOCK=1 replays)
 	$(WS) python ex2_confidence/run.py --method $(METHOD) $(if $(MODEL),--model $(MODEL)) $(if $(LIMIT),--limit $(LIMIT))
 
-eval: image ## Score every results/ex2_*.jsonl: accuracy, ECE, reliability, auto@95, cost
-	$(WS) python eval.py --reliability
+eval: image ## Score every results/ex2_*.jsonl: accuracy, ECE, reliability, auto@95, cost (QUESTION=department|urgency)
+	$(WS) python eval.py --reliability --question $(QUESTION)
 
 ex3: image ## Ex3: fast-first economics, threshold sweep (S1, S2, ERROR_COST, REVIEW)
 	$(WS) python ex3_fast_first/economics.py --s1 $(S1) --s2 $(S2) --error-cost $(ERROR_COST) --review $(REVIEW)

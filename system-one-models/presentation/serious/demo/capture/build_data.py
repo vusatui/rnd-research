@@ -13,9 +13,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 S1 = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 OUT = os.path.join(HERE, "..", "remotion", "src", "data.json")
 
-FILES = ["presentation/workshop-lite/jev_client.py", "presentation/workshop-lite/jev_emulator.py",
-         "presentation/workshop-lite/mock_rules.py", "presentation/workshop-lite/curl_example.sh",
-         "presentation/workshop-lite/README.md", "workshop/ex3_cascade/cascade.py", "Makefile"]
+FILES = ["presentation/workshop-lite/jev_client.py", "workshop/ex2_confidence/methods.py", "workshop/eval.py",
+         "workshop/ex3_fast_first/economics.py", "Makefile"]
+MAX_WAIT_MS = 1000   # the replay shortens any wait between output lines longer than this (Docker start-up);
+                     # the real latencies are printed by the programs themselves (e.g. "157 ms")
+
+
+def shorten_waits(run):
+    prev, shift = 0, 0
+    for ln in run["lines"]:
+        gap = ln["t"] - prev
+        prev = ln["t"]
+        shift += max(0, gap - MAX_WAIT_MS)
+        ln["t"] -= shift
+    run["duration_ms"] = (run["lines"][-1]["t"] if run["lines"] else 0) + 300
+    return run
 
 
 def cls(tt):
@@ -54,8 +66,7 @@ for f in FILES:
     text = open(os.path.join(S1, f)).read().expandtabs(4)
     files[f] = tokens(f, text)
 
-tree = sorted(os.listdir(os.path.join(S1, "presentation", "workshop-lite")))
-tree = [t for t in tree if not t.startswith(".") or t == ".env.example"]
-runs = {os.path.basename(p)[:-5]: json.load(open(p)) for p in sorted(glob.glob(os.path.join(HERE, "..", "runs", "*.json")))}
+tree = []
+runs = {os.path.basename(p)[:-5]: shorten_waits(json.load(open(p))) for p in sorted(glob.glob(os.path.join(HERE, "..", "runs", "*.json")))}
 json.dump({"files": files, "workshopLite": tree, "runs": runs}, open(OUT, "w"))
 print("data.json:", {k: len(v) for k, v in files.items()}, "runs:", list(runs))
