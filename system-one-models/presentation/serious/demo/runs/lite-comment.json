@@ -1,0 +1,97 @@
+{
+ "cmd": "make -s lite EX=comment",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T17:56:36+03:00",
+ "duration_ms": 3192,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 2227,
+   "text": "Jev EMULATOR (free LLM nvidia/nemotron-3.5-lightning:free, 5 votes/question, falls back to MOCK rules if the LLM fails) on http://127.0.0.1:8787  - this is NOT Jev"
+  },
+  {
+   "t": 2581,
+   "text": ""
+  },
+  {
+   "t": 2581,
+   "text": "=== 2. Moderate a comment ==="
+  },
+  {
+   "t": 2581,
+   "text": "STATE: You are all idiots. Go read the docs before posting garbage."
+  },
+  {
+   "t": 3085,
+   "text": "BACKEND: http://127.0.0.1:8787  model=EMULATOR(nvidia/nemotron-3.5-lightning:free)  (504 ms)"
+  },
+  {
+   "t": 3085,
+   "text": "{"
+  },
+  {
+   "t": 3085,
+   "text": "  \"toxic\": {"
+  },
+  {
+   "t": 3085,
+   "text": "    \"type\": \"noul\","
+  },
+  {
+   "t": 3085,
+   "text": "    \"noul\": 1.0"
+  },
+  {
+   "t": 3085,
+   "text": "  },"
+  },
+  {
+   "t": 3085,
+   "text": "  \"action\": {"
+  },
+  {
+   "t": 3085,
+   "text": "    \"type\": \"choice\","
+  },
+  {
+   "t": 3085,
+   "text": "    \"choice\": \"review\","
+  },
+  {
+   "t": 3085,
+   "text": "    \"confidence\": 0.6,"
+  },
+  {
+   "t": 3085,
+   "text": "    \"probabilities\": {"
+  },
+  {
+   "t": 3085,
+   "text": "      \"allow\": 0.0,"
+  },
+  {
+   "t": 3085,
+   "text": "      \"review\": 0.6,"
+  },
+  {
+   "t": 3085,
+   "text": "      \"block\": 0.4"
+  },
+  {
+   "t": 3085,
+   "text": "    }"
+  },
+  {
+   "t": 3085,
+   "text": "  }"
+  },
+  {
+   "t": 3085,
+   "text": "}"
+  },
+  {
+   "t": 3085,
+   "text": "-> CODE decides: REVIEW"
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "cmd": "make -s help",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-15T17:56:32+03:00",
+ "duration_ms": 7,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 3,
+   "text": "System One / Jev workshops (Docker + make only)"
+  },
+  {
+   "t": 4,
+   "text": ""
+  },
+  {
+   "t": 5,
+   "text": "  make help       Show this help"
+  },
+  {
+   "t": 5,
+   "text": "  make build      Build the Docker image (pinned Python deps, amd64/arm64)"
+  },
+  {
+   "t": 5,
+   "text": "  make lite       Talk demo: Jev emulator + 3 examples (EX=ticket|comment|approval)"
+  },
+  {
+   "t": 5,
+   "text": "  make lite-mock  Talk demo fully offline (MOCK rules, no key, no network)"
+  },
+  {
+   "t": 5,
+   "text": "  make emulator   Run only the Jev emulator on http://127.0.0.1:8787 (Ctrl+C stops)"
+  },
+  {
+   "t": 5,
+   "text": "  make curl       Plain-curl request to a running `make emulator` (curl runs in Docker)"
+  },
+  {
+   "t": 5,
+   "text": "  make workshop   Deep dive: ex1, ex2, ex3 in a row (MOCK=1 for offline)"
+  },
+  {
+   "t": 5,
+   "text": "  make ex1        Deep dive ex1: classic classifier baseline (no LLM, no key)"
+  },
+  {
+   "t": 5,
+   "text": "  make ex2        Deep dive ex2: free LLM forced into decision shape (LIMIT, K)"
+  },
+  {
+   "t": 5,
+   "text": "  make ex3        Deep dive ex3: confidence-gated cascade, LLM as System 2 (THRESHOLD)"
+  },
+  {
+   "t": 5,
+   "text": "  make ex3-sweep  Deep dive ex3: threshold sweep with a human queue (no LLM)"
+  },
+  {
+   "t": 5,
+   "text": "  make ex4        Deep dive ex4: real decision APIs (skips providers without keys)"
+  },
+  {
+   "t": 5,
+   "text": "  make decider    Deep dive: one decider.py call (choice + noul + score)"
+  },
+  {
+   "t": 5,
+   "text": "  make models     List current free OpenRouter models (needs network)"
+  },
+  {
+   "t": 5,
+   "text": "  make shell      Open a shell in the container"
+  },
+  {
+   "t": 5,
+   "text": "  make test       Offline smoke tests (MOCK, --network none, no key): what CI runs"
+  },
+  {
+   "t": 5,
+   "text": "  make test-live  One real call through the free OpenRouter model (needs key)"
+  },
+  {
+   "t": 5,
+   "text": "  make clean      Remove the local image"
+  },
+  {
+   "t": 5,
+   "text": ""
+  },
+  {
+   "t": 6,
+   "text": "Options: MOCK=1 (offline, no key)  FALLBACK= (no mock fallback)  EX=ticket|comment|approval"
+  },
+  {
+   "t": 6,
+   "text": "         LIMIT=15 K=3 (ex2)  THRESHOLD=0.6 (ex3)  PORT=8787 (emulator)  MOUNT=0 (use code baked in image)"
+  },
+  {
+   "t": 7,
+   "text": "Env file: ~/rnd-research/system-one-models/presentation/workshop-lite/.env"
+  }
+ ]
+}

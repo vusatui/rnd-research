@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serious variant of the System One / Jev deck: 19 Excalidraw frames (1600x900), hand-drawn style
+"""Serious variant of the System One / Jev deck: 22 Excalidraw frames (4 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
 (Excalifont, roughness 1), restrained navy + one orange accent, no characters.
    python3 build_deck.py     -> ../presentation.excalidraw (+ ../qr.png)
 Reuses ../../tools/excal.py (the scene builder of the light deck)."""
@@ -369,8 +369,8 @@ arr([(1270, 700), (1270, 770)], SLATE)
 s.label(1270, 810, "answered", 36, SLATE)
 
 # 13 Demo: request
-new_frame("Live demo: request")
-title("Live demo: request")
+new_frame("Demo: request")
+title("Demo: the request")
 req = ['POST /v1/systemone', '{', '  "model": "jev-latest",', '  "state": "API returns 500 on every',
        '            request for 20 minutes…",', '  "questions": {', '    "department": {', '      "type": "choice",',
        '      "criteria": { "billing": …,', '                    "technical": …,', '                    "sales": … }',
@@ -385,23 +385,38 @@ s.text(1070, 490, "what we want", 30, SLATE)
 tag(1070, 660, "shortened", size=28)
 s.text(100, 835, "workshop-lite/jev_client.py · local emulator unless a Jev key is set", 30, SLATE)
 
-# 14 Demo: response
-new_frame("Live demo: response")
-title("Live demo: response")
-resp = ['{', '  "department": {', '    "type": "choice",', '    "choice": "technical",', '    "confidence": 1.0,',
-        '    "probabilities": {', '      "billing": 0.0,', '      "technical": 1.0,', '      "sales": 0.0 }', '  },',
-        '  "urgent": { "type": "noul",', '              "noul": 1.0 }', '}']
-code_panel(100, 215, 720, resp, size=26, hl={3: ACC_L})
-arr([(850, 450), (960, 450)], ACC)
-code = ['d = answers["department"]', '', 'if d["confidence"] >= 0.7:', '    route(d["choice"])', 'else:', '    ask_a_human()']
-s.rect(980, 215, 520, 300, fill="#ffffff", stroke=ACC, sw=3)
-for i, ln in enumerate(code):
-    if ln:
-        s._base("text", 1005, 240 + i * 38, len(ln) * 26 * 0.586, 34, stroke=NAVY if i != 2 else ACC, text=ln, originalText=ln, fontSize=26,
-                fontFamily=3, textAlign="left", verticalAlign="top", containerId=None, autoResize=True, lineHeight=1.25)
-s.label(1240, 570, "our code decides", 42, ACC)
-tag(100, 745, "EMULATOR output, not real Jev", size=32)
-s.text(100, 815, "A free LLM behind a Jev-shaped endpoint (workshop-lite/sample_output.txt)", 30, SLATE)
+# 14-17 Recorded demo: four short clips (Remotion replay of the real files + real recorded runs, ../demo/).
+# The static frame shows a poster of the clip; present.html plays the mp4 exactly over the VIDEO_BOX.
+VIDEO_BOX = (176, 150, 1248, 702)
+DEMOS = [("demo-1-files", "The files"), ("demo-2-code", "The code"), ("demo-3-run", "Run it"), ("demo-4-threshold", "The threshold")]
+
+
+def clip_len(path):
+    try:
+        import subprocess
+        sec = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path],
+                                   capture_output=True, text=True, check=True).stdout)
+        t = int(round(sec))
+        return f"{t // 60}:{t % 60:02d}"
+    except Exception:
+        return ""
+
+
+for n, (vid, name) in enumerate(DEMOS, 1):
+    new_frame(f"Demo {n} {name}")
+    s.text(100, 42, f"Demo {n}/4 · {name}", 56, NAVY)
+    w, _ = measure(f"Demo {n}/4 · {name}", 56)
+    s.line([(100, 110), (100 + w * 0.6, 112), (100 + w, 109)], stroke=ACC, sw=5)
+    ln = clip_len(os.path.join(ROOT, "demo", "videos", f"{vid}.mp4"))
+    s.text(1500, 60, f"recorded · {ln}" if ln else "recorded", 30, SLATE, align="right")
+    x, y, bw, bh = VIDEO_BOX
+    poster = os.path.join(ROOT, "demo", "videos", f"{vid}.poster.jpg")
+    if os.path.exists(poster):
+        s.image(poster, x, y, bw, bh)
+    s.rect(x - 6, y - 6, bw + 12, bh + 12, stroke=NAVY, sw=3)
+    # play badge (hidden by the video while it plays)
+    s.ellipse(x + bw / 2 - 60, y + bh / 2 - 60, 120, 120, fill="#ffffff", stroke=ACC, sw=4)
+    s.line([(x + bw / 2 - 18, y + bh / 2 - 32), (x + bw / 2 + 34, y + bh / 2), (x + bw / 2 - 18, y + bh / 2 + 32)], stroke=ACC, fill=ACC, closed=True, sw=3)
 
 # 15 Use it / skip it
 new_frame("Use it, skip it")

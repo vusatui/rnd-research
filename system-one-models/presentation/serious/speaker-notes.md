@@ -1,8 +1,8 @@
-# Speaker notes for "System One models", serious variant (about 30 minutes)
+# Speaker notes for "System One models", serious variant (about 31 minutes)
 
-These notes are written to be read aloud, word for word, at a calm pace of roughly 130 words per minute. Each slide has a heading with its number, title and time. Lines in italic brackets are short stage directions and are not spoken. Every claim here is taken from the research notes in `../../research.md`, the Jev documentation at docs.typesafe.ai, and the vendors' own documentation. The questions and answers at the very end are for the discussion and are not part of the 30 minutes.
+These notes are written to be read aloud, word for word, at a calm pace of roughly 130 words per minute. Each slide has a heading with its number, title and time. Lines in italic brackets are short stage directions and are not spoken. Every claim here is taken from the research notes in `../../research.md`, the Jev documentation at docs.typesafe.ai, and the vendors' own documentation. The questions and answers at the very end are for the discussion and are not part of the talk time.
 
-The timing adds up to thirty minutes: 1.5, 2.5, 1.5, 1.5, 2.5, 1.5, then 1 each for slides 7 to 11, then 2, 2, 3, 1.5, 1.5, 1, 1 and 2. The demo is slides 13 and 14, five minutes in total. Slide 19 opens the last two minutes, which belong to questions.
+The timing adds up to about thirty-one and a half minutes: 1.5, 2.5, 1.5, 1.5, 2.5, 1.5, then 1 each for slides 7 to 11, then 2 for slide 12, then the demo, then 1.5, 1.5, 1, 1 and 2. The demo is slides 13 to 17, about six and a half minutes: slide 13 sets it up, and slides 14 to 17 each play a short recorded clip (no audio) in `present.html` while you read the notes over it. Press K to pause a clip if you need more time. Slide 22 opens the last two minutes, which belong to questions.
 
 ---
 
@@ -100,41 +100,55 @@ I want to be careful here. I will not give you a percentage for how many request
 
 So if someone asks how much you would save, the honest answer is to measure it. Take a sample of your own traffic, try the approach, and look at the numbers. You may also notice that this brings us back to the two ways of thinking from earlier. The fast model plays the part of the quick instinct, and the big model plays the part of careful thought. Each one is used where it makes the most sense.
 
-Now it is time to see this for real, so let me switch to the live example.
+Now it is time to see this in practice, so let me show you the demo.
 
-## Slide 13 · Live demo, request · 2 min
+## Slide 13 · Demo, the request · 1.5 min
 
-*[switch to the terminal, in the workshop-lite folder]*
+Let me show you what a real request looks like. On the slide you can see it, shortened so that it fits on the screen. It has two parts. The first is the state, which is the text to judge. Here it is a support ticket saying that an API integration has been returning errors for twenty minutes. The second part is the questions. I ask two of them. The first one is the department, which is a choice between billing, technical and sales. The second one asks whether the message is urgent, which is a yes or no question.
 
-For the next five minutes, I will show you a real request and a real response. On the slide you can see the request, shortened so that it fits on the screen. It has two parts. The first is the state, which is the text to judge. Here it is a support ticket saying that an API integration has been returning errors for twenty minutes. The second part is the questions. I ask two of them. The first one is the department, which is a choice between billing, technical and sales. The second one asks whether the message is urgent, which is a yes or no question.
+Before we watch the demo, I want to be honest about what is behind it. We did not have access to a real Jev key when I prepared this talk, so the demo uses a small local emulator. It accepts the same request as Jev, but behind it is a free chat model. It asks that model the same question five times and reports the share of votes as if they were probabilities. So the request you will see is the real shape, but the engine is different, and the numbers are not Jev's numbers. With a real key, the same code works by changing two settings.
 
-Before I run anything, I want to be honest about what is behind this demo. We did not have access to a real Jev key when I prepared this talk. So I will use a small local emulator. It is a free chat model sitting behind an endpoint that has the same request shape as Jev. It asks the free model the same question five times and reports the share of votes as if they were probabilities. So the request you see is the real shape, but the engine is different, and the numbers are not Jev's numbers. With a real key, the same code works by changing two settings.
+I recorded the demo in advance, so we do not depend on the network here. Everything you will see is the real code from the repository and the real output of a run I recorded while preparing this talk.
 
-*[start the emulator in the background]*
+## Slide 14 · Demo 1, the files · 1 min
 
-First, I start the emulator in the background by running the file called jev emulator dot py. It takes a second. Next I will run the client, and we will see the answer on the next slide.
+*[the clip starts by itself; press K to pause it, R to restart it]*
 
-## Slide 14 · Live demo, response · 3 min
+This is the light workshop folder from the repository. It is one folder, and three Python files in it matter. The first one is the emulator. It is a small local server that accepts the same request as Jev, and its very first line says clearly that it is not Jev. The second one is the client. It has three short examples, and the same code would talk to real Jev if you change the address and the key. The third one holds offline keyword rules. They are only a fallback for when there is no network, and every answer they produce is labelled as mock. Finally, the Makefile runs everything in Docker, so the only things you need on your laptop are Docker and make.
 
-*[run the ticket example]*
+## Slide 15 · Demo 2, the code · 1.5 min
 
-I now run the client by typing python jev client dot py, followed by the word ticket, and here is what came back. The slide shows a saved run of the same thing, in case the network is slow, and it is labelled as emulator output so nobody mistakes it for the real model.
+*[the clip starts by itself]*
 
-Let's read it together. The department answer says technical. Next to it you see the confidence, and below it a probability for each of the three options. The urgent question comes back as a single number, the probability of yes. In this run the emulator was completely sure, so you see ones and zeros. Please remember that these are vote shares from the emulator. Real Jev does not vote. It scores every option in a single pass, and its documentation says those probabilities are calibrated. That is a claim from the vendor about groups of answers, so you should always check it on your own data. Also, since language models vary a little between runs, your own run may differ slightly from the saved one.
+Let's open the client. Everything goes through one small function that sends a single HTTP call. It posts to the system one endpoint with three things: the model name, the state and the questions.
 
-Now look at the code on the right of the slide. This is the part I care about most. The model answers, and our code decides. If the confidence is high enough, we route the ticket to that team. If it is not, we ask a person. The threshold of zero point seven is simply the value I chose in the example, and you can pick any value that suits your case.
+The state is simply the text that the model should judge. Here it is the support ticket about the API returning errors for twenty minutes. The questions describe what we want back. The first is a choice between three teams, and each team has a short description. The second is a yes or no question about urgency, which Jev calls noul.
 
-*[run the comment example]*
+Now the line I care about most. The model only answers, and our code decides. If the confidence is at least zero point seven, we send the ticket to that team, and otherwise we ask a person. The moderation example has the same shape with different questions, and it includes review as an answer for cases of doubt. The expense example shows that the state can also be structured data.
 
-Let me run one more example, this time a moderation case. I type the same command, but with the word comment at the end. The comment is rude, but it is a borderline case. In the saved run, the emulator leans towards block, but it also gives some weight to review. That is exactly the kind of case where you would send the comment to a person.
+Now let's look behind the endpoint. The emulator asks a free language model the same question five times and turns the share of votes into probabilities. Real Jev does not vote. It scores every option in one pass. The answers come back typed, and every response is labelled as emulator output, so nobody can mistake it for Jev.
 
-I also want to point out the last line the program prints. It says what our code decides to do with the answer. That is the part you would replace with your own logic.
+## Slide 16 · Demo 3, run it · 1.5 min
 
-*[optional: show the plain curl script]*
+*[the clip starts by itself]*
 
-And if you prefer, the same request can be sent with plain curl, because underneath it is just one web call with some JSON. That is all for the demo, so let me go back to the slides.
+Now we run it. Nothing is installed on this machine except Docker and make. The help screen lists the commands, and make lite is the one for this talk. There is also an offline version for when there is no network at all.
 
-## Slide 15 · Use it, skip it · 1.5 min
+First, the ticket. The command starts the emulator inside a container and sends one request. The department comes back as technical with a confidence of one, because all five votes agreed. Urgent also comes back as one. That is the probability of yes, or here, the share of yes votes. Since one is above zero point seven, the code routes the ticket on its own.
+
+Next, the rude comment. This time the votes are split. Review got zero point six, and block got zero point four. The model is not sure, and that uncertainty is exactly what I want you to see. Here are both answers side by side with the same threshold. The ticket is clear, so it is handled automatically. The comment falls below the line, so a person should look at it. In an earlier run, the same comment leaned towards block instead, which shows how a borderline case can flip from one run to the next.
+
+Last, the expense. The state is a small piece of JSON, and the answer is approve, with full confidence that it is within the policy.
+
+## Slide 17 · Demo 4, the threshold · 1 min
+
+*[the clip starts by itself]*
+
+The last clip comes from the deeper workshop, and it shows what the threshold really changes. Here the fast model is a small classic classifier, trained on only twenty-four tickets. When its confidence is below the threshold, the ticket is escalated. In this sweep, escalations go to a human queue, and we assume the human is always right.
+
+We run it for four thresholds on sixteen test tickets. At zero point three, only four tickets are escalated, and accuracy is fifty percent. At zero point five, twelve are escalated, and accuracy rises to eighty-seven and a half percent. At zero point seven and above, every ticket goes to a person, so accuracy is perfect, but nothing is automated any more. This little classifier is weak, so the numbers are extreme. The point is the trade-off, and you are the one who chooses where to draw the line. That is the end of the demo, so let me go back to the slides.
+
+## Slide 18 · Use it, skip it · 1.5 min
 
 So when is a decision model the right tool, and when is it not? It is a good fit for sorting things into groups, for yes or no checks, for high volumes, and for situations where you need fast answers.
 
@@ -144,7 +158,7 @@ Think of it as choosing between a sorting machine and a writer. The sorting mach
 
 A simple way to remember this is that the decision model will tell you whether to open an email, but it will not write the reply for you. And like any tool, it has some limits that are worth knowing about.
 
-## Slide 16 · Honest limits · 1.5 min
+## Slide 19 · Honest limits · 1.5 min
 
 I would like to be open about four limits. First, these models are text first. The documentation does not offer audio or video. Image input exists only behind an experimental setting, so I would treat it as not ready for real use.
 
@@ -154,7 +168,7 @@ Third, always test on your own data. The probabilities are only as trustworthy a
 
 And fourth, most of the speed and quality numbers you will read about come from the vendors, so please treat them as claims and not as proof. Independent evaluations are still thin. None of these limits is a reason to avoid the technology. They are simply reasons to try it carefully, on a small sample, before you build anything important on top of it. A short experiment with your own examples will tell you far more than any announcement can. With these limits in mind, let me pull the main points together.
 
-## Slide 17 · Three takeaways · 1 min
+## Slide 20 · Three takeaways · 1 min
 
 If you remember only three things from this talk, I hope they are these. First, choose the right model for the job. Use a decision model for quick judgement calls, and a language model for writing and reasoning.
 
@@ -162,13 +176,13 @@ Second, the model answers, and your code decides. The thresholds, the routing an
 
 And third, go fast first, and use the big model only when the fast one is unsure. That is a simple pattern, and it works for many kinds of problems. If you forget everything else, remember that a decision model is a quick specialist, and that you are always the one in charge of what happens next.
 
-## Slide 18 · Try it yourself · 1 min
+## Slide 21 · Try it yourself · 1 min
 
 If you would like to try this yourself, everything is in a public repository on GitHub. You can see the address on the slide, and you can also scan the code with your phone. Look for the folder called system-one-models.
 
 In that folder, you will find the research notes with their sources, a comparison of the different approaches, a hands-on workshop with code you can run, and the slides from this talk. I suggest you start by running the workshop, which takes about fifteen minutes and works for free with the emulator. Then try changing the questions and the options, and watch how the answers move. After that, compare the different approaches, and read the sources behind the claims I made today.
 
-## Slide 19 · Questions · 2 min
+## Slide 22 · Questions · 2 min
 
 That brings me to the end. To sum it up, a System One model does not write, it decides, and it is best used for quick judgement calls, with your code in charge and with people handling the unclear cases.
 
