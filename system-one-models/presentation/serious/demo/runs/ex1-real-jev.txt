@@ -1,0 +1,67 @@
+2026-11-15T19:59:06+03:00
+
+=== 1. Route a support ticket ===
+STATE: Our API integration started returning 500 errors on every request 20 minutes ago. We can't process any customer orders until this is fixed.
+QUESTIONS in ONE request: department, urgent
+BACKEND: https://openrouter.ai/api  model=typesafe/jev-1.14-20261014  (146 ms, tokens in/out 378/55  $0.000016)
+{
+  "department": {
+    "type": "choice",
+    "choice": "technical",
+    "probabilities": {
+      "billing": 0,
+      "technical": 1,
+      "sales": 0
+    },
+    "confidence": 1
+  },
+  "urgent": {
+    "type": "noul",
+    "noul": 0.99
+  }
+}
+-> CODE decides: send to 'technical'; urgency yes -> page the on-call engineer
+
+=== 2. Moderate a comment ===
+STATE: You are all idiots. Go read the docs before posting garbage.
+QUESTIONS in ONE request: toxic, action
+BACKEND: https://openrouter.ai/api  model=typesafe/jev-1.14-20261014  (189 ms, tokens in/out 357/55  $0.000015)
+{
+  "toxic": {
+    "type": "noul",
+    "noul": 0.99
+  },
+  "action": {
+    "type": "choice",
+    "choice": "block",
+    "probabilities": {
+      "allow": 0,
+      "review": 0.07,
+      "block": 0.93
+    },
+    "confidence": 0.89
+  }
+}
+-> CODE decides: BLOCK  (model said block with p=0.93, 'block' needs >= 0.9)
+
+=== 3. Approve or reject an expense ===
+STATE: {"item": "Team lunch", "amount_usd": 42, "policy": "Meals up to $60 per person are fine.", "people": 4}
+QUESTIONS in ONE request: within_policy, decision
+BACKEND: https://openrouter.ai/api  model=typesafe/jev-1.14-20261014  (150 ms, tokens in/out 389/57  $0.000016)
+{
+  "within_policy": {
+    "type": "noul",
+    "noul": 0.73
+  },
+  "decision": {
+    "type": "choice",
+    "choice": "approve",
+    "probabilities": {
+      "approve": 0.7,
+      "reject": 0.19,
+      "escalate": 0.11
+    },
+    "confidence": 0.55
+  }
+}
+-> CODE decides: ESCALATE  (decision approve p=0.70, within policy: yes)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serious variant of the System One / Jev deck: 22 Excalidraw frames (4 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
+"""Serious variant of the System One / Jev deck: 24 Excalidraw frames (3 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
 (Excalifont, roughness 1), restrained navy + one orange accent, no characters.
    python3 build_deck.py     -> ../presentation.excalidraw (+ ../qr.png)
 Reuses ../../tools/excal.py (the scene builder of the light deck)."""
@@ -304,52 +304,6 @@ person(540, 700, 0.6, SLATE)
 s.text(590, 730, "human", 36, SLATE)
 tag(1290, 235, "illustrative", size=26)
 
-# 10 Moderation
-new_frame("Use case: moderation")
-title("Moderation")
-s.rect(100, 300, 330, 150, fill="#ffffff", stroke=NAVY, sw=3)
-s.label(265, 345, "comment", 40, NAVY)
-for i in range(2):
-    s.line([(135, 395 + i * 28), (395 - i * 60, 395 + i * 28)], stroke=SLATE, sw=3)
-arr([(450, 375), (570, 375)])
-box(590, 325, 200, 100, "Jev", 56, fill=ACC_L, stroke=ACC, color=ACC)
-arr([(810, 375), (880, 375)], ACC)
-# three lanes on a confidence strip
-lanes = [("Allow", 900, 180, LIGHT, NAVY), ("Human review", 1090, 290, ACC_L, ACC), ("Block", 1390, 130, LIGHT, NAVY)]
-for t, x, w, f, c in lanes:
-    s.rect(x, 330, w - 10, 90, fill=f, stroke=c, sw=3)
-    s.label(x + (w - 10) / 2, 375, t, 32, c)
-check(960, 470, 0.9, NAVY, 6)
-person(1225, 450, 0.55, ACC)
-cross(1430, 470, 0.9, NAVY, 6)
-arr([(900, 590), (1510, 590)], SLATE, tail="arrow", sw=3)
-s.text(900, 610, "sure it's fine", 30, SLATE)
-s.text(1510, 610, "sure it's not", 30, SLATE, align="right")
-s.label(800, 760, "unsure → ask a person", 42, ACC)
-tag(100, 240, "illustrative", size=26)
-
-# 11 Fraud triage
-new_frame("Use case: fraud triage")
-title("Fraud triage")
-s.rect(100, 330, 330, 190, fill="#ffffff", stroke=NAVY, sw=3)
-s.label(265, 380, "payment", 42, NAVY)
-s.label(265, 445, "unusual?", 42, SLATE)
-arr([(450, 425), (580, 425)])
-box(600, 375, 200, 100, "Jev", 56, fill=ACC_L, stroke=ACC, color=ACC)
-arr([(820, 425), (940, 425)], ACC)
-s.text(960, 285, "risk", 40, NAVY)
-gauge(960, 340, 480, 0.8, 0.6)
-s.text(960, 395, "low", 30, SLATE)
-s.text(1440, 395, "high", 30, SLATE, align="right")
-arr([(1300, 450), (1300, 560)], ACC)
-magnifier(1260, 580, 1.0, ACC)
-s.label(1300, 730, "closer look", 40, ACC)
-arr([(1010, 450), (1010, 560)], SLATE)
-check(980, 580, 1.0, NAVY, 7)
-s.label(1010, 730, "fast path", 40, NAVY)
-caption("a first look, not a verdict", 835, SLATE, 36)
-tag(100, 240, "illustrative", size=26)
-
 # 12 Cascade
 new_frame("Fast first")
 title("Fast first")
@@ -368,6 +322,102 @@ box(1080, 590, 380, 100, "Big LLM", 46)
 arr([(1270, 700), (1270, 770)], SLATE)
 s.label(1270, 810, "answered", 36, SLATE)
 
+
+# ---------- Why not structured output + confidence? (measured section) ----------
+# The real alternative
+new_frame("The real alternative")
+title("The real alternative")
+s.text(100, 200, "Chat LLM + structured output", 40, SLATE)
+doc(100, 300, 90, 115, 3)
+arr([(210, 358), (300, 358)])
+box(310, 310, 210, 96, "LLM", 46)
+arr([(415, 416), (415, 462)])
+code_panel(100, 470, 660, ['{', '  "department": "technical",', '  "confidence": 0.9', '}'], size=30)
+s.text(840, 200, "Decision model", 40, ACC)
+doc(840, 300, 90, 115, 3)
+arr([(950, 358), (1040, 358)], ACC)
+box(1050, 310, 210, 96, "Jev", 46, fill=ACC_L, stroke=ACC, color=ACC)
+arr([(1155, 416), (1155, 462)], ACC)
+s.rect(840, 470, 660, 250, fill="#ffffff", stroke=ACC, sw=3)
+bars(880, 510, [0.04, 0.9, 0.02, 0.02, 0.02], bw=56, hmax=130, hi=1)
+for i, t in enumerate(["bill", "tech", "acct", "sales", "other"]):
+    s.label(908 + i * 68, 670, t, 22, SLATE)
+s.text(1260, 540, "technical", 40, ACC)
+s.text(1260, 600, "p = 0.90", 36, NAVY)
+caption("Both give a label and a number", 800, NAVY, 42)
+
+# Where the number comes from
+new_frame("Where the number comes from")
+title("Where the number comes from")
+s.rect(100, 230, 680, 480, fill=LIGHT, stroke=NAVY, sw=3)
+s.label(440, 290, "Written", 56, NAVY)
+for i, t in enumerate(["0", ".", "9"]):
+    s.rect(230 + i * 100, 380, 80, 90, fill="#ffffff", stroke=NAVY, sw=3)
+    s.label(270 + i * 100, 425, t, 52, NAVY)
+    if i:
+        arr([(214 + i * 100, 425), (228 + i * 100, 425)], SLATE, sw=2)
+s.label(440, 540, "a token the model writes", 34, SLATE)
+s.label(440, 600, "one guess · coarse", 34, SLATE)
+s.label(440, 650, "costs output tokens", 34, SLATE)
+s.rect(820, 230, 680, 480, fill=ACC_L, stroke=ACC, sw=3)
+s.label(1160, 290, "Computed", 56, ACC)
+bars(985, 360, [0.05, 0.75, 0.12, 0.05, 0.03], bw=44, hmax=120, hi=1)
+s.label(1160, 540, "a probability for every option", 34, NAVY)
+s.label(1160, 600, "one pass · fine-grained", 34, NAVY)
+s.label(1160, 650, "output not billed", 34, NAVY)
+caption("Different kinds of number. Measure both.", 790, NAVY, 42)
+
+# How we tested
+new_frame("How we tested")
+title("How we tested")
+box(100, 250, 380, 150, "250 tickets\nsynthetic", 40)
+arr([(500, 325), (590, 325)])
+box(610, 250, 380, 150, "2 blind\nlabellers", 40)
+arr([(1010, 325), (1100, 325)])
+box(1120, 250, 380, 150, "150 held-out\ntest tickets", 40, fill=ACC_L, stroke=ACC, color=ACC)
+arr([(1310, 420), (1310, 470), (800, 470), (800, 510)], SLATE, roundness=None)
+box(300, 520, 1000, 110, "8 methods · same tickets · same options", 40)
+for i, t in enumerate(["accuracy", "calibration", "latency", "$ per 1,000"]):
+    tag(150 + i * 340, 690, t, NAVY, 34)
+s.text(100, 820, "free models built the data · paid budget only for the models under test", 28, SLATE)
+
+# Same 150 tickets: the numbers
+new_frame("Same 150 tickets")
+title("Same 150 tickets")
+cols = [("", 100, 400), ("accuracy", 500, 200), ("ECE", 700, 170), ("values", 870, 190), ("latency", 1060, 220), ("$ / 1k", 1280, 220)]
+rows_ = [("Jev", "93%", "0.04", "35", "0.16 s", "$0.025", True),
+         ("GPT-6 Sol", "93%", "0.04", "19", "2.1 s", "$1.34", False),
+         ("Claude Sonnet", "94%", "0.11", "17", "1.0 s", "$2.00", False),
+         ("DeepSeek Flash", "95%", "0.07", "12", "0.5 s", "$0.046", False),
+         ("DeepSeek × 5 votes", "97%", "0.02", "3", "0.8 s", "$0.15", False)]
+y0, rh = 215, 92
+for (t, x, w) in cols[1:]:
+    s.label(x + w / 2, y0 + 40, t, 32, SLATE)
+for r, row in enumerate(rows_):
+    y = y0 + rh * (r + 1)
+    hi = row[-1]
+    s.rect(100, y + 6, 1400, rh - 12, fill=ACC_L if hi else LIGHT, stroke=ACC if hi else MID, sw=3 if hi else 2)
+    s.text(130, y + 22, row[0], 38, ACC if hi else NAVY)
+    for (t, x, w), v in zip(cols[1:], row[1:6]):
+        s.label(x + w / 2, y + rh / 2, v, 38, ACC if hi else NAVY)
+s.text(130, 795, "written confidence: all but Jev and votes  ·  department question  ·  accuracy differences within noise", 26, SLATE)
+s.text(130, 835, "values = distinct confidence values  ·  ECE = calibration error, lower is better", 26, SLATE)
+
+# What the numbers say
+new_frame("What the numbers say")
+title("What the numbers say")
+verdict = [(True, "50-80× cheaper than strong LLMs"), (True, "6-13× faster"), (True, "one call, every option scored"),
+           (None, "same accuracy, similar calibration")]
+for i, (ok, t) in enumerate(verdict):
+    y = 250 + i * 100
+    if ok:
+        check(130, y, 0.75, ACC, 7)
+    else:
+        s.label(155, y + 25, "≈", 64, SLATE)
+    s.text(220, y - 4, t, 46, NAVY if ok else SLATE)
+s.rect(100, 680, 1400, 120, fill=ACC_L, stroke=ACC, sw=3)
+s.label(800, 740, "Not more accurate. Measure confidence on your data.", 44, ACC)
+
 # 13 Demo: request
 new_frame("Demo: request")
 title("Demo: the request")
@@ -383,12 +433,12 @@ arr([(950, 470), (1050, 470)], ACC, sw=3)
 s.text(1070, 440, "questions", 44, ACC)
 s.text(1070, 490, "what we want", 30, SLATE)
 tag(1070, 660, "shortened", size=28)
-s.text(100, 835, "workshop-lite/jev_client.py · local emulator unless a Jev key is set", 30, SLATE)
+s.text(100, 835, "workshop-lite/jev_client.py · real Jev via OpenRouter: make lite-jev", 30, SLATE)
 
 # 14-17 Recorded demo: four short clips (Remotion replay of the real files + real recorded runs, ../demo/).
 # The static frame shows a poster of the clip; present.html plays the mp4 exactly over the VIDEO_BOX.
 VIDEO_BOX = (176, 150, 1248, 702)
-DEMOS = [("demo-1-files", "The files"), ("demo-2-code", "The code"), ("demo-3-run", "Run it"), ("demo-4-threshold", "The threshold")]
+DEMOS = [("demo-1-one-call", "One call"), ("demo-2-same-tickets", "Same tickets"), ("demo-3-threshold", "The threshold")]
 
 
 def clip_len(path):
@@ -404,8 +454,8 @@ def clip_len(path):
 
 for n, (vid, name) in enumerate(DEMOS, 1):
     new_frame(f"Demo {n} {name}")
-    s.text(100, 42, f"Demo {n}/4 · {name}", 56, NAVY)
-    w, _ = measure(f"Demo {n}/4 · {name}", 56)
+    s.text(100, 42, f"Demo {n}/{len(DEMOS)} · {name}", 56, NAVY)
+    w, _ = measure(f"Demo {n}/{len(DEMOS)} · {name}", 56)
     s.line([(100, 110), (100 + w * 0.6, 112), (100 + w, 109)], stroke=ACC, sw=5)
     ln = clip_len(os.path.join(ROOT, "demo", "videos", f"{vid}.mp4"))
     s.text(1500, 60, f"recorded · {ln}" if ln else "recorded", 30, SLATE, align="right")
@@ -413,6 +463,9 @@ for n, (vid, name) in enumerate(DEMOS, 1):
     poster = os.path.join(ROOT, "demo", "videos", f"{vid}.poster.jpg")
     if os.path.exists(poster):
         s.image(poster, x, y, bw, bh)
+    else:  # clip not rendered yet (re-recording after review)
+        s.rect(x, y, bw, bh, fill=LIGHT, stroke=MID, sw=2)
+        s.label(x + bw / 2, y + bh / 2 + 110, "recorded clip · being re-recorded", 34, SLATE)
     s.rect(x - 6, y - 6, bw + 12, bh + 12, stroke=NAVY, sw=3)
     # play badge (hidden by the video while it plays)
     s.ellipse(x + bw / 2 - 60, y + bh / 2 - 60, 120, 120, fill="#ffffff", stroke=ACC, sw=4)
@@ -447,7 +500,7 @@ for i, (a, b) in enumerate(lim):
 # 17 Takeaways
 new_frame("Three takeaways")
 title("Three takeaways")
-for i, t in enumerate(["Right model\nfor the job", "The model answers,\nyour code decides", "Fast first,\nbig model if unsure"]):
+for i, t in enumerate(["Pick it for price,\nspeed and format", "The model answers,\nyour code decides", "Measure confidence\non your data"]):
     x = 100 + i * 490
     s.ellipse(x + 150, 250, 120, 120, fill=ACC_L, stroke=ACC, sw=4)
     s.label(x + 210, 312, str(i + 1), 72, ACC)

@@ -1,21 +1,21 @@
 # System One: the serious variant (30 min, technical audience)
 
-Second variant of the light talk in [`../`](../README.md): same content base, **sober look** (navy + one orange accent, white background, no characters, no jokes), still hand-drawn Excalidraw style (Excalifont, roughness 1, sketchy arrows and doodle icons drawn from Excalidraw primitives). 22 slides, one idea each, a title and a few words; everything else is in the speaker notes, which are written as a word-for-word read-aloud script.
+Second variant of the light talk in [`../`](../README.md): same content base, **sober look** (navy + one orange accent, white background, no characters, no jokes), still hand-drawn Excalidraw style (Excalifont, roughness 1, sketchy arrows and doodle icons drawn from Excalidraw primitives). 24 slides, one idea each, a title and a few words; everything else is in the speaker notes, which are written as a word-for-word read-aloud script.
 
 | What | File |
 |---|---|
 | **Presenter with the recorded demo (open this to present)** | [`present.html`](present.html) |
-| Deck (Excalidraw, 22 frames) | [`presentation.excalidraw`](presentation.excalidraw) |
-| Recorded demo clips (4 × mp4, no audio) and their reproducible source | [`demo/`](demo/README.md) |
+| Deck (Excalidraw, 24 frames) | [`presentation.excalidraw`](presentation.excalidraw) |
+| Recorded demo clips (3 × mp4, no audio; being re-recorded per [`demo/STORYBOARD.md`](demo/STORYBOARD.md)) and their reproducible source | [`demo/`](demo/README.md) |
 | PDF / PNG / SVG per slide / overview | [`presentation.pdf`](presentation.pdf), [`export/`](export/), [`contact-sheet.png`](contact-sheet.png) |
-| Read-aloud script (full sentences, about 130 words per minute, 30 min) with slide times, stage directions in italic brackets, and 10 spoken Q&As at the end | [`speaker-notes.md`](speaker-notes.md) |
+| Read-aloud script (full sentences, about 130 words per minute, ~32 min incl. 2 min questions) with slide times, stage directions in italic brackets, and 11 spoken Q&As with our measured numbers | [`speaker-notes.md`](speaker-notes.md) |
 | Demo code (request → response) | [`../workshop-lite/`](../workshop-lite/README.md) |
 | Generator and export tooling | [`tools/`](tools/) (reuses [`../tools/`](../tools/README.md) for `excal.py`, the Excalidraw bundle and `node_modules`) |
 
-Slides: 1 Title · 2 Two kinds of models · 3 Fast and slow · 4 What is Jev · 5 One call, one decision · 6 Three kinds of questions · 7 Not only Jev · 8 Where it fits · 9 Routing · 10 Moderation · 11 Fraud triage · 12 Fast first · 13 Demo: the request · 14–17 Recorded demo (1 The files · 2 The code · 3 Run it · 4 The threshold) · 18 Use it / skip it · 19 Honest limits · 20 Takeaways · 21 Try it yourself (repo link + QR) · 22 Questions.
+Slides: 1 Title · 2 Two kinds of models · 3 Fast and slow · 4 What is Jev · 5 One call, one decision · 6 Three kinds of questions · 7 Not only Jev · 8 Where it fits · 9 Routing · 10 Fast first · **11-15 Why not structured output + confidence?** (11 The real alternative · 12 Where the number comes from · 13 How we tested · 14 Same 150 tickets · 15 What the numbers say) · 16 Demo: the request · 17-19 Recorded demo (1 One call · 2 Same tickets · 3 The threshold) · 20 Use it / skip it · 21 Honest limits · 22 Takeaways · 23 Try it yourself (repo link + QR) · 24 Questions.
 
 ## Present (nothing runs live)
-Open [`present.html`](present.html) in Chrome (double-click, works offline from `file://`). It shows the exported slides and plays the recorded demo clips inside slides 14–17, so you only talk over them.
+Open [`present.html`](present.html) in Chrome (double-click, works offline from `file://`). It shows the exported slides and plays the recorded demo clips inside slides 17–19 (until the clips are re-rendered, those slides show a placeholder), so you only talk over them.
 
 | Key | Action |
 |---|---|
@@ -42,5 +42,7 @@ python3 make_presenter.py   # ../present.html (slides + demo clips + notes)
 The demo clips have their own pipeline (real runs → Remotion → mp4), see [`demo/README.md`](demo/README.md). Render them before `build_deck.py` so the demo slides get their posters and lengths.
 
 ## Honesty notes
-- Facts as in [`../../research.md`](../../research.md); no Jev launch dates, funding or latency numbers; no model versions on slides.
-- Slides 5, 9, 10, 11 are **illustrative**; the demo clips (slides 14–17) replay a recorded run of the **local emulator** (not Jev). No real Jev answer was obtained (no key available); nothing is fabricated.
+- Facts as in [`../../research.md`](../../research.md); no Jev launch dates, funding or vendor latency numbers. Model names on slides 14-15 are the ones we measured.
+- Slides 5 and 9 are **illustrative**. Slides 13-15 and the demo clips use **our own measurement**: 150 held-out synthetic tickets, labels from two blind LLM annotators, method and caveats in [`../../workshop/METHODOLOGY.md`](../../workshop/METHODOLOGY.md); results in [`demo/runs/ex2-ex3-results.txt`](demo/runs/ex2-ex3-results.txt).
+- Framing agreed for the talk: choose a decision model for price, speed and format plus decent probabilities, not for superior accuracy; measure confidence of any method on your own data.
+- Demo 1 calls **real Jev via OpenRouter** ([recorded run](demo/runs/ex1-real-jev.txt)); nothing is fabricated.

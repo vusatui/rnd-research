@@ -1,8 +1,8 @@
-# Speaker notes for "System One models", serious variant (about 31 minutes)
+# Speaker notes for "System One models", serious variant (about 32 minutes)
 
-These notes are written to be read aloud, word for word, at a calm pace of roughly 130 words per minute. Each slide has a heading with its number, title and time. Lines in italic brackets are short stage directions and are not spoken. Every claim here is taken from the research notes in `../../research.md`, the Jev documentation at docs.typesafe.ai, and the vendors' own documentation. The questions and answers at the very end are for the discussion and are not part of the talk time.
+These notes are written to be read aloud, word for word, at a calm pace of roughly 130 words per minute. Each slide has a heading with its number, title and time. Lines in italic brackets are short stage directions and are not spoken. Facts come from the research notes in `../../research.md`, the Jev documentation at docs.typesafe.ai, and our own measurement, described in `../../workshop/METHODOLOGY.md` (150 held-out synthetic support tickets, eight methods, 2026-11-15). The questions and answers at the very end are for the discussion and are not part of the talk time.
 
-The timing adds up to about thirty-one and a half minutes: 1.5, 2.5, 1.5, 1.5, 2.5, 1.5, then 1 each for slides 7 to 11, then 2 for slide 12, then the demo, then 1.5, 1.5, 1, 1 and 2. The demo is slides 13 to 17, about six and a half minutes: slide 13 sets it up, and slides 14 to 17 each play a short recorded clip (no audio) in `present.html` while you read the notes over it. Press K to pause a clip if you need more time. Slide 22 opens the last two minutes, which belong to questions.
+The timing adds up to about 32 minutes, including two minutes of questions. Slides 11 to 15 are the new section on why not structured output with a confidence score. The demo is slides 16 to 19: slide 16 sets it up, and slides 17 to 19 each play a short recorded clip (no audio) in `present.html` while you read the notes over it. Press K to pause a clip if you need more time.
 
 ---
 
@@ -10,39 +10,39 @@ The timing adds up to about thirty-one and a half minutes: 1.5, 2.5, 1.5, 1.5, 2
 
 Hello everyone, and thank you for being here. Today I want to talk about a kind of AI model that does not write text at all. Instead, it makes a decision. These models are called System One models, and the one we will look at closely is called Jev.
 
-Here is the plan for the next half hour. First, I will explain what these models are and how they differ from the chatbots we already know. Then we will look at what a single call to one of them looks like, and where such a model fits into real work. After that, I will run a short live example, so you can see a request and a response with your own eyes. Near the end, I will show you where you can try all of this yourself.
+Here is the plan for the next half hour. First, I will explain what these models are and how they differ from the chatbots we already know. Then we will look at what a single call to one of them looks like, and where such a model fits into real work. After that, I will answer the question I expect from most of you: why not simply ask a normal language model for structured output with a confidence score? We measured exactly that, on the same set of tickets, and I will show you the real numbers. Then three short recorded demos, and at the end, where you can try all of this yourself.
 
-I will keep it practical and fairly light. You do not need any machine learning background to follow along. If you have ever called a web API, you already know almost everything you need. It is also fine to ask questions along the way, although I will leave a couple of minutes at the end for them. So let's start with the basic idea.
+You do not need any machine learning background. If you have ever called a web API, you already know almost everything you need. So let's start with the basic idea.
 
-## Slide 02 · Two kinds of AI models · 2.5 min
+## Slide 02 · Two kinds of AI models · 1.75 min
 
 Most of the AI we use every day is a text generator. You give it some text, and it gives you more text back. That could be an answer, a summary, an email draft, or a piece of code. This is what the top row of the slide shows, and it is what we usually mean when we say a large language model.
 
 Now look at the bottom row. A decision model starts with the same kind of input, some text. But what comes out is not more text. What comes out is a decision. It might be a choice among a few options that you defined yourself, a score on a scale, or the probability that the answer to a yes or no question is yes. On the slide this is drawn as a small bar chart and a check mark, because the result is a set of numbers and a pick, not a paragraph.
 
-I think this difference matters a lot for developers. When a generator answers with words, your program has to read those words and work out what they mean. When a decision model answers, your program receives a result it can use directly. There is no free text to parse, and no guessing whether the model said yes or maybe. Let me give you a small example to make this concrete. Suppose a customer writes to you, and you want to know which team should handle the message. With a generator, you might get a friendly paragraph that starts with the words, it looks like this message is about a technical problem. Your program then has to find the word technical somewhere inside that paragraph. With a decision model, you get the word technical, together with a number that says how sure the model is. That is a much easier thing to build on.
+I think this difference matters a lot for developers. When a generator answers with words, your program has to read those words and work out what they mean. When a decision model answers, your program receives a result it can use directly. There is no free text to parse, and no guessing whether the model said yes or maybe.
 
 That is the whole idea of the talk in one sentence. So where does the strange name System One come from? Let's look at that next.
 
-## Slide 03 · Two ways to think · 1.5 min
+## Slide 03 · Two ways to think · 1.25 min
 
 The name comes from a well-known idea by the psychologist Daniel Kahneman, who described it in his book Thinking, Fast and Slow. He said that people have two modes of thinking. System one is fast and instinctive. It is what you use when you glance at a message and just know it is spam. System two is slow and deliberate. It is what you use when you plan a budget or work through a hard problem step by step.
 
-The vendor's own documentation uses this analogy for these models, and I find it helpful. The point is on the bottom of the slide. Decision models are built for the quick judgement calls, the System One kind of jobs. They are not meant to replace careful reasoning. You could say that a good team uses both modes. A person does not think hard about every single email, because that would be exhausting and slow. They sort most things quickly, and they save the careful thinking for the few cases that really need it. We can build software the same way, and we will come back to this idea when we talk about using a fast model first.
+The vendor's own documentation uses this analogy for these models, and I find it helpful. The point is on the bottom of the slide. Decision models are built for the quick judgement calls, the System One kind of jobs. They are not meant to replace careful reasoning. We can build software the same way, and we will come back to this idea when we talk about using a fast model first.
 
 Now that we have the idea, let me introduce the specific model we will use today.
 
-## Slide 04 · What is Jev? · 1.5 min
+## Slide 04 · What is Jev? · 1.25 min
 
 Jev is a hosted System One model from a company called TypeSafe AI. Hosted simply means that you do not run it yourself. You send a request over the internet, and you get an answer back. Its own documentation describes it as the first model of this kind.
 
 The slide shows three simple facts about Jev. First, it is one HTTP call. Second, it generates no text. Third, it returns typed answers, which means a choice, a score or a yes or no probability, rather than sentences.
 
-One small warning before we continue. If you search the internet for Jev, you will find many unofficial websites with launch dates, funding figures and speed numbers. I have not been able to verify those, so I will not quote them today. Everything I say about Jev comes from the official documentation. So how would you actually use it? There is no special software to install, and no model to download. If you can send a request from your own code, you can use Jev. In the next few slides, I will show you what such a request contains, what comes back, and what you can do with it. I think you will see that it is simpler than it sounds.
+One small warning before we continue. If you search the internet for Jev, you will find many unofficial websites with launch dates, funding figures and speed numbers. I have not been able to verify those, so I will not quote them today. Everything I say about Jev comes from the official documentation, or from measurements I made myself for this talk. Jev is also available through OpenRouter, which is how I called it.
 
 With that in place, let's look at what a call actually looks like.
 
-## Slide 05 · One call, one decision · 2.5 min
+## Slide 05 · One call, one decision · 2 min
 
 Let's walk through this picture from left to right. On the left, you send two things to Jev. The first is the state. That is simply the text you want it to look at, for example a message from a customer. The second is the list of questions. These are the things you want to know about that text, and you describe the possible answers in plain words.
 
@@ -50,9 +50,9 @@ In the middle is Jev itself. It reads the text and the questions in one pass. On
 
 Please note that this drawing is an illustration, not real output. We will see a real response in a few minutes. The important thing to remember is that the answer is numbers, not sentences. Your code can act on those numbers right away. You ask the questions you care about, and the model replies with a typed answer for each of them. Typed here means that every answer has a clear shape. A choice always comes back as a choice, and a yes or no question always comes back as a probability. Because of that, you can write ordinary code against it, in the same way you would write code against any other well-defined web interface.
 
-It is also worth noticing what is missing from this picture. There is no long prompt, no instructions about the format of the output, and no code to clean up the answer. You describe what you want to know, and the shape of the reply is already decided for you. Let's look more closely at the kinds of questions you can ask.
+Let's look more closely at the kinds of questions you can ask.
 
-## Slide 06 · Three kinds of questions · 1.5 min
+## Slide 06 · Three kinds of questions · 1.25 min
 
 There are three kinds of questions, and they cover a surprising amount of everyday work. The first is a choice. You give a list of options, such as billing, technical and sales, and the model picks one and tells you how likely each option is.
 
@@ -60,7 +60,7 @@ The second is a score. Here you define an ordered scale, for example from calm t
 
 The third is a yes or no question, such as whether a message is urgent. The answer is the probability of yes. In the Jev interface this type is called noul, which is a slightly odd name, but you only need to remember that it means yes or no.
 
-You can ask several questions about the same text in a single call. And because you describe the options in plain words in the request, you can change them at any time, without retraining anything. For example, with a single support ticket you might ask which team should handle it, how angry the customer sounds, and whether it is urgent, all in the same request. Jev is not the only product that works this way, so let's take a quick look around.
+You can ask several questions about the same text in a single call. And because you describe the options in plain words in the request, you can change them at any time, without retraining anything. Jev is not the only product that works this way, so let's take a quick look around.
 
 ## Slide 07 · Not only Jev · 1 min
 
@@ -68,164 +68,175 @@ The same idea exists elsewhere. OpenAI has a Decisions API, which was in beta wh
 
 These are different vendors, but the shape is similar. You send text and questions in, and you get typed answers back. If you ask me which one is best, my honest answer is that I do not know, because there is no independent comparison yet. The benchmark numbers that exist come from the vendors themselves, so the right approach is to test on your own data. So where would you use a model like this?
 
-## Slide 08 · Where it fits · 1 min
+## Slide 08 · Where it fits · 1.25 min
 
 Here are six everyday jobs where a decision model fits well. Routing, moderation, fraud triage, form checks, intent detection, and approvals.
 
-What these have in common is that a person could look at each item and decide in a second or two, but there are far too many items for a person to handle them all. That is exactly the gap a fast decision model can fill. Think about the work behind a busy online shop, a large community forum or a payment system. In each of them, there is a constant stream of small questions. Where should this message go? Is this comment acceptable? Does this payment look unusual? None of these questions needs an essay. Each of them needs a quick and consistent answer, and that is the sweet spot for a decision model. Over the next three slides, I will show three of these jobs in a little more detail.
+What these have in common is that a person could look at each item and decide in a second or two, but there are far too many items for a person to handle them all. That is exactly the gap a fast decision model can fill. Think about the work behind a busy online shop, a large community forum or a payment system. In each of them, there is a constant stream of small questions. Where should this message go? Is this comment acceptable? Does this payment look unusual? None of these questions needs an essay. Each of them needs a quick and consistent answer, and that is the sweet spot for a decision model. Let me show one of them, routing, in a little more detail, because it is also the task we measured.
 
 ## Slide 09 · Routing · 1 min
 
 The first example is routing. Please keep in mind that this is an illustration I made up to explain the idea. Imagine a support ticket arrives. Jev reads it and picks the right team, and in this case the technical team gets it.
 
-The dashed arrow at the bottom is the part I find most interesting. When the model is not confident about its answer, the ticket does not go to a team at random. It goes to a person. And the threshold for what counts as not confident is a decision made by your code, not by the model. This way the fast and cheap path handles the easy tickets, and your support staff spend their time on the ones that are genuinely unclear. This idea of letting people handle the unclear cases comes back in the next example.
+The dashed arrow at the bottom is the part I find most interesting. When the model is not confident about its answer, the ticket does not go to a team at random. It goes to a person. And the threshold for what counts as not confident is a decision made by your code, not by the model. This way the fast and cheap path handles the easy tickets, and your support staff spend their time on the ones that are genuinely unclear. This idea of sending only the unclear cases somewhere else leads straight to a pattern called fast first.
 
-## Slide 10 · Moderation · 1 min
+## Slide 10 · Fast first · 1.75 min
 
-The second example is moderation, and again this is an illustration. A comment comes in, and the model judges it. It might say allow, send to a human, or block.
+A common pattern is to put the fast decision model in front. It answers most of the requests by itself, quickly and cheaply. Only the requests it is not sure about are passed on, to a big language model or to a person. You can see this on the slide. Most requests leave through the top, and only a few take the dashed path down.
 
-You can think of it as a scale. At one end, the model is sure the comment is fine. At the other end, it is sure the comment breaks the rules. The clear cases at both ends can be handled automatically. The unclear cases in the middle are for people. The simple rule is to act when you are sure, and ask a person when you are not. That keeps the moderators focused on the difficult decisions, instead of reading every single comment from top to bottom.
+How many stay at the first step depends entirely on your data and on the threshold you choose, so I will not quote a vendor number. But I can tell you what we saw in our own test, which I will describe in a moment. On our support tickets, with the threshold at zero point nine five, Jev handled three quarters of the tickets on its own, and none of those automated answers was wrong in the test set. The other quarter went to a person. That is one small synthetic test, not a promise, but it shows the shape of the trade-off.
 
-## Slide 11 · Fraud triage · 1 min
+This also brings us back to the two ways of thinking from earlier. The fast model plays the part of quick instinct, and the big model or the person plays the part of careful thought. And now let me answer the question that I am sure some of you have been waiting to ask.
 
-The third example is fraud triage, and once more, this is an illustration. A payment comes in, and the model gives it a risk score. If the score is low, the payment takes the fast path. If it is above the threshold, an analyst takes a closer look.
+## Slide 11 · The real alternative · 1 min
 
-I want to be clear about one thing here. This is a first look, not a verdict. The model does not accuse anyone of anything. It only helps to decide which payments deserve a human's time. In other words, most normal payments go through without delay, and the unusual ones get attention from someone who can judge them properly. That brings me to a question that comes up often, which is how to make this cheaper and faster in practice.
+The question is this. Why not just take a normal language model, ask it for structured output, and add a confidence field? You can see that on the left. A JSON schema with the department and a number, say zero point nine. Modern models follow such a schema reliably, so nobody parses free text any more. This is the real competitor to a decision model, and it is a serious one.
 
-## Slide 12 · Fast first · 2 min
+On the right is the decision model. Same input, and also a label and a number. So on the surface both give you the same thing. The difference is not in the format. The difference is in where the number comes from, and that is the next slide.
 
-A common pattern is to put the fast decision model in front. It answers most of the requests by itself, quickly and cheaply. Only the requests it is not sure about are passed on to a big language model, which is slower and more expensive but can think more carefully. You can see this on the slide. Most requests leave through the top, and only a few take the dashed path down to the big model.
+## Slide 12 · Where the number comes from · 1.75 min
 
-I want to be careful here. I will not give you a percentage for how many requests stay at the first step. That number depends entirely on your data and on the thresholds you choose, and I do not have a verified figure for Jev. Other published work in this area, for example from Cloudflare and Unsloth, reports its own results, but those are claims from the vendors.
+On the left, the language model writes its confidence. The number zero point nine is a few tokens that the model generates, the same way it generates any other word. It is one guess, written after the answer. In practice these written numbers are coarse. In our test, the models used only twelve to nineteen different values across a hundred and fifty tickets, mostly round numbers like zero point nine or zero point nine five. And those tokens are output, which you pay for and wait for.
 
-So if someone asks how much you would save, the honest answer is to measure it. Take a sample of your own traffic, try the approach, and look at the numbers. You may also notice that this brings us back to the two ways of thinking from earlier. The fast model plays the part of the quick instinct, and the big model plays the part of careful thought. Each one is used where it makes the most sense.
+On the right, the decision model computes a probability for every option in a single pass. Nothing is written. You get the whole distribution, not just one number, and the vendor says the model is trained to make those probabilities calibrated. Output is not billed.
 
-Now it is time to see this in practice, so let me show you the demo.
+Now, I want to be fair here. Research shows that written confidence from chat models is not nonsense. A 2023 study by Tian and colleagues found that for chat models it is often better calibrated than their raw token probabilities. Another study, by Xiong and colleagues, found that it tends to be overconfident, and that this gets better with stronger models. So it is a different kind of number, not a useless one. The only honest thing to do is to measure both. So we did.
 
-## Slide 13 · Demo, the request · 1.5 min
+## Slide 13 · How we tested · 1 min
 
-Let me show you what a real request looks like. On the slide you can see it, shortened so that it fits on the screen. It has two parts. The first is the state, which is the text to judge. Here it is a support ticket saying that an API integration has been returning errors for twenty minutes. The second part is the questions. I ask two of them. The first one is the department, which is a choice between billing, technical and sales. The second one asks whether the message is urgent, which is a yes or no question.
+Here is how. We built two hundred and fifty realistic support tickets for a made-up software company, with five departments and three levels of urgency. Free models wrote them, and two other models labelled every ticket blindly, without seeing each other's answers. Where the two labellers disagreed, we flagged the ticket as ambiguous.
 
-Before we watch the demo, I want to be honest about what is behind it. We did not have access to a real Jev key when I prepared this talk, so the demo uses a small local emulator. It accepts the same request as Jev, but behind it is a free chat model. It asks that model the same question five times and reports the share of votes as if they were probabilities. So the request you will see is the real shape, but the engine is different, and the numbers are not Jev's numbers. With a real key, the same code works by changing two settings.
+We kept one hundred and fifty tickets aside as a test set. Every method saw exactly the same tickets and exactly the same descriptions of the options. Eight methods in total: Jev, strong and small chat models with written confidence, token probabilities, voting, and an old-school classifier. For each, we measured accuracy, calibration, latency and the cost per thousand tickets. One lesson from building this: use free models to make the data, and spend the paid budget only on the models you are testing.
 
-I recorded the demo in advance, so we do not depend on the network here. Everything you will see is the real code from the repository and the real output of a run I recorded while preparing this talk.
+## Slide 14 · Same 150 tickets · 1.75 min
 
-## Slide 14 · Demo 1, the files · 1 min
+These are the results for the department question. The top row is Jev. Ninety-three percent correct, a calibration error of zero point zero four, which is small, about a hundred and sixty milliseconds per ticket, and two and a half cents per thousand tickets. That is one call, with two questions in it.
+
+The next two rows are strong chat models with structured output. GPT-6 Sol got the same ninety-three percent, with the same calibration error. Its written confidence was honest. But it took about two seconds, and it cost a dollar thirty-four per thousand tickets. Claude Sonnet got ninety-four percent, and its confidence was too modest: when it said fifty-seven percent, it was right three times out of four. It took one second and cost two dollars per thousand.
+
+The cheap DeepSeek model was even a little more accurate, ninety-five percent, in half a second, for under five cents. Asking it five times and counting votes reached ninety-seven percent, but then the confidence has only three possible values, so it is a very blunt knob for a threshold.
+
+Two honest remarks. First, the accuracy differences in this table are within the statistical noise of a hundred and fifty tickets. Second, on the harder, more subjective question of urgency, Jev was less accurate than the chat models, by four to nine points.
+
+## Slide 15 · What the numbers say · 1 min
+
+So what do the numbers say? Compared with strong chat models, the decision model was fifty to eighty times cheaper, and six to thirteen times faster. It answered both questions in one call and scored every option, so your code gets a full distribution to set thresholds on. Its accuracy and calibration were about the same as the strong models on the main question.
+
+And here is the line I want you to take home. It was not more accurate. If you choose a decision model, choose it for price, speed and format, plus decent probabilities. Do not choose it because you expect it to be smarter. And whatever you use, a decision model or written confidence from a chat model, measure that confidence on your own data before you put a threshold on it.
+
+Now let me show you how this looks in code.
+
+## Slide 16 · Demo, the request · 1 min
+
+This is what a real request looks like, shortened to fit the screen. It has two parts. The state, which is the text to judge, here a support ticket saying that an API integration has been returning errors for twenty minutes. And the questions: the department, a choice between three teams, and whether the message is urgent, a yes or no question.
+
+The demos you will see are recorded, so we do not depend on the network here, and everything in them is real code from the repository and real output. This time the requests go to the real Jev, through OpenRouter. There are three short clips, one for each exercise of the workshop.
+
+## Slide 17 · Demo 1, one call · 2 min
 
 *[the clip starts by itself; press K to pause it, R to restart it]*
 
-This is the light workshop folder from the repository. It is one folder, and three Python files in it matter. The first one is the emulator. It is a small local server that accepts the same request as Jev, and its very first line says clearly that it is not Jev. The second one is the client. It has three short examples, and the same code would talk to real Jev if you change the address and the key. The third one holds offline keyword rules. They are only a fallback for when there is no network, and every answer they produce is labelled as mock. Finally, the Makefile runs everything in Docker, so the only things you need on your laptop are Docker and make.
+Exercise one. The problem: one ticket, several things to decide, and the code should be in charge. The design is simple. One request carries all the questions. The model returns a probability for each answer, and our code turns those probabilities into actions, with a different threshold for each action.
 
-## Slide 15 · Demo 2, the code · 1.5 min
+Here is the request in the client, and here is the line where the code decides. A yes or no answer counts as yes above zero point seven and as no below zero point three, and everything in between gets its own outcome. Risky actions need more: blocking a comment or approving an expense needs at least zero point nine.
 
-*[the clip starts by itself]*
+Now we run it against real Jev. The ticket goes to the technical team, with a probability of one, and urgent at zero point nine nine, so the on-call engineer is paged. That took about a hundred and fifty milliseconds and cost less than two thousandths of a cent. The rude comment comes back as block with zero point nine one, just above the bar, so it is blocked. And the expense, a forty-two dollar lunch for four people, which is clearly within policy, comes back as approve with only zero point seven. That is below our zero point nine bar, so the code escalates it to a manager. This is the threshold doing its job. A structured output call could do the routing too, but it would need one generated answer per question, and it would give us one written number instead of a distribution.
 
-Let's open the client. Everything goes through one small function that sends a single HTTP call. It posts to the system one endpoint with three things: the model name, the state and the questions.
-
-The state is simply the text that the model should judge. Here it is the support ticket about the API returning errors for twenty minutes. The questions describe what we want back. The first is a choice between three teams, and each team has a short description. The second is a yes or no question about urgency, which Jev calls noul.
-
-Now the line I care about most. The model only answers, and our code decides. If the confidence is at least zero point seven, we send the ticket to that team, and otherwise we ask a person. The moderation example has the same shape with different questions, and it includes review as an answer for cases of doubt. The expense example shows that the state can also be structured data.
-
-Now let's look behind the endpoint. The emulator asks a free language model the same question five times and turns the share of votes into probabilities. Real Jev does not vote. It scores every option in one pass. The answers come back typed, and every response is labelled as emulator output, so nobody can mistake it for Jev.
-
-## Slide 16 · Demo 3, run it · 1.5 min
+## Slide 18 · Demo 2, same tickets · 1.75 min
 
 *[the clip starts by itself]*
 
-Now we run it. Nothing is installed on this machine except Docker and make. The help screen lists the commands, and make lite is the one for this talk. There is also an offline version for when there is no network at all.
+Exercise two is the comparison you just saw on the slides, as code. The problem: decide how to get a trustworthy confidence. The design is one dataset, one evaluation script, and five ways of getting a confidence, each in a small function in the same file.
 
-First, the ticket. The command starts the emulator inside a container and sends one request. The department comes back as technical with a confidence of one, because all five votes agreed. Urgent also comes back as one. That is the probability of yes, or here, the share of yes votes. Since one is above zero point seven, the code routes the ticket on its own.
+Here is the structured output method. The schema has the department, the urgency, and a confidence field for each, and the prompt asks the model to be calibrated. Here is the token probability method, which reads the model's own probabilities for the first token of each option. Here is the voting method, five samples at temperature one. And here is Jev, one request with both questions. All of them get exactly the same option descriptions.
 
-Next, the rude comment. This time the votes are split. Review got zero point six, and block got zero point four. The model is not sure, and that uncertainty is exactly what I want you to see. Here are both answers side by side with the same threshold. The ticket is clear, so it is handled automatically. The comment falls below the line, so a person should look at it. In an earlier run, the same comment leaned towards block instead, which shows how a borderline case can flip from one run to the next.
+Now we run the evaluation. It reads the saved results and prints one table: accuracy, calibration error, how much we could automate at ninety-five percent accuracy, the number of distinct confidence values, latency, and cost. And here are the reliability tables, confidence on the left and how often the model was right on the right. Look at the token probabilities on the urgency question. When they say ninety-eight percent, they are right only sixty-five percent of the time. That is overconfidence, and it is exactly what would hurt you if you put a threshold on it. The written confidence from GPT-6 Sol, by contrast, lines up well. Measure first, then trust.
 
-Last, the expense. The state is a small piece of JSON, and the answer is approve, with full confidence that it is within the policy.
-
-## Slide 17 · Demo 4, the threshold · 1 min
+## Slide 19 · Demo 3, the threshold · 1.25 min
 
 *[the clip starts by itself]*
 
-The last clip comes from the deeper workshop, and it shows what the threshold really changes. Here the fast model is a small classic classifier, trained on only twenty-four tickets. When its confidence is below the threshold, the ticket is escalated. In this sweep, escalations go to a human queue, and we assume the human is always right.
+Exercise three answers the last practical question: where should the threshold be? The design is a small simulation. Every wrong automatic answer costs five dollars, every human review costs fifty cents, and we sweep the threshold from zero to one.
 
-We run it for four thresholds on sixteen test tickets. At zero point three, only four tickets are escalated, and accuracy is fifty percent. At zero point five, twelve are escalated, and accuracy rises to eighty-seven and a half percent. At zero point seven and above, every ticket goes to a person, so accuracy is perfect, but nothing is automated any more. This little classifier is weak, so the numbers are extreme. The point is the trade-off, and you are the one who chooses where to draw the line. That is the end of the demo, so let me go back to the slides.
+Here is the result for Jev. Automating everything costs three hundred and thirty-three dollars per thousand tickets, because of the mistakes. Sending everything to people costs five hundred. The cheapest point is a threshold of zero point nine five: three quarters automated, no mistakes in the test, a hundred and twenty-seven dollars. And at the bottom, the same optimum for every method. The strong chat models land at a hundred and thirty-five to a hundred and thirty-eight dollars, close to Jev. At this volume, the model's own price is tiny compared to mistakes and reviews. Its price and speed start to matter at large volume and when you need an answer in milliseconds. That is the end of the demo.
 
-## Slide 18 · Use it, skip it · 1.5 min
+## Slide 20 · Use it, skip it · 0.75 min
 
-So when is a decision model the right tool, and when is it not? It is a good fit for sorting things into groups, for yes or no checks, for high volumes, and for situations where you need fast answers.
+So when is a decision model the right tool? It fits sorting things into groups, yes or no checks, high volumes, and situations where you need fast answers.
 
-It is not the right tool for writing text. The Jev documentation says plainly that it does not write replies, code or explanations. It is also not for explaining why it decided something, for reasoning that takes many steps, or for open conversation. For those jobs, a large language model is the better choice.
+It is not the right tool for writing text, for explaining why it decided something, for reasoning that takes many steps, or for open conversation. The Jev documentation says plainly that it does not write replies, code or explanations. For those jobs, a large language model is the better choice. A simple way to remember it: the decision model tells you whether to open an email, but it will not write the reply.
 
-Think of it as choosing between a sorting machine and a writer. The sorting machine is built to be fast and to handle a large volume, but it can only sort. The writer can explain, argue and create, but it is slower and more expensive for each answer. Many good systems use both, each for what it does well.
+## Slide 21 · Honest limits · 1 min
 
-A simple way to remember this is that the decision model will tell you whether to open an email, but it will not write the reply for you. And like any tool, it has some limits that are worth knowing about.
+Four limits. First, these models read text, and Jev also reads images, but there is no audio or video.
 
-## Slide 19 · Honest limits · 1.5 min
+Second, English works best. The documentation says other languages are handled less well, so test carefully if your data is in another language.
 
-I would like to be open about four limits. First, these models are text first. The documentation does not offer audio or video. Image input exists only behind an experimental setting, so I would treat it as not ready for real use.
+Third, test on your own data. Our own measurement used synthetic tickets labelled by language models, which gives chat models a home advantage, and a hundred and fifty tickets is a small sample. Your numbers will be different.
 
-Second, English works best. The documentation says that other languages are handled less well, so if your data is in another language, test it carefully before you rely on it.
+And fourth, most of the speed and quality numbers you will read come from the vendors, so treat them as claims, not proof. None of these limits is a reason to avoid the technology. They are reasons to try it on a small sample first.
 
-Third, always test on your own data. The probabilities are only as trustworthy as the checks you run yourself.
+## Slide 22 · Three takeaways · 1 min
 
-And fourth, most of the speed and quality numbers you will read about come from the vendors, so please treat them as claims and not as proof. Independent evaluations are still thin. None of these limits is a reason to avoid the technology. They are simply reasons to try it carefully, on a small sample, before you build anything important on top of it. A short experiment with your own examples will tell you far more than any announcement can. With these limits in mind, let me pull the main points together.
+If you remember only three things, I hope they are these. First, pick a decision model for price, speed and format. In our test it was fifty to eighty times cheaper and up to thirteen times faster than strong chat models, at the same accuracy, but not better.
 
-## Slide 20 · Three takeaways · 1 min
+Second, the model answers, and your code decides. The thresholds, the routing and the human review are yours to design, and they can differ for every action.
 
-If you remember only three things from this talk, I hope they are these. First, choose the right model for the job. Use a decision model for quick judgement calls, and a language model for writing and reasoning.
+And third, measure confidence on your own data, whatever method you use. Written confidence from a chat model can be good, and computed probabilities can be off. A reliability table on a few hundred of your own examples will tell you which one you can trust.
 
-Second, the model answers, and your code decides. The thresholds, the routing and the human review are all yours to design.
+## Slide 23 · Try it yourself · 0.75 min
 
-And third, go fast first, and use the big model only when the fast one is unsure. That is a simple pattern, and it works for many kinds of problems. If you forget everything else, remember that a decision model is a quick specialist, and that you are always the one in charge of what happens next.
+Everything is in a public repository on GitHub. You can see the address on the slide, or scan the code with your phone. Look for the folder called system-one-models.
 
-## Slide 21 · Try it yourself · 1 min
+There you will find the research notes with their sources, the workshop with its three exercises, the dataset, all saved results, and a methodology note that explains exactly how we tested. The whole comparison replays offline with one command, without any key. If you have an OpenRouter key, the same client talks to real Jev, and a run of the first exercise costs a fraction of a cent.
 
-If you would like to try this yourself, everything is in a public repository on GitHub. You can see the address on the slide, and you can also scan the code with your phone. Look for the folder called system-one-models.
+## Slide 24 · Questions · 2 min
 
-In that folder, you will find the research notes with their sources, a comparison of the different approaches, a hands-on workshop with code you can run, and the slides from this talk. I suggest you start by running the workshop, which takes about fifteen minutes and works for free with the emulator. Then try changing the questions and the options, and watch how the answers move. After that, compare the different approaches, and read the sources behind the claims I made today.
+That brings me to the end. A System One model does not write, it decides. It is a fast and cheap way to make many small decisions with probabilities your code can act on, as long as your code stays in charge and people handle the unclear cases. And it is not magic: in our test it matched strong chat models on accuracy at a tiny fraction of the cost and time, but it did not beat them.
 
-## Slide 22 · Questions · 2 min
-
-That brings me to the end. To sum it up, a System One model does not write, it decides, and it is best used for quick judgement calls, with your code in charge and with people handling the unclear cases.
-
-Along the way, we looked at the two kinds of models, at what a call to Jev looks like, at three everyday use cases, and at the pattern of using a fast model first. We also saw an honest demo, and a list of limits worth keeping in mind. Thank you very much for listening. I would be happy to take your questions now. If I do not know the answer, I will say so and find out, rather than guess.
+Thank you very much for listening. I would be happy to take your questions now. If I do not know the answer, I will say so and find out, rather than guess.
 
 *[the rest of the two minutes is open for questions]*
 
 ---
 
-## Easy questions you may get
+## Questions you may get
 
-These answers are written the same way, so you can read them aloud if you like.
+These answers are written the same way, so you can read them aloud if you like. Numbers are from our test on 150 synthetic tickets; see `../../workshop/METHODOLOGY.md`.
 
-**1. Is this just a classifier?**
-It is a close cousin. Classic classifiers needed training data for every new task. A System One model is meant to work without that. You describe the options in plain words in the request, and it takes it from there.
+**1. Why not just use structured output with a confidence field?**
+You can, and with a strong model it works. In our test GPT-6 Sol was as accurate as Jev, ninety-three percent, and its written confidence was about as well calibrated. The differences were price, speed and format: it cost a dollar thirty-four per thousand tickets against two and a half cents, it took about two seconds against a hundred and sixty milliseconds, and it gave one written number instead of a probability for every option.
 
-**2. Why not just ask a chatbot for a one word answer?**
-You can, and for a small number of requests that is perfectly fine. Decision models aim to be faster and cheaper, they give you a number for every option along with a confidence, and you do not need to parse any text.
+**2. So is Jev more accurate?**
+No, not in our test. On the department question all the model-based methods were within the statistical noise of each other, between ninety-two and ninety-seven percent. On the subjective urgency question Jev was four to nine points behind the chat models. Choose it for price, speed and format, not for accuracy.
 
-**3. How fast and how cheap is it?**
-The Jev documentation lists a price of four point two cents per million input tokens, with output being free. Speed numbers on the internet mostly come from the vendors or from unofficial sites, so my advice is to measure it yourself.
+**3. Are written confidence scores garbage?**
+No. The research says they are often better calibrated than a chat model's token probabilities, and in our test the strong models were honest or even too modest. But they are coarse, twelve to nineteen distinct values in our test, and they cost output tokens and time. Measure them before you use them.
 
-**4. Can I run it on my own servers?**
-Jev itself is hosted. But open-weights options exist, for example Cloudflare's Clef, and the Unsloth recipe lets you train your own. The quality differs between them, so please test before you decide.
+**4. Why not use logprobs or ask several times?**
+Both work, and both were accurate. But token probabilities were overconfident on the subjective question: when they said ninety-eight percent, they were right sixty-five percent of the time. Voting five times costs five calls and gives only a few possible values, so a threshold has very few positions.
 
-**5. Can I trust the percentages?**
-They are designed to be calibrated, and the Jev documentation says so. That is a statement about large groups of answers, not a guarantee for each single answer. So check them against your own labelled examples.
+**5. How fast and how cheap is it, really?**
+The documentation lists four point two cents per million input tokens, output free. In our test, through OpenRouter, a request with two questions took about a hundred and sixty milliseconds in the middle case and cost about two and a half cents per thousand tickets.
 
-**6. Does it explain its answer?**
-No, it does not. It returns the decision and the probabilities, but no reasoning. If you need to know why, you can pass those cases to a language model.
+**6. How did you test, and can I trust a synthetic dataset?**
+Two hundred and fifty synthetic tickets, two blind labellers, a hundred and fifty held out, the same options for every method. The weak spot is that the labels come from language models, which favours chat models, and a hundred and fifty tickets is small. That is why I report intervals and why I tell you to test on your own data.
 
-**7. Does it work in other languages?**
-The documentation says English works best and that other languages are handled less well. So test it before you rely on it.
+**7. Can I run it on my own servers?**
+Jev itself is hosted. Open-weights options exist, for example Cloudflare's Clef, and the Unsloth recipe lets you train your own. Quality differs, so test before you decide.
 
-**8. What about private data?**
-The documentation states that it is not trained on customer requests, and it mentions zero data retention for enterprise customers. I would still read the legal page and talk to your security team before sending real data.
+**8. Does it explain its answer?**
+No. It returns the decision and the probabilities, but no reasoning. If you need to know why, pass those cases to a language model.
 
-**9. Do I need a GPU or machine learning skills?**
-No. It is one web call with some JSON, so any developer can use it.
+**9. Does it work in other languages, or with images?**
+The documentation says English works best. It also reads images. Test both before you rely on them.
 
-**10. Is it free to try?**
-According to third-party trackers, new accounts currently get no free credits, so please check this in the console. For the workshop, we use a free emulator, so everyone can follow along at no cost.
+**10. What about private data?**
+The documentation states that it is not trained on customer requests, and it mentions zero data retention for enterprise customers. Still read the legal page and talk to your security team before sending real data.
+
+**11. Is it free to try?**
+New TypeSafe accounts currently get no free credits, as far as I could find. Through an OpenRouter key with credits, the first exercise costs a fraction of a cent, and the whole comparison replays offline without any key.
 
 ---
 
-Sources for the facts above: [`../../research.md`](../../research.md), the [Jev documentation](https://docs.typesafe.ai/concepts/system-one), and the [Jev models page](https://docs.typesafe.ai/models.md).
+Sources: [`../../research.md`](../../research.md), [`../../workshop/METHODOLOGY.md`](../../workshop/METHODOLOGY.md), the [Jev documentation](https://docs.typesafe.ai/concepts/system-one), the [Jev models page](https://docs.typesafe.ai/models.md), Tian et al. 2023 ([arXiv:2305.14975](https://arxiv.org/abs/2305.14975)), Xiong et al. 2024 ([arXiv:2306.13063](https://arxiv.org/abs/2306.13063)).

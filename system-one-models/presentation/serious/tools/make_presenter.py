@@ -11,7 +11,7 @@ import glob, html, json, os, re
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 VIDEO_BOX = (176, 150, 1248, 702)            # same box as build_deck.py
-DEMOS = {"demo-1": "demo-1-files", "demo-2": "demo-2-code", "demo-3": "demo-3-run", "demo-4": "demo-4-threshold"}
+DEMOS = {"demo-1": "demo-1-one-call", "demo-2": "demo-2-same-tickets", "demo-3": "demo-3-threshold"}  # same names as build_deck.py
 
 pngs = sorted(glob.glob(os.path.join(ROOT, "export", "slide-*.png")))
 notes_md = open(os.path.join(ROOT, "speaker-notes.md")).read()
@@ -26,6 +26,8 @@ for p in pngs:
     name = os.path.basename(p)
     n = int(name.split("-")[1])
     vid = next((v for k, v in DEMOS.items() if f"-{k}-" in name), None)
+    if vid and not os.path.exists(os.path.join(ROOT, "demo", "videos", f"{vid}.mp4")):
+        vid = None  # clip not rendered yet: the slide shows its placeholder
     slides.append({"img": f"export/{name}", "video": f"demo/videos/{vid}.mp4" if vid else None,
                    "poster": f"demo/videos/{vid}.poster.jpg" if vid else None, "notes": notes.get(n, "")})
 

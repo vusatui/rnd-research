@@ -1,0 +1,215 @@
+2026-11-15T17:50:47+00:00
+
+Question: department   (same 150 test tickets for every method)
+
+method                               acc clear  conf   ECE  auto@95  auto@98 distinct  tok in/out  p50 ms    $/1k
+-----------------------------------------------------------------------------------------------------------------
+D classic TF-IDF+logreg (100 train   72%   72%  0.39 0.329      43%      39%      146     0/0           1   0.000
+E jev (typesafe/jev-1.14-20261014)   93%   95%  0.93 0.042      87%      77%       35   596/88        161   0.025
+B logprobs deepseek-v4.1-flash-101   95%   96%  0.97 0.032      99%      93%       31   554/2         433   0.037
+A verbal  claude-haiku-5.5           92%   94%  0.86 0.069      92%      73%       14   799/40        815   0.100
+A verbal  claude-sonnet-5.5          94%   95%  0.83 0.113      94%      83%       17   800/40       1020   2.001
+A verbal  deepseek-v4.1-flash-1017   95%   97%  0.89 0.067     100%      81%       12   354/34        540   0.046
+A verbal  gpt-6-sol                  93%   95%  0.95 0.039      97%      87%       19   382/58       2108   1.340
+C votes k=5 deepseek-v4.1-flash-10   97%   98%  0.98 0.024     100%       0%        3  1403/75        756   0.153
+
+95% bootstrap confidence intervals (2,000 resamples of the 150 tickets)
+  D classic TF-IDF+logreg (100 train accuracy  72% [ 65%- 79%]   ECE 0.329 [0.262-0.395]   jev minus this: +21.3% [+12.7% to +29.3%]
+  E jev (typesafe/jev-1.14-20261014) accuracy  93% [ 89%- 97%]   ECE 0.042 [0.030-0.088]
+  B logprobs deepseek-v4.1-flash-101 accuracy  95% [ 91%- 98%]   ECE 0.032 [0.015-0.067]   jev minus this: -1.3% [-6.0% to +3.3%]
+  A verbal  claude-haiku-5.5         accuracy  92% [ 87%- 96%]   ECE 0.069 [0.068-0.113]   jev minus this: +1.3% [-2.7% to +5.3%]
+  A verbal  claude-sonnet-5.5        accuracy  94% [ 90%- 97%]   ECE 0.113 [0.087-0.147]   jev minus this: -0.7% [-4.7% to +3.3%]
+  A verbal  deepseek-v4.1-flash-1017 accuracy  95% [ 92%- 99%]   ECE 0.067 [0.046-0.099]   jev minus this: -2.0% [-6.0% to +2.0%]
+  A verbal  gpt-6-sol                accuracy  93% [ 89%- 97%]   ECE 0.039 [0.021-0.075]   jev minus this: +0.0% [-4.0% to +3.3%]
+  C votes k=5 deepseek-v4.1-flash-10 accuracy  97% [ 93%- 99%]   ECE 0.024 [0.009-0.057]   jev minus this: -3.3% [-8.0% to +0.7%]
+
+Reliability - D classic TF-IDF+logreg (100 train): confidence bin -> how often it was right
+  0.00-0.50  n=128  said 0.36  was right  67%  #############
+  0.50-0.70  n= 19  said 0.58  was right 100%  ####################
+  0.70-0.80  n=  3  said 0.74  was right 100%  ####################
+
+Reliability - E jev (typesafe/jev-1.14-20261014): confidence bin -> how often it was right
+  0.50-0.70  n= 11  said 0.58  was right  73%  ###############
+  0.70-0.80  n= 14  said 0.75  was right  79%  ################
+  0.80-0.90  n=  7  said 0.86  was right  86%  #################
+  0.90-0.95  n=  6  said 0.92  was right  50%  ##########
+  0.95-0.99  n= 17  said 0.97  was right 100%  ####################
+  0.99-1.00  n= 95  said 1.00  was right 100%  ####################
+
+Reliability - B logprobs deepseek-v4.1-flash-1017: confidence bin -> how often it was right
+  0.50-0.70  n=  4  said 0.58  was right  50%  ##########
+  0.70-0.80  n=  3  said 0.73  was right  33%  #######
+  0.80-0.90  n=  4  said 0.85  was right  50%  ##########
+  0.90-0.95  n=  7  said 0.92  was right 100%  ####################
+  0.95-0.99  n=  3  said 0.96  was right 100%  ####################
+  0.99-1.00  n=129  said 1.00  was right  98%  ####################
+
+Reliability - A verbal  claude-haiku-5.5: confidence bin -> how often it was right
+  0.50-0.70  n= 12  said 0.60  was right  50%  ##########
+  0.70-0.80  n=  7  said 0.72  was right  57%  ###########
+  0.80-0.90  n= 37  said 0.82  was right  92%  ##################
+  0.90-0.95  n= 74  said 0.92  was right 100%  ####################
+  0.95-0.99  n= 20  said 0.96  was right 100%  ####################
+
+Reliability - A verbal  claude-sonnet-5.5: confidence bin -> how often it was right
+  0.00-0.50  n=  2  said 0.43  was right  50%  ##########
+  0.50-0.70  n= 29  said 0.57  was right  76%  ###############
+  0.70-0.80  n=  9  said 0.72  was right  89%  ##################
+  0.80-0.90  n= 28  said 0.84  was right 100%  ####################
+  0.90-0.95  n= 49  said 0.92  was right 100%  ####################
+  0.95-0.99  n= 33  said 0.96  was right 100%  ####################
+
+Reliability - A verbal  deepseek-v4.1-flash-1017: confidence bin -> how often it was right
+  0.50-0.70  n=  3  said 0.55  was right  67%  #############
+  0.70-0.80  n= 27  said 0.72  was right  81%  ################
+  0.80-0.90  n= 16  said 0.83  was right  94%  ###################
+  0.90-0.95  n= 37  said 0.91  was right 100%  ####################
+  0.95-0.99  n= 64  said 0.96  was right 100%  ####################
+  0.99-1.00  n=  3  said 0.99  was right 100%  ####################
+
+Reliability - A verbal  gpt-6-sol: confidence bin -> how often it was right
+  0.70-0.80  n= 12  said 0.75  was right  50%  ##########
+  0.80-0.90  n= 19  said 0.86  was right  84%  #################
+  0.90-0.95  n= 10  said 0.91  was right  90%  ##################
+  0.95-0.99  n= 22  said 0.97  was right 100%  ####################
+  0.99-1.00  n= 87  said 0.99  was right 100%  ####################
+
+Reliability - C votes k=5 deepseek-v4.1-flash-1017: confidence bin -> how often it was right
+  0.50-0.70  n=  4  said 0.60  was right  75%  ###############
+  0.80-0.90  n=  5  said 0.80  was right  80%  ################
+  0.99-1.00  n=141  said 1.00  was right  98%  ####################
+
+Question: urgency   (same 150 test tickets for every method)
+
+method                               acc clear  conf   ECE  auto@95  auto@98 distinct  tok in/out  p50 ms    $/1k
+-----------------------------------------------------------------------------------------------------------------
+D classic TF-IDF+logreg (100 train   53%   54%  0.50 0.042       3%       3%      146     0/0           1   0.000
+E jev (typesafe/jev-1.14-20261014)   78%   77%  0.81 0.075      21%      18%       45   596/88        161   0.025
+B logprobs deepseek-v4.1-flash-101   87%   88%  0.97 0.122      69%      44%       45   554/2         433   0.037
+A verbal  claude-haiku-5.5           84%   85%  0.80 0.082      43%      43%       15   799/40        815   0.100
+A verbal  claude-sonnet-5.5          82%   83%  0.72 0.099      53%      45%       19   800/40       1020   2.001
+A verbal  deepseek-v4.1-flash-1017   86%   86%  0.85 0.057      47%      18%       16   354/34        540   0.046
+A verbal  gpt-6-sol                  82%   82%  0.89 0.086      59%      55%       24   382/58       2108   1.340
+C votes k=5 deepseek-v4.1-flash-10   84%   84%  0.95 0.113       0%       0%        3  1403/75        756   0.153
+
+95% bootstrap confidence intervals (2,000 resamples of the 150 tickets)
+  D classic TF-IDF+logreg (100 train accuracy  53% [ 45%- 61%]   ECE 0.042 [0.032-0.133]   jev minus this: +25.3% [+15.3% to +35.3%]
+  E jev (typesafe/jev-1.14-20261014) accuracy  78% [ 71%- 85%]   ECE 0.075 [0.046-0.140]
+  B logprobs deepseek-v4.1-flash-101 accuracy  87% [ 81%- 93%]   ECE 0.122 [0.073-0.177]   jev minus this: -9.3% [-15.3% to -3.3%]
+  A verbal  claude-haiku-5.5         accuracy  84% [ 78%- 89%]   ECE 0.082 [0.048-0.139]   jev minus this: -6.0% [-13.3% to +1.3%]
+  A verbal  claude-sonnet-5.5        accuracy  82% [ 75%- 88%]   ECE 0.099 [0.064-0.158]   jev minus this: -4.0% [-12.7% to +5.3%]
+  A verbal  deepseek-v4.1-flash-1017 accuracy  86% [ 80%- 91%]   ECE 0.057 [0.028-0.111]   jev minus this: -8.0% [-13.3% to -2.7%]
+  A verbal  gpt-6-sol                accuracy  82% [ 75%- 88%]   ECE 0.086 [0.044-0.150]   jev minus this: -4.0% [-11.3% to +3.3%]
+  C votes k=5 deepseek-v4.1-flash-10 accuracy  84% [ 78%- 90%]   ECE 0.113 [0.063-0.168]   jev minus this: -6.0% [-12.0% to -0.7%]
+
+Reliability - D classic TF-IDF+logreg (100 train): confidence bin -> how often it was right
+  0.00-0.50  n= 85  said 0.43  was right  48%  ##########
+  0.50-0.70  n= 61  said 0.57  was right  56%  ###########
+  0.70-0.80  n=  4  said 0.76  was right 100%  ####################
+
+Reliability - E jev (typesafe/jev-1.14-20261014): confidence bin -> how often it was right
+  0.00-0.50  n=  1  said 0.49  was right 100%  ####################
+  0.50-0.70  n= 40  said 0.59  was right  48%  ##########
+  0.70-0.80  n= 29  said 0.75  was right  79%  ################
+  0.80-0.90  n= 15  said 0.85  was right  93%  ###################
+  0.90-0.95  n= 16  said 0.92  was right  88%  ##################
+  0.95-0.99  n= 18  said 0.97  was right  89%  ##################
+  0.99-1.00  n= 31  said 1.00  was right  97%  ###################
+
+Reliability - B logprobs deepseek-v4.1-flash-1017: confidence bin -> how often it was right
+  0.50-0.70  n=  3  said 0.66  was right 100%  ####################
+  0.70-0.80  n=  4  said 0.77  was right 100%  ####################
+  0.80-0.90  n= 11  said 0.84  was right  55%  ###########
+  0.90-0.95  n=  4  said 0.92  was right  75%  ###############
+  0.95-0.99  n= 20  said 0.98  was right  65%  #############
+  0.99-1.00  n=108  said 1.00  was right  94%  ###################
+
+Reliability - A verbal  claude-haiku-5.5: confidence bin -> how often it was right
+  0.50-0.70  n= 15  said 0.60  was right  67%  #############
+  0.70-0.80  n= 40  said 0.70  was right  65%  #############
+  0.80-0.90  n= 47  said 0.82  was right  89%  ##################
+  0.90-0.95  n= 34  said 0.91  was right 100%  ####################
+  0.95-0.99  n= 14  said 0.96  was right 100%  ####################
+
+Reliability - A verbal  claude-sonnet-5.5: confidence bin -> how often it was right
+  0.50-0.70  n= 75  said 0.59  was right  67%  #############
+  0.70-0.80  n= 15  said 0.71  was right  87%  #################
+  0.80-0.90  n= 26  said 0.84  was right 100%  ####################
+  0.90-0.95  n= 24  said 0.91  was right 100%  ####################
+  0.95-0.99  n= 10  said 0.96  was right 100%  ####################
+
+Reliability - A verbal  deepseek-v4.1-flash-1017: confidence bin -> how often it was right
+  0.50-0.70  n=  3  said 0.63  was right  33%  #######
+  0.70-0.80  n= 22  said 0.73  was right  64%  #############
+  0.80-0.90  n= 55  said 0.83  was right  84%  #################
+  0.90-0.95  n= 45  said 0.90  was right  96%  ###################
+  0.95-0.99  n= 25  said 0.96  was right 100%  ####################
+
+Reliability - A verbal  gpt-6-sol: confidence bin -> how often it was right
+  0.50-0.70  n=  2  said 0.68  was right 100%  ####################
+  0.70-0.80  n= 30  said 0.74  was right  57%  ###########
+  0.80-0.90  n= 37  said 0.84  was right  65%  #############
+  0.90-0.95  n= 20  said 0.92  was right  95%  ###################
+  0.95-0.99  n= 31  said 0.97  was right 100%  ####################
+  0.99-1.00  n= 30  said 0.99  was right 100%  ####################
+
+Reliability - C votes k=5 deepseek-v4.1-flash-1017: confidence bin -> how often it was right
+  0.50-0.70  n=  5  said 0.60  was right  40%  ########
+  0.80-0.90  n= 25  said 0.80  was right  60%  ############
+  0.99-1.00  n=120  said 1.00  was right  91%  ##################
+S1 = jev   S2 = human   error $5.00   review $0.50   (150 test tickets, scaled to 1,000)
+
+threshold automated  errors to human to S2 LLM  total $
+     0.00      100%      67        0         0      333
+     0.30      100%      67        0         0      333
+     0.40      100%      67        0         0      333
+     0.50      100%      67        0         0      333
+     0.60       95%      60       47         0      323
+     0.70       93%      47       73         0      270
+     0.80       83%      27      167         0      217
+     0.85       83%      27      173         0      220
+     0.90       79%      20      213         0      207
+     0.95       75%       0      253         0      127  <- cheapest
+     0.99       63%       0      367         0      183
+    never        0%       0     1000         0      500
+
+(threshold 0 = automate everything, 'never' = everything goes to S2)
+
+Same economics, best threshold for every S1 method from Exercise 2:
+S1 method                          best t automated  errors  total $
+classic                              0.40       39%       7      337
+jev                                  0.95       75%       0      127
+logprobs_deepseek-v4.1-flash-1017    0.90       93%      13      103
+verbal_claude-haiku-5.5              0.85       73%       0      137
+verbal_claude-sonnet-5.5             0.80       73%       0      135
+verbal_deepseek-v4.1-flash-1017      0.85       75%       0      127
+verbal_gpt-6-sol                     0.90       79%       7      138
+votes_deepseek-v4.1-flash-1017       0.85       94%      20      130
+S1 = jev   S2 = human   error $20.00   review $1.00   (150 test tickets, scaled to 1,000)
+
+threshold automated  errors to human to S2 LLM  total $
+     0.00      100%      67        0         0     1333
+     0.30      100%      67        0         0     1333
+     0.40      100%      67        0         0     1333
+     0.50      100%      67        0         0     1333
+     0.60       95%      60       47         0     1247
+     0.70       93%      47       73         0     1007
+     0.80       83%      27      167         0      700
+     0.85       83%      27      173         0      707
+     0.90       79%      20      213         0      613
+     0.95       75%       0      253         0      253  <- cheapest
+     0.99       63%       0      367         0      367
+    never        0%       0     1000         0     1000
+
+(threshold 0 = automate everything, 'never' = everything goes to S2)
+
+Same economics, best threshold for every S1 method from Exercise 2:
+S1 method                          best t automated  errors  total $
+classic                              0.40       39%       7      740
+jev                                  0.95       75%       0      253
+logprobs_deepseek-v4.1-flash-1017    0.90       93%      13      340
+verbal_claude-haiku-5.5              0.85       73%       0      273
+verbal_claude-sonnet-5.5             0.80       73%       0      269
+verbal_deepseek-v4.1-flash-1017      0.85       75%       0      253
+verbal_gpt-6-sol                     0.95       73%       0      275
+votes_deepseek-v4.1-flash-1017       0.85       94%      20      460
