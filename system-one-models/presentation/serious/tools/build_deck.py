@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serious variant of the System One / Jev deck: 24 Excalidraw frames (3 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
+"""Serious variant of the System One / Jev deck: 23 Excalidraw frames (2 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
 (Excalifont, roughness 1), restrained navy + one orange accent, no characters.
    python3 build_deck.py     -> ../presentation.excalidraw (+ ../qr.png)
 Reuses ../../tools/excal.py (the scene builder of the light deck)."""
@@ -379,7 +379,7 @@ arr([(1310, 420), (1310, 470), (800, 470), (800, 510)], SLATE, roundness=None)
 box(300, 520, 1000, 110, "8 methods · same tickets · same options", 40)
 for i, t in enumerate(["accuracy", "calibration", "latency", "$ per 1,000"]):
     tag(150 + i * 340, 690, t, NAVY, 34)
-s.text(100, 820, "free models built the data · paid budget only for the models under test", 28, SLATE)
+s.text(100, 820, "data: free models · paid calls only for models under test", 28, SLATE)
 
 # Same 150 tickets: the numbers
 new_frame("Same 150 tickets")
@@ -400,8 +400,8 @@ for r, row in enumerate(rows_):
     s.text(130, y + 22, row[0], 38, ACC if hi else NAVY)
     for (t, x, w), v in zip(cols[1:], row[1:6]):
         s.label(x + w / 2, y + rh / 2, v, 38, ACC if hi else NAVY)
-s.text(130, 795, "written confidence: all but Jev and votes  ·  department question  ·  accuracy differences within noise", 26, SLATE)
-s.text(130, 835, "values = distinct confidence values  ·  ECE = calibration error, lower is better", 26, SLATE)
+s.text(130, 795, "department question  ·  differences within noise", 26, SLATE)
+s.text(130, 835, "values = distinct confidences  ·  ECE = calibration error (lower is better)", 26, SLATE)
 
 # What the numbers say
 new_frame("What the numbers say")
@@ -433,12 +433,12 @@ arr([(950, 470), (1050, 470)], ACC, sw=3)
 s.text(1070, 440, "questions", 44, ACC)
 s.text(1070, 490, "what we want", 30, SLATE)
 tag(1070, 660, "shortened", size=28)
-s.text(100, 835, "workshop-lite/jev_client.py · real Jev via OpenRouter: make lite-jev", 30, SLATE)
+s.text(100, 835, "real Jev via OpenRouter · make lite-jev", 30, SLATE)
 
-# 14-17 Recorded demo: four short clips (Remotion replay of the real files + real recorded runs, ../demo/).
+# Recorded demo: two short clips (Remotion replay of the real files + real recorded runs, ../demo/).
 # The static frame shows a poster of the clip; present.html plays the mp4 exactly over the VIDEO_BOX.
 VIDEO_BOX = (176, 150, 1248, 702)
-DEMOS = [("demo-1-one-call", "One call"), ("demo-2-same-tickets", "Same tickets"), ("demo-3-threshold", "The threshold")]
+DEMOS = [("demo-1-one-call", "One call"), ("demo-2-same-tickets", "Same tickets")]
 
 
 def clip_len(path):
@@ -512,9 +512,9 @@ new_frame("Try it yourself")
 title("Try it yourself")
 s.text(100, 250, REPO, 44, ACC)
 s.text(100, 315, "→ system-one-models/", 40, NAVY)
-for i, t in enumerate(["Run the workshop", "Poke the API calls", "Compare the approaches", "Read the sources"]):
-    s.ellipse(110, 440 + i * 85 + 12, 26, 26, fill=ACC, stroke=ACC, sw=2)
-    s.text(165, 438 + i * 85, t, 48, NAVY)
+for i, t in enumerate(["Run the workshop", "Compare the approaches", "Read the sources"]):
+    s.ellipse(110, 450 + i * 95 + 12, 26, 26, fill=ACC, stroke=ACC, sw=2)
+    s.text(165, 448 + i * 95, t, 48, NAVY)
 qr_path = os.path.join(ROOT, "qr.png")  # made by make_qr.py (segno)
 s.rect(1030, 230, 460, 460, fill="#ffffff", stroke=NAVY, sw=3)
 s.image(qr_path, 1050, 250, 420, 420)

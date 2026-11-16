@@ -17,7 +17,7 @@ let ok = true; const check = (c, msg) => { console.log((c ? "PASS " : "FAIL ") +
 await sleep(800);
 let s = await st(); check(s.imgOk === 1600 && !s.video, `slide 1 shows an image, no video (${s.img})`);
 const vids = await page.evaluate("S.map(s => !!s.video)"); const total = vids.length;
-const demo = [17, 18, 19];  // demo slides in build_deck.py
+const demo = [17, 18];  // demo slides in build_deck.py
 for (let k = 1; k < demo[0]; k++) await page.keyboard.press("ArrowRight");
 for (const n of demo) {
   await sleep(900); s = await st();
@@ -32,7 +32,7 @@ for (const n of demo) {
   await page.screenshot({ path: `${out}/slide-${n}.png` });
   await page.keyboard.press("ArrowRight");
 }
-await sleep(500); s = await st(); check(s.slide === "#20" && !s.video, `slide 20 has no video (${s.img})`);
+await sleep(500); s = await st(); check(s.slide === "#19" && !s.video, `slide 19 has no video (${s.img})`);
 await page.keyboard.press("End"); await sleep(300); s = await st(); check(s.slide === `#${total}`, `End goes to the last slide ${total} (${s.img})`);
 check(errors.length === 0, "no page errors / failed requests" + (errors.length ? ": " + errors.join("; ") : ""));
 await browser.close(); process.exit(ok ? 0 : 1);

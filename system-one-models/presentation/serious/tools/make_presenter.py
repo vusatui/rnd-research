@@ -13,7 +13,7 @@ import glob, html, json, os, re
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, ".."))
 VIDEO_BOX = (176, 150, 1248, 702)            # same box as build_deck.py
-DEMOS = {"demo-1": "demo-1-one-call", "demo-2": "demo-2-same-tickets", "demo-3": "demo-3-threshold"}  # same names as build_deck.py
+DEMOS = {"demo-1": "demo-1-one-call", "demo-2": "demo-2-same-tickets"}  # same names as build_deck.py
 
 pngs = sorted(glob.glob(os.path.join(ROOT, "export", "slide-*.png")))
 notes_md = open(os.path.join(ROOT, "speaker-notes.md")).read()
