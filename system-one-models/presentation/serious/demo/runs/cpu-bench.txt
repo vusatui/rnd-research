@@ -1,0 +1,8 @@
+Local CPU benchmark, 2026-11-16 17:10 (UTC+3). Free, no API calls. Script: ../../tools/cpu_bench.py
+Data: workshop/data/tickets.jsonl, department question, 100 train / 150 held-out test tickets (the same test set as slides 13-14).
+Hardware: the author's Linux box, Intel Xeon (8 vCPU), torch CPU build, 4 threads, one ticket at a time (batch 1). One run; latency excludes model loading.
+
+bge-small (33M) + logistic regression, trained on 100 tickets: accuracy 82.7%, latency p50 11 ms, p90 14 ms per ticket
+deberta-v3-base zero-shot NLI (184M), no training: accuracy 68.0%, latency p50 307 ms, p90 367 ms per ticket
+
+For comparison (same 150 tickets, ex2 results): Jev 93% at 161 ms p50 via OpenRouter; TF-IDF + logistic regression 72%.
