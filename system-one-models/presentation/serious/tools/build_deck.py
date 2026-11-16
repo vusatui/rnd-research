@@ -376,7 +376,7 @@ box(610, 250, 380, 150, "2 blind\nlabellers", 40)
 arr([(1010, 325), (1100, 325)])
 box(1120, 250, 380, 150, "150 held-out\ntest tickets", 40, fill=ACC_L, stroke=ACC, color=ACC)
 arr([(1310, 420), (1310, 470), (800, 470), (800, 510)], SLATE, roundness=None)
-box(300, 520, 1000, 110, "8 methods · same tickets · same options", 40)
+box(300, 520, 1000, 110, "Jev vs 4 chat LLMs · same tickets · same options", 40)
 for i, t in enumerate(["accuracy", "calibration", "latency", "$ per 1,000"]):
     tag(150 + i * 340, 690, t, NAVY, 34)
 s.text(100, 820, "data: free models · paid calls only for models under test", 28, SLATE)
@@ -384,12 +384,12 @@ s.text(100, 820, "data: free models · paid calls only for models under test", 2
 # Same 150 tickets: the numbers
 new_frame("Same 150 tickets")
 title("Same 150 tickets")
-cols = [("", 100, 400), ("accuracy", 500, 200), ("ECE", 700, 170), ("values", 870, 190), ("latency", 1060, 220), ("$ / 1k", 1280, 220)]
-rows_ = [("Jev", "93%", "0.04", "35", "0.16 s", "$0.025", True),
-         ("GPT-6 Sol", "93%", "0.04", "19", "2.1 s", "$1.34", False),
-         ("Claude Sonnet", "94%", "0.11", "17", "1.0 s", "$2.00", False),
-         ("DeepSeek Flash", "95%", "0.07", "12", "0.5 s", "$0.046", False),
-         ("DeepSeek × 5 votes", "97%", "0.02", "3", "0.8 s", "$0.15", False)]
+cols = [("", 100, 420), ("confidence", 520, 260), ("accuracy", 780, 240), ("latency", 1020, 240), ("$ / 1k", 1260, 240)]
+rows_ = [("Jev", "computed", "93%", "0.16 s", "$0.025", True),
+         ("GPT-6 Sol", "written", "93%", "2.1 s", "$1.34", False),
+         ("Claude Sonnet", "written", "94%", "1.0 s", "$2.00", False),
+         ("Claude Haiku", "written", "92%", "0.8 s", "$0.10", False),
+         ("DeepSeek Flash", "written", "95%", "0.5 s", "$0.046", False)]
 y0, rh = 215, 92
 for (t, x, w) in cols[1:]:
     s.label(x + w / 2, y0 + 40, t, 32, SLATE)
@@ -398,10 +398,9 @@ for r, row in enumerate(rows_):
     hi = row[-1]
     s.rect(100, y + 6, 1400, rh - 12, fill=ACC_L if hi else LIGHT, stroke=ACC if hi else MID, sw=3 if hi else 2)
     s.text(130, y + 22, row[0], 38, ACC if hi else NAVY)
-    for (t, x, w), v in zip(cols[1:], row[1:6]):
-        s.label(x + w / 2, y + rh / 2, v, 38, ACC if hi else NAVY)
-s.text(130, 795, "department question  ·  differences within noise", 26, SLATE)
-s.text(130, 835, "values = distinct confidences  ·  ECE = calibration error (lower is better)", 26, SLATE)
+    for (t, x, w), v in zip(cols[1:], row[1:5]):
+        s.label(x + w / 2, y + rh / 2, v, 38, ACC if hi else (SLATE if t == "confidence" else NAVY))
+s.text(130, 800, "department question  ·  accuracy differences within noise", 26, SLATE)
 
 # What the numbers say
 new_frame("What the numbers say")

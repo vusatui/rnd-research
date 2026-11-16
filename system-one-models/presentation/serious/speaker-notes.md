@@ -1,6 +1,6 @@
 # Speaker notes for "System One models", serious variant (about 27 minutes)
 
-Read aloud, word for word, at about 130 words per minute. Each heading gives the slide number, title and time; lines in italic brackets are stage directions and are not spoken. Facts come from `../../research.md`, the Jev documentation at docs.typesafe.ai, and our own measurement in `../../workshop/METHODOLOGY.md` (150 held-out synthetic support tickets, eight methods, 2026-11-15). The questions at the end are not part of the talk time.
+Read aloud, word for word, at about 130 words per minute. Each heading gives the slide number, title and time; lines in italic brackets are stage directions and are not spoken. Facts come from `../../research.md`, the Jev documentation at docs.typesafe.ai, and our own measurement in `../../workshop/METHODOLOGY.md` (150 held-out synthetic support tickets, 2026-11-15). The questions at the end are not part of the talk time.
 
 The timing adds up to about 27 minutes, including two minutes of questions. Slides 11 to 15 answer why not structured output with a confidence score. The demo is slides 16 to 18: slide 16 sets it up, and slides 17 and 18 each play a recorded clip at half speed (no audio) in `present.html`, with timestamped comments to read over it. Press K to pause a clip if you need more time.
 
@@ -88,17 +88,15 @@ To be fair, a written confidence is not nonsense. It is a different kind of numb
 
 We built two hundred and fifty realistic support tickets for a made-up software company, with five departments and three levels of urgency. Free models wrote them, and two other models labelled each ticket blindly. Where they disagreed, the ticket was flagged as ambiguous.
 
-A hundred and fifty tickets were held out as the test set. Eight methods saw exactly the same tickets and option descriptions: Jev, strong and small chat models with written confidence, token probabilities, voting, and a classic classifier. We measured accuracy, calibration, latency and cost per thousand tickets. The paid budget went only to the models under test.
+A hundred and fifty tickets were held out as the test set. Jev and four ordinary chat models, each asked for structured output with a confidence field, saw exactly the same tickets and option descriptions. We measured accuracy, how honest the confidence was, latency and cost per thousand tickets. The paid budget went only to the models under test.
 
 ## Slide 14 · Same 150 tickets · 1.25 min
 
-These are the results for the department question. Jev: ninety-three percent correct, a small calibration error of zero point zero four, about a hundred and sixty milliseconds, and two and a half cents per thousand tickets, for one call with two questions.
+These are the results for the department question. The second column says where the confidence comes from: computed by Jev, or written by the chat model. Jev got ninety-three percent correct in about a hundred and sixty milliseconds, for two and a half cents per thousand tickets, with two questions in one call.
 
-GPT-6 Sol with structured output got the same ninety-three percent and the same calibration error, but took about two seconds and cost a dollar thirty-four per thousand. Claude Sonnet got ninety-four percent, but its confidence was too modest: when it said fifty-seven percent, it was right three times out of four. It took one second and cost two dollars.
+GPT-6 Sol got the same ninety-three percent, and its written confidence was just as honest, but it took about two seconds and cost a dollar thirty-four per thousand. Claude Sonnet got ninety-four percent, but its confidence was too modest: when it said fifty-seven percent, it was right three times out of four. It took one second and cost two dollars. Claude Haiku got ninety-two percent for ten cents, and the cheap DeepSeek model ninety-five percent in half a second for under five cents.
 
-The cheap DeepSeek model reached ninety-five percent in half a second for under five cents. Five votes reached ninety-seven, but with only three possible confidence values, a very blunt knob for a threshold.
-
-Two remarks. These accuracy differences are within the noise of a hundred and fifty tickets. And on the more subjective urgency question, Jev was four to nine points behind the chat models.
+Two remarks. These accuracy differences are within the noise of a hundred and fifty tickets. And on the more subjective urgency question, Jev was four to eight points behind the chat models.
 
 ## Slide 15 · What the numbers say · 0.75 min
 
@@ -136,19 +134,18 @@ The two clips are recorded, with real code from the repository and real output f
 *[timestamped comments: the clip runs 3:34 at half speed]*
 
 - **0:00** — Exercise two: why not ask a chat model for structured output with a confidence field? Can we trust that number? We measured it.
-- **0:12** — The design: the same hundred and fifty held-out tickets, the same option descriptions, five ways to get a confidence, one evaluation script.
+- **0:12** — The design: the same hundred and fifty held-out tickets, the same option descriptions, and one evaluation script for every way of getting a confidence.
 - **0:38** — All methods live in one file and see the same options.
-- **0:44** — Method A, structured output: a label plus a confidence field per question, and the prompt asks the model to be calibrated.
-- **1:08** — Method B reads the model's token probabilities for each option.
-- **1:20** — Method C asks five times at temperature one and counts the votes.
+- **0:44** — Structured output: the chat model returns a label plus a written confidence for each question.
+- **1:08** — Two other confidence methods we also tried; details in the Q&A.
 - **1:30** — And Jev: one request with both questions, a probability for every option.
 - **1:44** — We run the evaluation on the saved results, with no API calls.
-- **1:52** — One row per method: accuracy, calibration error, how much we can automate, distinct confidence values, latency and cost.
-- **2:10** — Jev: ninety-three percent, calibration error zero point zero four, a hundred and sixty milliseconds, two and a half cents per thousand.
+- **1:52** — One row per method. We look at accuracy, latency and cost.
+- **2:10** — Jev: ninety-three percent, a hundred and sixty milliseconds, two and a half cents per thousand.
 - **2:20** — The strong chat models: ninety-three to ninety-four percent, one to two seconds, one thirty-four to two dollars per thousand.
 - **2:30** — Now the harder, subjective question: urgency.
-- **2:38** — Token probabilities say zero point nine eight, and are right only sixty-five percent of the time. That is overconfidence.
-- **2:50** — Side by side: token probabilities are overconfident, while GPT-6 Sol's written confidence lines up well. Measure first, then trust.
+- **2:38** — How often each method was right at each confidence level. Not every method's number can be trusted here.
+- **2:50** — GPT-6 Sol's written confidence lines up well with how often it was right. Measure first, then trust.
 - **3:10** — The summary: Jev is fifty to eighty times cheaper and six to thirteen times faster than the strong models, with the same accuracy within the confidence intervals. Not more accurate. That is the end of the demo.
 
 ## Slide 19 · Use it, skip it · 0.5 min
@@ -189,13 +186,13 @@ Written to be read aloud. Numbers are from our test on 150 synthetic tickets; se
 You can, and with a strong model it works. GPT-6 Sol was as accurate as Jev, ninety-three percent, and about as well calibrated. The differences were price, speed and format: a dollar thirty-four per thousand tickets against two and a half cents, about two seconds against a hundred and sixty milliseconds, and one written number instead of a probability for every option.
 
 **2. So is Jev more accurate?**
-No, not in our test. On the department question all model-based methods were within the noise of each other, between ninety-two and ninety-seven percent. On the subjective urgency question Jev was four to nine points behind the chat models. Choose it for price, speed and format, not accuracy.
+No, not in our test. On the department question Jev and the chat models were within the noise of each other, between ninety-two and ninety-five percent. On the subjective urgency question Jev was four to eight points behind them. Choose it for price, speed and format, not accuracy.
 
 **3. Are written confidence scores garbage?**
 No. In our test the strong models were honest or even too modest. But they are coarse, twelve to nineteen distinct values, and they cost output tokens and time. Measure them before you use them.
 
-**4. Why not use logprobs or ask several times?**
-Both were accurate. But token probabilities were overconfident on the subjective question: when they said ninety-eight percent, they were right sixty-five percent of the time. Voting five times costs five calls and gives only a few possible values, so a threshold has very few positions.
+**4. Did you try other ways to get a confidence?**
+Yes, three, all on the same tickets. First, reading the chat model's own token probabilities for each option instead of asking it to write a number: with DeepSeek Flash that got ninety-five percent on the department in under half a second for under four cents per thousand, but on urgency it was overconfident: when it said ninety-eight percent, it was right sixty-five percent of the time. Second, asking DeepSeek five times and counting the votes: ninety-seven percent, but five calls, fifteen cents per thousand, and only three possible confidence values, so a threshold has almost nothing to work with. Third, a classic word-count classifier trained on our hundred training tickets: free and instant, but only seventy-two percent on the department and fifty-three on urgency. None of this changes the conclusion.
 
 **5. How fast and how cheap is it, really?**
 The documentation lists four point two cents per million input tokens, output free. In our test, through OpenRouter, a request with two questions took about a hundred and sixty milliseconds in the middle case and cost about two and a half cents per thousand tickets.
