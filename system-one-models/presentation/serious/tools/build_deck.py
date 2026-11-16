@@ -377,8 +377,8 @@ arr([(1010, 325), (1100, 325)])
 box(1120, 250, 380, 150, "150 held-out\ntest tickets", 40, fill=ACC_L, stroke=ACC, color=ACC)
 arr([(1310, 420), (1310, 470), (800, 470), (800, 510)], SLATE, roundness=None)
 box(300, 520, 1000, 110, "Jev vs 4 chat LLMs · same tickets · same options", 40)
-for i, t in enumerate(["accuracy", "calibration", "latency", "$ per 1,000"]):
-    tag(150 + i * 340, 690, t, NAVY, 34)
+for i, t in enumerate(["accuracy", "latency", "$ per 1,000"]):
+    tag(330 + i * 340, 690, t, NAVY, 34)
 s.text(100, 820, "data: free models · paid calls only for models under test", 28, SLATE)
 
 # Same 150 tickets: the numbers

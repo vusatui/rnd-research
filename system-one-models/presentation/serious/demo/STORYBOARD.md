@@ -1,6 +1,6 @@
 # Demo storyboard v5: two clips, one per exercise (approved 2026-11-15, rendered; slowed to 0.5× and clip 3 dropped 2026-11-16)
 
-Deck slots: slides 17-18 of the serious deck (`present.html`). Narration = the read-aloud notes of those slides in [`../speaker-notes.md`](../speaker-notes.md) (single source). The timings below are those of the original render; the clips in `videos/` play at half speed, so every time doubles (clip 1 4:04, clip 2 3:34), and the timestamps in the notes are already doubled. All numbers are from real recorded runs on 2026-11-15 (UTC+3):
+Deck slots: slides 17-18 of the serious deck (`present.html`). Narration = the read-aloud notes of those slides in [`../speaker-notes.md`](../speaker-notes.md) (single source). The timings below are those of the original render; the clips in `videos/` play at half speed, so every time doubles (clip 1 4:04, clip 2 2:22), and the timestamps in the notes are already doubled. All numbers are from real recorded runs on 2026-11-15 (UTC+3):
 [`runs/ex1-real-jev.txt`](runs/ex1-real-jev.txt) (real Jev via OpenRouter) and [`runs/ex2-ex3-results.txt`](runs/ex2-ex3-results.txt) (`eval.py --ci --reliability`, `economics.py`). Method: [`../../../workshop/METHODOLOGY.md`](../../../workshop/METHODOLOGY.md).
 
 Every clip follows the same arc:
@@ -11,7 +11,7 @@ Visual language (unchanged from v3): editor + terminal replay of the real files 
 | Clip | Slide | Exercise | Code | Run | Length |
 |---|---|---|---|---|---|
 | 1 One call | 17 | Ex1: one request, several questions, code decides | `presentation/workshop-lite/jev_client.py` | `make lite-jev` (real Jev) | 2:02 |
-| 2 Same tickets | 18 | Ex2: verbalized vs computed confidence | `workshop/ex2_confidence/methods.py`, `workshop/eval.py` | `make eval`, `make eval QUESTION=urgency` (re-score saved results, offline) | 1:47 |
+| 2 Same tickets | 18 | Ex2: written vs computed confidence | `workshop/ex2_confidence/methods.py` | `make -s eval \| grep -E '^(Question\|method\|E jev\|A verbal)'` (re-score saved results, offline) | 1:11 (2:22 at half speed) |
 
 Total 3:49 as rendered, 7:38 at half speed. No emulator on screen except as a one-line mention: the runs are real Jev and saved real results.
 
@@ -30,16 +30,19 @@ Total 3:49 as rendered, 7:38 at half speed. No emulator on screen except as a on
 
 Numbers: from the re-recorded real runs `runs/jev-ticket.json`, `jev-comment.json`, `jev-approval.json` (2026-11-15 21:20 UTC+3): ticket 255 ms, comment block p=0.92, expense approve p=0.67 (earlier runs: 0.91-0.93 and 0.68-0.70, see `runs/ex1-real-jev.txt`). The three runs cost ~$0.00005.
 
-## Clip 2 · Same tickets (Ex2) · 1:47
+## Clip 2 · Same tickets (Ex2) · 1:11 (v5, re-rendered 2026-11-16)
+
+Simplified to the talk's core story: Jev (computed probability) vs chat LLMs asked for a written confidence in structured output. Token logprobs, 5 votes and the TF-IDF classifier are no longer on screen (they are in the Q&A of the speaker notes, with their numbers). Times below are at 1×; the delivered clip is slowed to 0.5×.
 
 | # | sec | On screen | Camera / card |
 |---|---|---|---|
-| 1 Problem | 0-8 | Card: "Why not structured output + a confidence field?" | — |
-| 2 Design | 8-25 | Architecture card: request = 150 held-out tickets, same option text → five scorers (A written confidence · B token logprobs · C 5 votes · D classifier · E Jev) → `eval.py` (accuracy, ECE, reliability, auto@95/98, distinct values, latency, $) → decision = which confidence you may threshold | scorer boxes fan out |
-| 3 Why | 25-32 | Card: "Same tickets, same options, same metrics: only the source of the number differs" | — |
-| 4 Code | 32-62 | `methods.py`: l.43-51 `VERBAL_SCHEMA` (label + `*_confidence`) → l.87-92 logprobs (`top_logprobs=20`) → l.116-121 votes (k=5, temperature 1) → l.160-164 Jev (one `systemone` call, both questions) → `eval.py` l.26 `ece()` and l.49 `coverage_at()` | zoom per function; label chip A/B/C/E |
-| 5 Run | 62-90 | type `make eval` (then `make eval QUESTION=urgency`) → table (department): Jev 93% · ECE 0.042 · 35 values · 161 ms · $0.025/1k; gpt-6-sol 93% · 0.039 · 19 · 2,108 ms · $1.34; sonnet-5.5 94% · 0.113 · 17 · 1,020 ms · $2.00; deepseek verbal 95% · 0.067 · 12 · 540 ms · $0.046; votes 97% · 0.024 · 3 values → reliability (urgency): logprobs "said 0.98, right 65%"; gpt-6-sol "said 0.99, right 100%" (department) | zoom on the Jev row, then the two strong rows, then the logprobs reliability line (orange underline) |
-| 6 Alternatives | 90-105 | Card: **Jev wins** on price (50-80× cheaper than strong LLMs), speed (6-13×), format (one call, every option). **Ties** on accuracy and calibration on department (differences within the 95% CIs). **Loses** on the subjective urgency question (−4 vs strong models, n.s.; −6 to −9 vs deepseek). Caveat chip: "synthetic tickets, LLM labels, n=150" | static |
+| 1 Problem | 0-6 | Card: "Why not structured output + a confidence field? Is a decision model any better? Measure it on the same tickets." | — |
+| 2 Design | 6-18 | Architecture card: 150 tickets (held out, blind labels) → 2 kinds (written: chat LLM, structured output · computed: Jev) → `eval.py` (accuracy · latency · $ per 1,000) → compare | boxes light up |
+| 4 Code | 18-40 | `methods.py`: l.43-48 `VERBAL_SCHEMA` (label + `*_confidence`) → l.52-56 the prompt → l.160-168 Jev (one `systemone` call, both questions) | zoom per block |
+| 5 Run | 40-58 | type `make -s eval \| grep -E '^(Question\|method\|E jev\|A verbal)'` (real run, `runs/eval-written.json`, 2026-11-16 20:59 UTC+3; same numbers as `runs/eval.json`) → Jev row: 93% · 161 ms · $0.025/1k → the four written rows: 92–95% · 540 ms–2.1 s · $0.046–$2.00/1k | zoom on the Jev row, then the four written rows |
+| 6 Summary | 58-71 | Table card, same as slide 14: Jev computed 93% · 0.16 s · $0.025; GPT-6 Sol written 93% · 2.1 s · $1.34; Claude Sonnet 94% · 1.0 s · $2.00; Claude Haiku 92% · 0.8 s · $0.10; DeepSeek Flash 95% · 0.5 s · $0.046. Foot: ~54–80× cheaper, 6–13× faster than the strong LLMs, same accuracy within the noise; urgency Jev 78% vs 82–86%; not more accurate | static |
+
+Rendered: Remotion at 2880×1620 (CRF 16) → ffmpeg `setpts=2.0*PTS`, lanczos to 2560×1440, CRF 18, 30 fps → `videos/demo-2-same-tickets.mp4` (2:22); poster at 2:12 (the table card).
 
 ## Claims checklist (all on screen numbers)
 
@@ -56,3 +59,4 @@ Numbers: from the re-recorded real runs `runs/jev-ticket.json`, `jev-comment.jso
 3. The local Remotion project (not in the repo) renders the 1920×1080 stage at 4K and downsamples to 2560×1440 H.264 → `videos/demo-1-one-call.mp4`, `demo-2-same-tickets.mp4` + posters (a third clip, `demo-3-threshold`, was rendered and later dropped from the deck); every number on a card or caption is parsed from the runs.
 4. `tools/build_deck.py && node tools/export_frames.mjs && python3 tools/make_presenter.py` put the posters into slides 17-18 and the clips into `present.html` (native player).
 5. 2026-11-16: both clips slowed to 0.5× with ffmpeg (`setpts=2.0*PTS`, 30 fps, CRF 18, 2560×1440 kept, posters unchanged).
+6. 2026-11-16: clip 2 re-rendered (v5, simplified to Jev vs written confidence) from a new real run `runs/eval-written.json`, then slowed to 0.5×.

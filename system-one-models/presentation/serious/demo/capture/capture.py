@@ -26,6 +26,7 @@ RUNS = {   # the three re-recorded clips (STORYBOARD v4). Only the jev-* runs ca
     "jev-approval": "make -s lite-jev EX=approval",
     "eval":         "make -s eval",
     "eval-urgency": "make -s eval QUESTION=urgency",
+    "eval-written": "make -s eval | grep -E '^(Question|method|E jev|A verbal)'",   # demo 2 v5: Jev vs written confidence only
     "ex3":          "make -s ex3",
 }
 SECRETS = [v for k, v in os.environ.items() if any(s in k for s in ("KEY", "TOKEN", "SECRET")) and len(v) >= 12]

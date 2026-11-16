@@ -5,7 +5,7 @@ Two short, silent clips (2560×1440, H.264, no audio, slowed to half speed so th
 | Clip | Length | Shows |
 |---|---|---|
 | [`videos/demo-1-one-call.mp4`](videos/demo-1-one-call.mp4) | 4:04 | `jev_client.py`: one request with several questions to **real Jev via OpenRouter**, thresholds per action in code; `make -s lite-jev` for a ticket, a comment and an expense |
-| [`videos/demo-2-same-tickets.mp4`](videos/demo-2-same-tickets.mp4) | 3:34 | `ex2_confidence/methods.py`: written confidence, token logprobs, votes, Jev; `make -s eval` (and `QUESTION=urgency`) re-scoring the saved results: table, reliability |
+| [`videos/demo-2-same-tickets.mp4`](videos/demo-2-same-tickets.mp4) | 2:22 | `ex2_confidence/methods.py`: written confidence (structured output) vs Jev's computed probabilities; `make -s eval \| grep` re-scoring the saved results, showing only Jev and the written-confidence rows (re-rendered 2026-11-16) |
 
 ## What is real, and how it is made
 The clips are **not screen captures**. They are rendered with a local video tool (not included in this repo) from:

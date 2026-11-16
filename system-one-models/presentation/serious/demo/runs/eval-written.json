@@ -1,0 +1,37 @@
+{
+ "cmd": "make -s eval | grep -E '^(Question|method|E jev|A verbal)'",
+ "cwd": "~/rnd-research/system-one-models",
+ "started_at": "2026-11-16T20:59:06+03:00",
+ "duration_ms": 3129,
+ "exit_code": 0,
+ "lines": [
+  {
+   "t": 3126,
+   "text": "Question: department   (same 150 test tickets for every method)"
+  },
+  {
+   "t": 3126,
+   "text": "method                               acc clear  conf   ECE  auto@95  auto@98 distinct  tok in/out  p50 ms    $/1k"
+  },
+  {
+   "t": 3126,
+   "text": "E jev (typesafe/jev-1.14-20261014)   93%   95%  0.93 0.042      87%      77%       35   596/88        161   0.025"
+  },
+  {
+   "t": 3126,
+   "text": "A verbal  claude-haiku-5.5           92%   94%  0.86 0.069      92%      73%       14   799/40        815   0.100"
+  },
+  {
+   "t": 3126,
+   "text": "A verbal  claude-sonnet-5.5          94%   95%  0.83 0.113      94%      83%       17   800/40       1020   2.001"
+  },
+  {
+   "t": 3126,
+   "text": "A verbal  deepseek-v4.1-flash-1017   95%   97%  0.89 0.067     100%      81%       12   354/34        540   0.046"
+  },
+  {
+   "t": 3126,
+   "text": "A verbal  gpt-6-sol                  93%   95%  0.95 0.039      97%      87%       19   382/58       2108   1.340"
+  }
+ ]
+}
