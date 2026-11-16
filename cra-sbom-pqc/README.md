@@ -9,6 +9,7 @@ should contain (CRA Annex I, BSI TR-03183-2, CISA 2026 minimum elements), how to
 - [`research.md`](research.md) - sources (checked 2026-11-16) with ✅/🟡/🟠/❌/🧪/🔮 markers: CRA text (read on EUR-Lex), reporting clock, SBOM requirements, PQC status, our measurements, consensus vs disputed, open items
 - [`comparison.md`](comparison.md) - SBOM generators, formats, scanners and VEX, reporting operations, crypto inventory sources, PQC migration options; decision guide
 - [`talk-outline.md`](talk-outline.md) - ~35 min talk, 9 segments with timing
+- [`talk-script.md`](talk-script.md) + [`presentation/`](presentation/) - read-aloud script and 25-slide serious Excalidraw deck (PDF, per-slide PNG/SVG, speaker notes, QR)
 - [`workshop-plan.md`](workshop-plan.md) + [`workshop/`](workshop/) - 5 labs (SBOM gaps, scan + KEV + VEX, the 24 h clock, crypto inventory/CBOM, hybrid ML-KEM TLS) with real measured results; free OpenRouter models only (one optional step), everything else offline or against public databases
 
 Quick start:
@@ -23,4 +24,4 @@ python ex4_crypto_inventory/scan_crypto.py
 python ex5_pqc_tls/pqc_tls_lab.py      # needs OpenSSL >= 3.5
 ```
 
-Status: Stage 1 done (2026-11-16): research, comparison, talk outline, workshop, workshop plan. Talk script and slides: not started.
+Status: Stage 2 done (2026-11-16): talk script (~35 min + Q&A) and a 25-slide Excalidraw deck with read-aloud notes in [`presentation/`](presentation/). Participant guide and root README row: not yet.

@@ -134,31 +134,58 @@ The demos you will see are recorded, so we do not depend on the network here, an
 
 ## Slide 17 · Demo 1, one call · 2 min
 
-*[the clip starts by itself; press K to pause it, R to restart it]*
+*[timestamped comments: the clip runs 2:02; the current line is highlighted in the notes panel while it plays. Space / click pauses]*
 
-Exercise one. The problem: one ticket, several things to decide, and the code should be in charge. The design is simple. One request carries all the questions. The model returns a probability for each answer, and our code turns those probabilities into actions, with a different threshold for each action.
-
-Here is the request in the client, and here is the line where the code decides. A yes or no answer counts as yes above zero point seven and as no below zero point three, and everything in between gets its own outcome. Risky actions need more: blocking a comment or approving an expense needs at least zero point nine.
-
-Now we run it against real Jev. The ticket goes to the technical team, with a probability of one, and urgent at zero point nine nine, so the on-call engineer is paged. That took about a quarter of a second, both questions in one request, and cost less than two thousandths of a cent. The rude comment comes back as block with zero point nine two, just above the bar, so it is blocked. And the expense, a forty-two dollar lunch for four people, which is clearly within policy, comes back as approve with only zero point six seven. That is below our zero point nine bar, so the code escalates it to a manager. This is the threshold doing its job. A structured output call could do the routing too, but it would need one generated answer per question, and it would give us one written number instead of a distribution.
+- **0:00** — Exercise one. A ticket says our API has been failing for twenty minutes. Which team gets it, and do we wake someone up? We need a decision, not an essay.
+- **0:07** — The design: one request carries the ticket and all the questions. Each question has fixed options described in plain words. Jev returns a probability for every option, and our code turns those probabilities into actions, with a threshold per action.
+- **0:21** — Why like this: one call answers all questions, every option is scored, and the thresholds live in our code, not in the model.
+- **0:30** — Here is the request: one POST to the System One endpoint with a model, a state and the questions.
+- **0:36** — Two questions in the same request: a choice with criteria, and a yes-or-no question for urgency.
+- **0:42** — And here the code decides: we route automatically only if the probability is at least zero point seven.
+- **0:48** — For yes-or-no answers: yes above zero point seven, no below zero point three, and the band in between gets its own outcome.
+- **0:54** — Risk sets the bar. Blocking a comment needs at least zero point nine, and approving money needs zero point nine and a clear yes on policy.
+- **1:04** — Now we run it against real Jev through OpenRouter. Both questions took about a quarter of a second and cost less than two thousandths of a cent.
+- **1:13** — The ticket goes to technical with probability one, urgent at zero point nine nine, so the on-call engineer is paged.
+- **1:20** — The rude comment: block with zero point nine two, just above the bar, so it is blocked.
+- **1:31** — The expense, a forty-two dollar lunch for four, clearly within policy: approve with only zero point six seven. Below our bar, so the code escalates it to a manager. That is the threshold doing its job.
+- **1:42** — Same code, same thresholds, three different outcomes.
+- **1:50** — Alternatives. Structured output from a chat model works too, but it is one generated answer and one written number, not a distribution. Keyword rules are free but brittle. Jev gives every option a probability in one call, but no text, and its numbers still need checking on your data.
 
 ## Slide 18 · Demo 2, same tickets · 1.75 min
 
-*[the clip starts by itself]*
+*[timestamped comments: the clip runs 1:47]*
 
-Exercise two is the comparison you just saw on the slides, as code. The problem: decide how to get a trustworthy confidence. The design is one dataset, one evaluation script, and five ways of getting a confidence, each in a small function in the same file.
-
-Here is the structured output method. The schema has the department, the urgency, and a confidence field for each, and the prompt asks the model to be calibrated. Here is the token probability method, which reads the model's own probabilities for the first token of each option. Here is the voting method, five samples at temperature one. And here is Jev, one request with both questions. All of them get exactly the same option descriptions.
-
-Now we run the evaluation. It reads the saved results and prints one table: accuracy, calibration error, how much we could automate at ninety-five percent accuracy, the number of distinct confidence values, latency, and cost. And here are the reliability tables, confidence on the left and how often the model was right on the right. Look at the token probabilities on the urgency question. When they say ninety-eight percent, they are right only sixty-five percent of the time. That is overconfidence, and it is exactly what would hurt you if you put a threshold on it. The written confidence from GPT-6 Sol, by contrast, lines up well. Measure first, then trust.
+- **0:00** — Exercise two: why not just ask a chat model for structured output with a confidence field? Is that number trustworthy? We measured it.
+- **0:06** — The design: the same hundred and fifty held-out tickets, the same option descriptions, five ways to get a confidence, and one evaluation script.
+- **0:19** — All methods live in one file and see exactly the same options.
+- **0:22** — Method A, structured output: the label plus a confidence field for each question, and the prompt explicitly asks the model to be calibrated.
+- **0:34** — Method B reads the model's own token probabilities for each option.
+- **0:40** — Method C asks five times at temperature one and counts the votes.
+- **0:45** — And Jev: one request with both questions, a probability for every option.
+- **0:52** — We run the evaluation on the saved results. No API calls here.
+- **0:56** — One row per method: accuracy, calibration error, how much we can automate, distinct confidence values, latency and cost.
+- **1:05** — Jev: ninety-three percent, calibration error zero point zero four, a hundred and sixty milliseconds, two and a half cents per thousand tickets.
+- **1:10** — The strong chat models with a written confidence: ninety-three to ninety-four percent, one to two seconds, one thirty-four to two dollars per thousand.
+- **1:15** — Now the harder, subjective question: urgency.
+- **1:19** — Token probabilities say zero point nine eight, and they are right only sixty-five percent of the time. That is overconfidence.
+- **1:25** — Side by side: the token probabilities are overconfident, while GPT-6 Sol's written confidence lines up well. So measure first, then trust.
+- **1:35** — The summary: Jev is about fifty to eighty times cheaper and six to thirteen times faster than the strong models, with the same accuracy within the confidence intervals. It is not more accurate.
 
 ## Slide 19 · Demo 3, the threshold · 1.25 min
 
-*[the clip starts by itself]*
+*[timestamped comments: the clip runs 1:13]*
 
-Exercise three answers the last practical question: where should the threshold be? The design is a small simulation. Every wrong automatic answer costs five dollars, every human review costs fifty cents, and we sweep the threshold from zero to one.
-
-Here is the result for Jev. Automating everything costs three hundred and thirty-three dollars per thousand tickets, because of the mistakes. Sending everything to people costs five hundred. The cheapest point is a threshold of zero point nine five: three quarters automated, no mistakes in the test, a hundred and twenty-seven dollars. And at the bottom, the same optimum for every method. The strong chat models land at a hundred and thirty-five to a hundred and thirty-eight dollars, close to Jev. At this volume, the model's own price is tiny compared to mistakes and reviews. Its price and speed start to matter at large volume and when you need an answer in milliseconds. That is the end of the demo.
+- **0:00** — Exercise three: where do we put the threshold? Too low and we make mistakes; too high and people do all the work.
+- **0:05** — A small simulation on the saved Jev answers: each wrong automatic answer costs five dollars, each human review fifty cents.
+- **0:14** — The threshold is a business knob: price the mistakes and the reviews, then sweep.
+- **0:18** — Above the threshold the answer is used; below it a person reviews the ticket.
+- **0:26** — We try every threshold and keep the cheapest.
+- **0:31** — Run the sweep.
+- **0:35** — Automating everything costs three hundred and thirty-three dollars per thousand tickets because of the mistakes. Sending everything to people costs five hundred.
+- **0:43** — The cheapest point is zero point nine five: three quarters automated, no mistakes on the test set, a hundred and twenty-seven dollars.
+- **0:48** — The same curve as a picture: the cost falls, bottoms out at zero point nine five, and climbs when people do everything.
+- **0:58** — The same economics for every method from exercise two.
+- **1:03** — The strong chat models land at a hundred and thirty-five to a hundred and thirty-eight dollars, close to Jev. At this volume, mistakes and reviews dominate; price and speed matter at large volume. That is the end of the demo.
 
 ## Slide 20 · Use it, skip it · 0.75 min
 

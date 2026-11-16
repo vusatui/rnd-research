@@ -8,7 +8,7 @@ const out = process.argv[2] || "/tmp/presenter-test"; fs.mkdirSync(out, { recurs
 const browser = await puppeteer.launch({ executablePath: "/usr/bin/google-chrome", headless: "new",
   args: ["--no-sandbox", "--autoplay-policy=no-user-gesture-required", "--allow-file-access-from-files"] });
 const page = await browser.newPage(); await page.setViewport({ width: 1600, height: 900 });
-const errors = []; page.on("pageerror", (e) => errors.push(e.message)); page.on("requestfailed", (r) => { if (r.failure()?.errorText !== "net::ERR_ABORTED") errors.push("failed " + r.url() + " " + r.failure()?.errorText); }); // ERR_ABORTED = clip switched away
+const errors = []; page.on("pageerror", (e) => errors.push(e.message)); page.on("requestfailed", (r) => { if (r.failure()?.errorText !== "net::ERR_ABORTED" && !r.url().startsWith("data:")) errors.push("failed " + r.url() + " " + r.failure()?.errorText); }); // ERR_ABORTED = clip switched away
 await page.goto("file://" + path.resolve(here, "../present.html") + "#1");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const st = () => page.evaluate(() => { const v = document.getElementById("vid"); return { slide: location.hash, img: document.getElementById("img").src.split("/").pop(),
@@ -20,9 +20,12 @@ const vids = await page.evaluate("S.map(s => !!s.video)"); const total = vids.le
 const demo = [17, 18, 19];  // demo slides in build_deck.py
 for (let k = 1; k < demo[0]; k++) await page.keyboard.press("ArrowRight");
 for (const n of demo) {
-  await sleep(vids[n - 1] ? 3000 : 600); s = await st();
+  await sleep(900); s = await st();
   if (vids[n - 1]) {
-    check(s.slide === `#${n}` && s.video && !s.paused && s.t > 1 && s.ready >= 2, `slide ${n} plays ${s.video} (t=${s.t}s of ${s.dur}s)`);
+    check(s.slide === `#${n}` && s.video && s.paused && await page.evaluate(() => document.getElementById("vid").controls), `slide ${n}: native player with controls, no autoplay (${s.video})`);
+    await page.evaluate(() => document.getElementById("vid").play()); await sleep(2500); s = await st();
+    const cur = await page.evaluate(() => document.querySelector("#notes li.cur")?.dataset.t);
+    check(!s.paused && s.t > 1 && cur === "0", `slide ${n} plays on demand (t=${s.t}s of ${s.dur}s), notes highlight comment at ${cur}s`);
   } else {
     check(s.slide === `#${n}` && !s.video && s.imgOk === 1600, `slide ${n}: clip not rendered yet, placeholder image shown (${s.img})`);
   }
