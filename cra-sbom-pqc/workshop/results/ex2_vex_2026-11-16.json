@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-16",
+  "candidates": [
+    "pkg:pypi/pyyaml@5.3.1",
+    "pkg:pypi/requests@2.25.0",
+    "pkg:pypi/jinja2@2.11.2",
+    "pkg:npm/lodash@4.17.15",
+    "pkg:npm/minimist@1.2.0",
+    "pkg:npm/express@4.17.1"
+  ],
+  "vex_statements": 19,
+  "grype_matches_before": 156,
+  "grype_matches_after_vex": 137,
+  "kev_matches_before": 1,
+  "kev_matches_after_vex": 1,
+  "still_affected_packages": [
+    "body-parser@1.19.0",
+    "cookie@0.4.0",
+    "cryptography@3.3.2",
+    "jsonwebtoken@8.5.1",
+    "path-to-regexp@0.1.7",
+    "pillow@8.1.0",
+    "qs@6.7.0",
+    "send@0.17.1",
+    "serve-static@1.14.1"
+  ]
+}

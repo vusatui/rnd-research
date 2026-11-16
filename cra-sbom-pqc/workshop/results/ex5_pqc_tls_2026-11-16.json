@@ -1,0 +1,437 @@
+{
+  "date": "2026-11-16",
+  "openssl": "OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026)",
+  "n": 30,
+  "process_start_baseline_ms": 2.4,
+  "A_handshakes": [
+    {
+      "cert": "RSA-2048",
+      "client_groups": "X25519",
+      "ok": "30/30",
+      "negotiated": "X25519, 253 bits",
+      "sig": "rsa_pss_rsae_sha256",
+      "bytes_c2s": 330,
+      "bytes_s2c": 1413,
+      "median_ms": 10.8
+    },
+    {
+      "cert": "RSA-2048",
+      "client_groups": "secp256r1",
+      "ok": "30/30",
+      "negotiated": "ECDH, prime256v1",
+      "sig": "rsa_pss_rsae_sha256",
+      "bytes_c2s": 363,
+      "bytes_s2c": 1403,
+      "median_ms": 10.7
+    },
+    {
+      "cert": "RSA-2048",
+      "client_groups": "X25519MLKEM768",
+      "ok": "30/30",
+      "negotiated": "X25519MLKEM768",
+      "sig": "rsa_pss_rsae_sha256",
+      "bytes_c2s": 1506,
+      "bytes_s2c": 2459,
+      "median_ms": 10.9
+    },
+    {
+      "cert": "RSA-2048",
+      "client_groups": "SecP256r1MLKEM768",
+      "ok": "30/30",
+      "negotiated": "SecP256r1MLKEM768",
+      "sig": "rsa_pss_rsae_sha256",
+      "bytes_c2s": 1539,
+      "bytes_s2c": 2500,
+      "median_ms": 11.0
+    },
+    {
+      "cert": "RSA-2048",
+      "client_groups": "MLKEM768",
+      "ok": "30/30",
+      "negotiated": "MLKEM768",
+      "sig": "rsa_pss_rsae_sha256",
+      "bytes_c2s": 1474,
+      "bytes_s2c": 2486,
+      "median_ms": 10.7
+    },
+    {
+      "cert": "ECDSA-P256",
+      "client_groups": "X25519",
+      "ok": "30/30",
+      "negotiated": "X25519, 253 bits",
+      "sig": "ecdsa_secp256r1_sha256",
+      "bytes_c2s": 330,
+      "bytes_s2c": 832,
+      "median_ms": 10.6
+    },
+    {
+      "cert": "ECDSA-P256",
+      "client_groups": "secp256r1",
+      "ok": "30/30",
+      "negotiated": "ECDH, prime256v1",
+      "sig": "ecdsa_secp256r1_sha256",
+      "bytes_c2s": 363,
+      "bytes_s2c": 856,
+      "median_ms": 10.5
+    },
+    {
+      "cert": "ECDSA-P256",
+      "client_groups": "X25519MLKEM768",
+      "ok": "30/30",
+      "negotiated": "X25519MLKEM768",
+      "sig": "ecdsa_secp256r1_sha256",
+      "bytes_c2s": 1506,
+      "bytes_s2c": 1895,
+      "median_ms": 10.6
+    },
+    {
+      "cert": "ECDSA-P256",
+      "client_groups": "SecP256r1MLKEM768",
+      "ok": "30/30",
+      "negotiated": "SecP256r1MLKEM768",
+      "sig": "ecdsa_secp256r1_sha256",
+      "bytes_c2s": 1539,
+      "bytes_s2c": 1961,
+      "median_ms": 10.6
+    },
+    {
+      "cert": "ECDSA-P256",
+      "client_groups": "MLKEM768",
+      "ok": "30/30",
+      "negotiated": "MLKEM768",
+      "sig": "ecdsa_secp256r1_sha256",
+      "bytes_c2s": 1474,
+      "bytes_s2c": 1956,
+      "median_ms": 10.5
+    },
+    {
+      "cert": "Ed25519",
+      "client_groups": "X25519",
+      "ok": "30/30",
+      "negotiated": "X25519, 253 bits",
+      "sig": "ed25519",
+      "bytes_c2s": 330,
+      "bytes_s2c": 751,
+      "median_ms": 10.9
+    },
+    {
+      "cert": "Ed25519",
+      "client_groups": "secp256r1",
+      "ok": "30/30",
+      "negotiated": "ECDH, prime256v1",
+      "sig": "ed25519",
+      "bytes_c2s": 363,
+      "bytes_s2c": 767,
+      "median_ms": 10.5
+    },
+    {
+      "cert": "Ed25519",
+      "client_groups": "X25519MLKEM768",
+      "ok": "30/30",
+      "negotiated": "X25519MLKEM768",
+      "sig": "ed25519",
+      "bytes_c2s": 1506,
+      "bytes_s2c": 1780,
+      "median_ms": 10.7
+    },
+    {
+      "cert": "Ed25519",
+      "client_groups": "SecP256r1MLKEM768",
+      "ok": "30/30",
+      "negotiated": "SecP256r1MLKEM768",
+      "sig": "ed25519",
+      "bytes_c2s": 1539,
+      "bytes_s2c": 1830,
+      "median_ms": 10.7
+    },
+    {
+      "cert": "Ed25519",
+      "client_groups": "MLKEM768",
+      "ok": "30/30",
+      "negotiated": "MLKEM768",
+      "sig": "ed25519",
+      "bytes_c2s": 1474,
+      "bytes_s2c": 1798,
+      "median_ms": 10.8
+    },
+    {
+      "cert": "ML-DSA-44",
+      "client_groups": "X25519",
+      "ok": "30/30",
+      "negotiated": "X25519, 253 bits",
+      "sig": "mldsa44",
+      "bytes_c2s": 330,
+      "bytes_s2c": 6768,
+      "median_ms": 10.9
+    },
+    {
+      "cert": "ML-DSA-44",
+      "client_groups": "secp256r1",
+      "ok": "30/30",
+      "negotiated": "ECDH, prime256v1",
+      "sig": "mldsa44",
+      "bytes_c2s": 363,
+      "bytes_s2c": 6792,
+      "median_ms": 10.8
+    },
+    {
+      "cert": "ML-DSA-44",
+      "client_groups": "X25519MLKEM768",
+      "ok": "30/30",
+      "negotiated": "X25519MLKEM768",
+      "sig": "mldsa44",
+      "bytes_c2s": 1506,
+      "bytes_s2c": 7851,
+      "median_ms": 11.0
+    },
+    {
+      "cert": "ML-DSA-44",
+      "client_groups": "SecP256r1MLKEM768",
+      "ok": "30/30",
+      "negotiated": "SecP256r1MLKEM768",
+      "sig": "mldsa44",
+      "bytes_c2s": 1539,
+      "bytes_s2c": 7950,
+      "median_ms": 11.2
+    },
+    {
+      "cert": "ML-DSA-44",
+      "client_groups": "MLKEM768",
+      "ok": "30/30",
+      "negotiated": "MLKEM768",
+      "sig": "mldsa44",
+      "bytes_c2s": 1474,
+      "bytes_s2c": 7876,
+      "median_ms": 11.1
+    },
+    {
+      "cert": "ML-DSA-65",
+      "client_groups": "X25519",
+      "ok": "30/30",
+      "negotiated": "X25519, 253 bits",
+      "sig": "mldsa65",
+      "bytes_c2s": 330,
+      "bytes_s2c": 9169,
+      "median_ms": 11.1
+    },
+    {
+      "cert": "ML-DSA-65",
+      "client_groups": "secp256r1",
+      "ok": "30/30",
+      "negotiated": "ECDH, prime256v1",
+      "sig": "mldsa65",
+      "bytes_c2s": 363,
+      "bytes_s2c": 9185,
+      "median_ms": 11.3
+    },
+    {
+      "cert": "ML-DSA-65",
+      "client_groups": "X25519MLKEM768",
+      "ok": "30/30",
+      "negotiated": "X25519MLKEM768",
+      "sig": "mldsa65",
+      "bytes_c2s": 1506,
+      "bytes_s2c": 10224,
+      "median_ms": 11.3
+    },
+    {
+      "cert": "ML-DSA-65",
+      "client_groups": "SecP256r1MLKEM768",
+      "ok": "30/30",
+      "negotiated": "SecP256r1MLKEM768",
+      "sig": "mldsa65",
+      "bytes_c2s": 1539,
+      "bytes_s2c": 10282,
+      "median_ms": 11.5
+    },
+    {
+      "cert": "ML-DSA-65",
+      "client_groups": "MLKEM768",
+      "ok": "30/30",
+      "negotiated": "MLKEM768",
+      "sig": "mldsa65",
+      "bytes_c2s": 1474,
+      "bytes_s2c": 10225,
+      "median_ms": 11.3
+    },
+    {
+      "cert": "ML-DSA-87",
+      "client_groups": "X25519",
+      "ok": "30/30",
+      "negotiated": "X25519, 253 bits",
+      "sig": "mldsa87",
+      "bytes_c2s": 330,
+      "bytes_s2c": 12428,
+      "median_ms": 11.5
+    },
+    {
+      "cert": "ML-DSA-87",
+      "client_groups": "secp256r1",
+      "ok": "30/30",
+      "negotiated": "ECDH, prime256v1",
+      "sig": "mldsa87",
+      "bytes_c2s": 363,
+      "bytes_s2c": 12487,
+      "median_ms": 11.6
+    },
+    {
+      "cert": "ML-DSA-87",
+      "client_groups": "X25519MLKEM768",
+      "ok": "30/30",
+      "negotiated": "X25519MLKEM768",
+      "sig": "mldsa87",
+      "bytes_c2s": 1506,
+      "bytes_s2c": 13568,
+      "median_ms": 11.8
+    },
+    {
+      "cert": "ML-DSA-87",
+      "client_groups": "SecP256r1MLKEM768",
+      "ok": "30/30",
+      "negotiated": "SecP256r1MLKEM768",
+      "sig": "mldsa87",
+      "bytes_c2s": 1539,
+      "bytes_s2c": 13617,
+      "median_ms": 12.3
+    },
+    {
+      "cert": "ML-DSA-87",
+      "client_groups": "MLKEM768",
+      "ok": "30/30",
+      "negotiated": "MLKEM768",
+      "sig": "mldsa87",
+      "bytes_c2s": 1474,
+      "bytes_s2c": 13667,
+      "median_ms": 11.7
+    }
+  ],
+  "B_interop": [
+    {
+      "server": "classical-only (groups=X25519)",
+      "client": "client default (offers hybrid + X25519 shares)",
+      "ok": "5/5",
+      "negotiated": "X25519, 253 bits",
+      "err": null
+    },
+    {
+      "server": "classical-only (groups=X25519)",
+      "client": "client offers ONLY X25519MLKEM768",
+      "ok": "0/5",
+      "negotiated": null,
+      "err": [
+        "40A7322E807F0000:error:0A000410:SSL routines:ssl3_read_bytes:ssl/tls alert handshake failure:../ssl/record/rec_layer_s3.c:918:SSL alert number 40"
+      ]
+    },
+    {
+      "server": "classical-only (groups=X25519)",
+      "client": "client offers X25519MLKEM768:X25519",
+      "ok": "5/5",
+      "negotiated": "X25519, 253 bits",
+      "err": null
+    },
+    {
+      "server": "OpenSSL 3.5 default groups",
+      "client": "client offers ONLY MLKEM768 (pure ML-KEM)",
+      "ok": "0/5",
+      "negotiated": null,
+      "err": [
+        "40E7C6D9A07F0000:error:0A000410:SSL routines:ssl3_read_bytes:ssl/tls alert handshake failure:../ssl/record/rec_layer_s3.c:918:SSL alert number 40"
+      ]
+    },
+    {
+      "server": "OpenSSL 3.5 default groups",
+      "client": "client offers ONLY SecP256r1MLKEM768",
+      "ok": "0/5",
+      "negotiated": null,
+      "err": [
+        "4027A57E197F0000:error:0A000410:SSL routines:ssl3_read_bytes:ssl/tls alert handshake failure:../ssl/record/rec_layer_s3.c:918:SSL alert number 40"
+      ]
+    }
+  ],
+  "C_sizes": {
+    "signatures": {
+      "RSA-2048": {
+        "public_key_der_bytes": 294,
+        "signature_bytes": 256,
+        "self_signed_cert_der_bytes": 781
+      },
+      "ECDSA-P256": {
+        "public_key_der_bytes": 91,
+        "signature_bytes": 71,
+        "self_signed_cert_der_bytes": 385
+      },
+      "Ed25519": {
+        "public_key_der_bytes": 44,
+        "signature_bytes": 64,
+        "self_signed_cert_der_bytes": 320
+      },
+      "ML-DSA-44": {
+        "public_key_der_bytes": 1334,
+        "signature_bytes": 2420,
+        "self_signed_cert_der_bytes": 3981
+      },
+      "ML-DSA-65": {
+        "public_key_der_bytes": 1974,
+        "signature_bytes": 3309,
+        "self_signed_cert_der_bytes": 5510
+      },
+      "ML-DSA-87": {
+        "public_key_der_bytes": 2614,
+        "signature_bytes": 4627,
+        "self_signed_cert_der_bytes": 7468
+      }
+    },
+    "kem": {
+      "ML-KEM-512": {
+        "public_key_der_bytes": 822,
+        "ciphertext_bytes": 768,
+        "shared_secret_bytes": 32
+      },
+      "ML-KEM-768": {
+        "public_key_der_bytes": 1206,
+        "ciphertext_bytes": 1088,
+        "shared_secret_bytes": 32
+      },
+      "ML-KEM-1024": {
+        "public_key_der_bytes": 1590,
+        "ciphertext_bytes": 1568,
+        "shared_secret_bytes": 32
+      },
+      "X25519": {
+        "public_key_der_bytes": 44
+      }
+    }
+  },
+  "D_probe": [
+    {
+      "endpoint_cert": "RSA-2048",
+      "default_client_negotiated_group": "X25519MLKEM768",
+      "certificate_signature_type": "rsa_pss_rsae_sha256"
+    },
+    {
+      "endpoint_cert": "ECDSA-P256",
+      "default_client_negotiated_group": "X25519MLKEM768",
+      "certificate_signature_type": "ecdsa_secp256r1_sha256"
+    },
+    {
+      "endpoint_cert": "Ed25519",
+      "default_client_negotiated_group": "X25519MLKEM768",
+      "certificate_signature_type": "ed25519"
+    },
+    {
+      "endpoint_cert": "ML-DSA-44",
+      "default_client_negotiated_group": "X25519MLKEM768",
+      "certificate_signature_type": "mldsa44"
+    },
+    {
+      "endpoint_cert": "ML-DSA-65",
+      "default_client_negotiated_group": "X25519MLKEM768",
+      "certificate_signature_type": "mldsa65"
+    },
+    {
+      "endpoint_cert": "ML-DSA-87",
+      "default_client_negotiated_group": "X25519MLKEM768",
+      "certificate_signature_type": "mldsa87"
+    }
+  ]
+}

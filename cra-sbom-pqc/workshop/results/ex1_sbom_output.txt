@@ -1,0 +1,84 @@
+syft 1.57.1: 74 components in 1.0 s, CycloneDX 1.7
+
+=== BEFORE (raw syft output) ===
+components checked: 72
+
+CRA Annex I Part II(1)
+  machine-readable common format (CycloneDX/SPDX JSON)      1/1   100.0%
+  top-level dependencies listed (components present)        1/1   100.0%
+
+BSI TR-03183-2 v2.1.0 (SBOM-level)
+  creator with e-mail or URL                                0/1     0.0%
+  timestamp                                                 1/1   100.0%
+  SBOM URI (serialNumber)                                   1/1   100.0%
+  CycloneDX >= 1.6                                          1/1   100.0%
+
+BSI TR-03183-2 v2.1.0 (per component)
+  component creator with e-mail or URL                      0/72    0.0%
+  name                                                     72/72  100.0%
+  version                                                  72/72  100.0%
+  dependency relationships present                         20/72   27.8%
+  licence                                                  66/72   91.7%
+  SHA-512 hash of the deployable                            0/72    0.0%
+  unique identifier (purl/CPE/SWID)                        72/72  100.0%
+  source-code URI                                           0/72    0.0%
+  URI of the deployable form                                0/72    0.0%
+
+CISA 2026 Minimum Elements (SBOM-level)
+  SBOM Author                                               0/1     0.0%
+  SBOM Author Signature                                     0/1     0.0%
+  Data Format Name + Version                                1/1   100.0%
+  Generation Context (lifecycles)                           0/1     0.0%
+  SBOM Tool Name + Version                                  1/1   100.0%
+  SBOM Version                                              1/1   100.0%
+  SBOM Timestamp                                            1/1   100.0%
+  Coverage declared (compositions)                          0/1     0.0%
+
+CISA 2026 Minimum Elements (per component)
+  Component Producer                                        0/72    0.0%
+  Component Hash (value + algorithm)                        0/72    0.0%
+  Component License                                        66/72   91.7%
+  Component Identifiers                                    72/72  100.0%
+
+=== AFTER enrich.py ({'hashes_added': 66, 'uris_added': 66}) ===
+components checked: 72
+
+CRA Annex I Part II(1)
+  machine-readable common format (CycloneDX/SPDX JSON)      1/1   100.0%
+  top-level dependencies listed (components present)        1/1   100.0%
+
+BSI TR-03183-2 v2.1.0 (SBOM-level)
+  creator with e-mail or URL                                1/1   100.0%
+  timestamp                                                 1/1   100.0%
+  SBOM URI (serialNumber)                                   1/1   100.0%
+  CycloneDX >= 1.6                                          1/1   100.0%
+
+BSI TR-03183-2 v2.1.0 (per component)
+  component creator with e-mail or URL                      0/72    0.0%
+  name                                                     72/72  100.0%
+  version                                                  72/72  100.0%
+  dependency relationships present                         20/72   27.8%
+  licence                                                  66/72   91.7%
+  SHA-512 hash of the deployable                           66/72   91.7%
+  unique identifier (purl/CPE/SWID)                        72/72  100.0%
+  source-code URI                                           0/72    0.0%
+  URI of the deployable form                               66/72   91.7%
+
+CISA 2026 Minimum Elements (SBOM-level)
+  SBOM Author                                               1/1   100.0%
+  SBOM Author Signature                                     0/1     0.0%
+  Data Format Name + Version                                1/1   100.0%
+  Generation Context (lifecycles)                           1/1   100.0%
+  SBOM Tool Name + Version                                  1/1   100.0%
+  SBOM Version                                              1/1   100.0%
+  SBOM Timestamp                                            1/1   100.0%
+  Coverage declared (compositions)                          1/1   100.0%
+
+CISA 2026 Minimum Elements (per component)
+  Component Producer                                        0/72    0.0%
+  Component Hash (value + algorithm)                       66/72   91.7%
+  Component License                                        66/72   91.7%
+  Component Identifiers                                    72/72  100.0%
+
+summary % before: {'CRA Annex I Part II(1)': 100.0, 'BSI TR-03183-2 v2.1.0 (SBOM-level)': 75.0, 'BSI TR-03183-2 v2.1.0 (per component)': 46.6, 'CISA 2026 Minimum Elements (SBOM-level)': 50.0, 'CISA 2026 Minimum Elements (per component)': 47.9}
+summary % after:  {'CRA Annex I Part II(1)': 100.0, 'BSI TR-03183-2 v2.1.0 (SBOM-level)': 100.0, 'BSI TR-03183-2 v2.1.0 (per component)': 67.0, 'CISA 2026 Minimum Elements (SBOM-level)': 87.5, 'CISA 2026 Minimum Elements (per component)': 70.8}

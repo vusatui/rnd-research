@@ -1,0 +1,82 @@
+{
+  "finding": {
+    "package": "pillow@8.1.0",
+    "advisory": "GHSA-j7hp-h8jx-5ppr",
+    "cve": "CVE-2023-4863",
+    "kev_date_added": "2023-09-13",
+    "kev_product": "Google Chromium WebP",
+    "fix": [
+      "10.0.1"
+    ],
+    "in_live_kev": true
+  },
+  "clock": [
+    {
+      "step": "early_warning",
+      "due_utc": "2026-11-17T09:00:00+00:00",
+      "state": "SENT ON TIME",
+      "time_left": null
+    },
+    {
+      "step": "notification",
+      "due_utc": "2026-11-19T09:00:00+00:00",
+      "state": "open",
+      "time_left": "2d 04h 00m"
+    },
+    {
+      "step": "final_report",
+      "due_utc": "2026-12-02T15:00:00+00:00",
+      "state": "open",
+      "time_left": "15d 10h 00m"
+    }
+  ],
+  "early_warning": {
+    "type": "early_warning_actively_exploited_vulnerability",
+    "legal_basis": "Regulation (EU) 2024/2847 Art. 14(2)(a)",
+    "manufacturer_aware_at_utc": "2026-11-16T09:00:00+00:00",
+    "vulnerability_ids": [
+      "CVE-2023-4863",
+      "GHSA-j7hp-h8jx-5ppr"
+    ],
+    "affected_product": "Acme Gateway (fictional) - component pillow@8.1.0",
+    "member_states_where_product_is_available": [
+      "DE",
+      "NL"
+    ],
+    "exploitation_evidence": "listed in CISA KEV since 2023-09-13 (Google Chromium WebP); our own exposure assessment: PENDING",
+    "details_still_unknown": [
+      "whether our deployments have been attacked",
+      "affected firmware versions",
+      "workaround"
+    ]
+  },
+  "vulnerability_notification": {
+    "type": "vulnerability_notification",
+    "legal_basis": "Art. 14(2)(b)",
+    "product_general_information": "Acme Gateway device gateway, Python service using Pillow for thumbnails",
+    "general_nature_of_exploit_and_vulnerability": "CVE-2023-4863 (Google Chromium WebP): malformed WebP image parsing; present in the bundled library pillow@8.1.0",
+    "corrective_or_mitigating_measures_taken": [
+      "block WebP uploads at the edge (mitigation)",
+      "upgrade to 10.0.1 or later (corrective, in progress)"
+    ],
+    "measures_users_can_take": [
+      "disable WebP upload in the console",
+      "install the security update when released"
+    ],
+    "information_sensitivity": "TLP:AMBER (our assessment; CSIRT may delay dissemination for justified cybersecurity grounds, Art. 16(2))"
+  },
+  "final_report": {
+    "type": "final_report",
+    "legal_basis": "Art. 14(2)(c)",
+    "corrective_measure_available_utc": "2026-11-18T15:00:00+00:00",
+    "description_incl_severity_and_impact": "CVE-2023-4863: out-of-bounds write (CWE-787, as listed in the KEV entry) in libwebp, reachable via image upload",
+    "malicious_actor_information": "none known to us (where available)",
+    "security_update_details": "Pillow >= 10.0.1 shipped in firmware 2.4.1 (fictional)"
+  },
+  "user_advisory_llm": "**Security Advisory**\n\nA critical vulnerability (CVE-2023-4863) affects the pillow image processing library version 8.1.0. This vulnerability is currently being actively exploited in the wild.\n\nTo protect your device gateway, you must immediately block all WebP image uploads. Update pillow to version 10.0.1 or later to resolve this issue.",
+  "user_advisory_model": "nvidia/nemotron-3.5-lightning:free",
+  "user_advisory_unsupported_claims": [
+    "critical",
+    "immediately"
+  ]
+}

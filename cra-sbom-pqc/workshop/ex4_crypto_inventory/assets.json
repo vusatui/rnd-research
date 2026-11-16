@@ -1,0 +1,205 @@
+{
+ "_comment": "Business context a scanner cannot know. X = years the protected secret / the trust must hold; Y = years a migration takes for this asset (incl. field updates). FICTIONAL numbers for the sample app - in a real inventory the owners of each asset fill these in.",
+ "assets": [
+  {
+   "file": "py/app.py",
+   "family": "RSA",
+   "code_regex": "generate_private_key",
+   "asset": "device identity key (firmware manifest signing)",
+   "purpose": "authenticity",
+   "x_years_secure": 10,
+   "y_years_to_migrate": 5,
+   "updatable_in_field": false
+  },
+  {
+   "file": "py/app.py",
+   "family": "RSA",
+   "code_regex": "PKCS1v15",
+   "asset": "firmware manifest signature",
+   "purpose": "authenticity",
+   "x_years_secure": 10,
+   "y_years_to_migrate": 5,
+   "updatable_in_field": false
+  },
+  {
+   "file": "py/app.py",
+   "family": "ECDH",
+   "code_regex": "ECDH",
+   "asset": "session key agreement device<->cloud (telemetry with customer data)",
+   "purpose": "confidentiality",
+   "x_years_secure": 12,
+   "y_years_to_migrate": 3,
+   "updatable_in_field": true
+  },
+  {
+   "file": "py/app.py",
+   "family": "EC key (NIST P-curve)",
+   "code_regex": "generate_private_key",
+   "asset": "session key agreement device<->cloud (telemetry with customer data)",
+   "purpose": "confidentiality",
+   "x_years_secure": 12,
+   "y_years_to_migrate": 3,
+   "updatable_in_field": true
+  },
+  {
+   "file": "py/app.py",
+   "family": "X25519",
+   "code_regex": ".",
+   "asset": "modern key exchange (unused helper)",
+   "purpose": "confidentiality",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "web/server.js",
+   "family": "RSA",
+   "code_regex": ".",
+   "asset": "operator session tokens (JWT RS256)",
+   "purpose": "authenticity",
+   "x_years_secure": 0.1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "web/server.js",
+   "family": "ECDH",
+   "code_regex": ".",
+   "asset": "browser<->device pairing",
+   "purpose": "confidentiality",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "web/server.js",
+   "family": "EC key (NIST P-curve)",
+   "code_regex": ".",
+   "asset": "browser<->device pairing",
+   "purpose": "confidentiality",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "java/Pairing.java",
+   "family": "RSA",
+   "code_regex": ".",
+   "asset": "legacy pairing service",
+   "purpose": "confidentiality",
+   "x_years_secure": 5,
+   "y_years_to_migrate": 4,
+   "updatable_in_field": true
+  },
+  {
+   "file": "java/Pairing.java",
+   "family": "EC key (NIST P-curve)",
+   "code_regex": ".",
+   "asset": "legacy pairing service",
+   "purpose": "confidentiality",
+   "x_years_secure": 5,
+   "y_years_to_migrate": 4,
+   "updatable_in_field": true
+  },
+  {
+   "file": "java/Pairing.java",
+   "family": "ECDH",
+   "code_regex": ".",
+   "asset": "legacy pairing service",
+   "purpose": "confidentiality",
+   "x_years_secure": 5,
+   "y_years_to_migrate": 4,
+   "updatable_in_field": true
+  },
+  {
+   "file": "java/Pairing.java",
+   "family": "ECDSA",
+   "code_regex": ".",
+   "asset": "legacy pairing service",
+   "purpose": "authenticity",
+   "x_years_secure": 5,
+   "y_years_to_migrate": 4,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/nginx.conf",
+   "family": "RSA",
+   "code_regex": ".",
+   "asset": "public TLS endpoint (RSA-2048 leaf)",
+   "purpose": "authenticity",
+   "x_years_secure": 0.25,
+   "y_years_to_migrate": 2,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/nginx.conf",
+   "family": "ECDSA",
+   "code_regex": ".",
+   "asset": "public TLS endpoint",
+   "purpose": "authenticity",
+   "x_years_secure": 0.25,
+   "y_years_to_migrate": 2,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/nginx.conf",
+   "family": "EC key (NIST P-curve)",
+   "code_regex": ".",
+   "asset": "public TLS key exchange (harvest-now-decrypt-later exposure)",
+   "purpose": "confidentiality",
+   "x_years_secure": 12,
+   "y_years_to_migrate": 2,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/sshd_config",
+   "family": "RSA",
+   "code_regex": ".",
+   "asset": "SSH host key (RSA)",
+   "purpose": "authenticity",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/sshd_config",
+   "family": "Ed25519",
+   "code_regex": ".",
+   "asset": "SSH host key (Ed25519)",
+   "purpose": "authenticity",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/sshd_config",
+   "family": "X25519",
+   "code_regex": ".",
+   "asset": "SSH key exchange",
+   "purpose": "confidentiality",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/sshd_config",
+   "family": "ECDH",
+   "code_regex": ".",
+   "asset": "SSH key exchange",
+   "purpose": "confidentiality",
+   "x_years_secure": 1,
+   "y_years_to_migrate": 1,
+   "updatable_in_field": true
+  },
+  {
+   "file": "deploy/nginx.conf",
+   "family": "ECDH",
+   "code_regex": ".",
+   "asset": "public TLS key exchange (harvest-now-decrypt-later exposure)",
+   "purpose": "confidentiality",
+   "x_years_secure": 12,
+   "y_years_to_migrate": 2,
+   "updatable_in_field": true
+  }
+ ]
+}

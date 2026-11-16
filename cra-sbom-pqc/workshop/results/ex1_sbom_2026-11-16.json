@@ -1,0 +1,265 @@
+{
+  "date": "2026-11-16",
+  "tool": "syft 1.57.1",
+  "seconds": 0.97,
+  "components": 72,
+  "spec_version": "1.7",
+  "enrich_stats": {
+    "hashes_added": 66,
+    "uris_added": 66
+  },
+  "before": {
+    "CRA Annex I Part II(1)": {
+      "machine-readable common format (CycloneDX/SPDX JSON)": [
+        1,
+        1
+      ],
+      "top-level dependencies listed (components present)": [
+        1,
+        1
+      ]
+    },
+    "BSI TR-03183-2 v2.1.0 (SBOM-level)": {
+      "creator with e-mail or URL": [
+        0,
+        1
+      ],
+      "timestamp": [
+        1,
+        1
+      ],
+      "SBOM URI (serialNumber)": [
+        1,
+        1
+      ],
+      "CycloneDX >= 1.6": [
+        1,
+        1
+      ]
+    },
+    "BSI TR-03183-2 v2.1.0 (per component)": {
+      "component creator with e-mail or URL": [
+        0,
+        72
+      ],
+      "name": [
+        72,
+        72
+      ],
+      "version": [
+        72,
+        72
+      ],
+      "dependency relationships present": [
+        20,
+        72
+      ],
+      "licence": [
+        66,
+        72
+      ],
+      "SHA-512 hash of the deployable": [
+        0,
+        72
+      ],
+      "unique identifier (purl/CPE/SWID)": [
+        72,
+        72
+      ],
+      "source-code URI": [
+        0,
+        72
+      ],
+      "URI of the deployable form": [
+        0,
+        72
+      ]
+    },
+    "CISA 2026 Minimum Elements (SBOM-level)": {
+      "SBOM Author": [
+        0,
+        1
+      ],
+      "SBOM Author Signature": [
+        0,
+        1
+      ],
+      "Data Format Name + Version": [
+        1,
+        1
+      ],
+      "Generation Context (lifecycles)": [
+        0,
+        1
+      ],
+      "SBOM Tool Name + Version": [
+        1,
+        1
+      ],
+      "SBOM Version": [
+        1,
+        1
+      ],
+      "SBOM Timestamp": [
+        1,
+        1
+      ],
+      "Coverage declared (compositions)": [
+        0,
+        1
+      ]
+    },
+    "CISA 2026 Minimum Elements (per component)": {
+      "Component Producer": [
+        0,
+        72
+      ],
+      "Component Hash (value + algorithm)": [
+        0,
+        72
+      ],
+      "Component License": [
+        66,
+        72
+      ],
+      "Component Identifiers": [
+        72,
+        72
+      ]
+    }
+  },
+  "after": {
+    "CRA Annex I Part II(1)": {
+      "machine-readable common format (CycloneDX/SPDX JSON)": [
+        1,
+        1
+      ],
+      "top-level dependencies listed (components present)": [
+        1,
+        1
+      ]
+    },
+    "BSI TR-03183-2 v2.1.0 (SBOM-level)": {
+      "creator with e-mail or URL": [
+        1,
+        1
+      ],
+      "timestamp": [
+        1,
+        1
+      ],
+      "SBOM URI (serialNumber)": [
+        1,
+        1
+      ],
+      "CycloneDX >= 1.6": [
+        1,
+        1
+      ]
+    },
+    "BSI TR-03183-2 v2.1.0 (per component)": {
+      "component creator with e-mail or URL": [
+        0,
+        72
+      ],
+      "name": [
+        72,
+        72
+      ],
+      "version": [
+        72,
+        72
+      ],
+      "dependency relationships present": [
+        20,
+        72
+      ],
+      "licence": [
+        66,
+        72
+      ],
+      "SHA-512 hash of the deployable": [
+        66,
+        72
+      ],
+      "unique identifier (purl/CPE/SWID)": [
+        72,
+        72
+      ],
+      "source-code URI": [
+        0,
+        72
+      ],
+      "URI of the deployable form": [
+        66,
+        72
+      ]
+    },
+    "CISA 2026 Minimum Elements (SBOM-level)": {
+      "SBOM Author": [
+        1,
+        1
+      ],
+      "SBOM Author Signature": [
+        0,
+        1
+      ],
+      "Data Format Name + Version": [
+        1,
+        1
+      ],
+      "Generation Context (lifecycles)": [
+        1,
+        1
+      ],
+      "SBOM Tool Name + Version": [
+        1,
+        1
+      ],
+      "SBOM Version": [
+        1,
+        1
+      ],
+      "SBOM Timestamp": [
+        1,
+        1
+      ],
+      "Coverage declared (compositions)": [
+        1,
+        1
+      ]
+    },
+    "CISA 2026 Minimum Elements (per component)": {
+      "Component Producer": [
+        0,
+        72
+      ],
+      "Component Hash (value + algorithm)": [
+        66,
+        72
+      ],
+      "Component License": [
+        66,
+        72
+      ],
+      "Component Identifiers": [
+        72,
+        72
+      ]
+    }
+  },
+  "summary_pct_before": {
+    "CRA Annex I Part II(1)": 100.0,
+    "BSI TR-03183-2 v2.1.0 (SBOM-level)": 75.0,
+    "BSI TR-03183-2 v2.1.0 (per component)": 46.6,
+    "CISA 2026 Minimum Elements (SBOM-level)": 50.0,
+    "CISA 2026 Minimum Elements (per component)": 47.9
+  },
+  "summary_pct_after": {
+    "CRA Annex I Part II(1)": 100.0,
+    "BSI TR-03183-2 v2.1.0 (SBOM-level)": 100.0,
+    "BSI TR-03183-2 v2.1.0 (per component)": 67.0,
+    "CISA 2026 Minimum Elements (SBOM-level)": 87.5,
+    "CISA 2026 Minimum Elements (per component)": 70.8
+  }
+}

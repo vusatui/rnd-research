@@ -1,0 +1,61 @@
+OpenSSL 3.5.7 9 Jun 2026 (Library: OpenSSL 3.5.7 9 Jun 2026) | n=30 | `openssl version` process baseline 2.4 ms
+
+A. handshake cost (bytes are per handshake, whole TCP session incl. close)
+cert       client groups      ok     negotiated           c->s   s->c     ms
+RSA-2048   X25519             30/30  X25519, 253 bits      330   1413   10.8
+RSA-2048   secp256r1          30/30  ECDH, prime256v1      363   1403   10.7
+RSA-2048   X25519MLKEM768     30/30  X25519MLKEM768       1506   2459   10.9
+RSA-2048   SecP256r1MLKEM768  30/30  SecP256r1MLKEM768    1539   2500   11.0
+RSA-2048   MLKEM768           30/30  MLKEM768             1474   2486   10.7
+ECDSA-P256 X25519             30/30  X25519, 253 bits      330    832   10.6
+ECDSA-P256 secp256r1          30/30  ECDH, prime256v1      363    856   10.5
+ECDSA-P256 X25519MLKEM768     30/30  X25519MLKEM768       1506   1895   10.6
+ECDSA-P256 SecP256r1MLKEM768  30/30  SecP256r1MLKEM768    1539   1961   10.6
+ECDSA-P256 MLKEM768           30/30  MLKEM768             1474   1956   10.5
+Ed25519    X25519             30/30  X25519, 253 bits      330    751   10.9
+Ed25519    secp256r1          30/30  ECDH, prime256v1      363    767   10.5
+Ed25519    X25519MLKEM768     30/30  X25519MLKEM768       1506   1780   10.7
+Ed25519    SecP256r1MLKEM768  30/30  SecP256r1MLKEM768    1539   1830   10.7
+Ed25519    MLKEM768           30/30  MLKEM768             1474   1798   10.8
+ML-DSA-44  X25519             30/30  X25519, 253 bits      330   6768   10.9
+ML-DSA-44  secp256r1          30/30  ECDH, prime256v1      363   6792   10.8
+ML-DSA-44  X25519MLKEM768     30/30  X25519MLKEM768       1506   7851   11.0
+ML-DSA-44  SecP256r1MLKEM768  30/30  SecP256r1MLKEM768    1539   7950   11.2
+ML-DSA-44  MLKEM768           30/30  MLKEM768             1474   7876   11.1
+ML-DSA-65  X25519             30/30  X25519, 253 bits      330   9169   11.1
+ML-DSA-65  secp256r1          30/30  ECDH, prime256v1      363   9185   11.3
+ML-DSA-65  X25519MLKEM768     30/30  X25519MLKEM768       1506  10224   11.3
+ML-DSA-65  SecP256r1MLKEM768  30/30  SecP256r1MLKEM768    1539  10282   11.5
+ML-DSA-65  MLKEM768           30/30  MLKEM768             1474  10225   11.3
+ML-DSA-87  X25519             30/30  X25519, 253 bits      330  12428   11.5
+ML-DSA-87  secp256r1          30/30  ECDH, prime256v1      363  12487   11.6
+ML-DSA-87  X25519MLKEM768     30/30  X25519MLKEM768       1506  13568   11.8
+ML-DSA-87  SecP256r1MLKEM768  30/30  SecP256r1MLKEM768    1539  13617   12.3
+ML-DSA-87  MLKEM768           30/30  MLKEM768             1474  13667   11.7
+
+B. interop
+  {"server": "classical-only (groups=X25519)", "client": "client default (offers hybrid + X25519 shares)", "ok": "5/5", "negotiated": "X25519, 253 bits", "err": null}
+  {"server": "classical-only (groups=X25519)", "client": "client offers ONLY X25519MLKEM768", "ok": "0/5", "negotiated": null, "err": ["40A7322E807F0000:error:0A000410:SSL routines:ssl3_read_bytes:ssl/tls alert handshake failure:../ssl/record/rec_layer_s3.c:918:SSL alert number 40"]}
+  {"server": "classical-only (groups=X25519)", "client": "client offers X25519MLKEM768:X25519", "ok": "5/5", "negotiated": "X25519, 253 bits", "err": null}
+  {"server": "OpenSSL 3.5 default groups", "client": "client offers ONLY MLKEM768 (pure ML-KEM)", "ok": "0/5", "negotiated": null, "err": ["40E7C6D9A07F0000:error:0A000410:SSL routines:ssl3_read_bytes:ssl/tls alert handshake failure:../ssl/record/rec_layer_s3.c:918:SSL alert number 40"]}
+  {"server": "OpenSSL 3.5 default groups", "client": "client offers ONLY SecP256r1MLKEM768", "ok": "0/5", "negotiated": null, "err": ["4027A57E197F0000:error:0A000410:SSL routines:ssl3_read_bytes:ssl/tls alert handshake failure:../ssl/record/rec_layer_s3.c:918:SSL alert number 40"]}
+
+C. sizes (bytes)
+  RSA-2048    {'public_key_der_bytes': 294, 'signature_bytes': 256, 'self_signed_cert_der_bytes': 781}
+  ECDSA-P256  {'public_key_der_bytes': 91, 'signature_bytes': 71, 'self_signed_cert_der_bytes': 385}
+  Ed25519     {'public_key_der_bytes': 44, 'signature_bytes': 64, 'self_signed_cert_der_bytes': 320}
+  ML-DSA-44   {'public_key_der_bytes': 1334, 'signature_bytes': 2420, 'self_signed_cert_der_bytes': 3981}
+  ML-DSA-65   {'public_key_der_bytes': 1974, 'signature_bytes': 3309, 'self_signed_cert_der_bytes': 5510}
+  ML-DSA-87   {'public_key_der_bytes': 2614, 'signature_bytes': 4627, 'self_signed_cert_der_bytes': 7468}
+  ML-KEM-512  {'public_key_der_bytes': 822, 'ciphertext_bytes': 768, 'shared_secret_bytes': 32}
+  ML-KEM-768  {'public_key_der_bytes': 1206, 'ciphertext_bytes': 1088, 'shared_secret_bytes': 32}
+  ML-KEM-1024 {'public_key_der_bytes': 1590, 'ciphertext_bytes': 1568, 'shared_secret_bytes': 32}
+  X25519      {'public_key_der_bytes': 44}
+
+D. probe
+  {"endpoint_cert": "RSA-2048", "default_client_negotiated_group": "X25519MLKEM768", "certificate_signature_type": "rsa_pss_rsae_sha256"}
+  {"endpoint_cert": "ECDSA-P256", "default_client_negotiated_group": "X25519MLKEM768", "certificate_signature_type": "ecdsa_secp256r1_sha256"}
+  {"endpoint_cert": "Ed25519", "default_client_negotiated_group": "X25519MLKEM768", "certificate_signature_type": "ed25519"}
+  {"endpoint_cert": "ML-DSA-44", "default_client_negotiated_group": "X25519MLKEM768", "certificate_signature_type": "mldsa44"}
+  {"endpoint_cert": "ML-DSA-65", "default_client_negotiated_group": "X25519MLKEM768", "certificate_signature_type": "mldsa65"}
+  {"endpoint_cert": "ML-DSA-87", "default_client_negotiated_group": "X25519MLKEM768", "certificate_signature_type": "mldsa87"}

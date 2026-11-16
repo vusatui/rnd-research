@@ -1,0 +1,28 @@
+32 findings in 5 files; CBOM components: 13
+
+  RSA                          broken-by-Shor         8
+  ECDSA                        broken-by-Shor         2
+  ECDH                         broken-by-Shor         5
+  EC key (NIST P-curve)        broken-by-Shor         5
+  Ed25519                      broken-by-Shor         1
+  X25519                       broken-by-Shor         3
+  MD5                          classically-broken     1
+  SHA-1                        classically-broken     1
+  SHA-256 / HMAC-SHA-256       grover-halved          3
+  AES-256-GCM                  grover-halved          1
+  TLS 1.2 allowed              n/a                    2
+
+Quantum-vulnerable, ranked by X+Y (years); verdict for Z = [8, 12, 15]:
+  X=10   Y=5   Z=8:MIGRATE NOW Z=12:MIGRATE NOW Z=15:plan        device identity key (firmware manifest signing)  [RSA; 1 loc]
+  X=10   Y=5   Z=8:MIGRATE NOW Z=12:MIGRATE NOW Z=15:plan        firmware manifest signature  [RSA; 1 loc]
+  X=12   Y=3   Z=8:MIGRATE NOW Z=12:MIGRATE NOW Z=15:plan        session key agreement device<->cloud (telemetry with customer data)  [EC key (NIST P-curve), ECDH; 3 loc]
+  X=12   Y=2   Z=8:MIGRATE NOW Z=12:MIGRATE NOW Z=15:plan        public TLS key exchange (harvest-now-decrypt-later exposure)  [EC key (NIST P-curve), ECDH; 1 loc]
+  X=5    Y=4   Z=8:MIGRATE NOW Z=12:plan        Z=15:plan        legacy pairing service  [EC key (NIST P-curve), ECDH, ECDSA, RSA; 4 loc]
+  X=0.25 Y=2   Z=8:plan        Z=12:plan        Z=15:plan        public TLS endpoint (RSA-2048 leaf)  [RSA; 2 loc]
+  X=0.25 Y=2   Z=8:plan        Z=12:plan        Z=15:plan        public TLS endpoint  [ECDSA; 1 loc]
+  X=1    Y=1   Z=8:plan        Z=12:plan        Z=15:plan        SSH host key (RSA)  [RSA; 1 loc]
+  X=1    Y=1   Z=8:plan        Z=12:plan        Z=15:plan        SSH host key (Ed25519)  [Ed25519; 1 loc]
+  X=1    Y=1   Z=8:plan        Z=12:plan        Z=15:plan        SSH key exchange  [ECDH, X25519; 1 loc]
+  X=1    Y=1   Z=8:plan        Z=12:plan        Z=15:plan        modern key exchange (unused helper)  [X25519; 2 loc]
+  X=1    Y=1   Z=8:plan        Z=12:plan        Z=15:plan        browser<->device pairing  [EC key (NIST P-curve), ECDH; 1 loc]
+  X=0.1  Y=1   Z=8:plan        Z=12:plan        Z=15:plan        operator session tokens (JWT RS256)  [RSA; 2 loc]

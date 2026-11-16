@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-16",
+  "grype_db_built": "2026-11-15T06:19:39Z",
+  "grype": {
+    "matches": 156,
+    "vulnerable_packages": 15,
+    "by_severity": {
+      "High": 79,
+      "Critical": 16,
+      "Medium": 50,
+      "Low": 11
+    },
+    "with_fix": 156,
+    "distinct_ids_incl_aliases": 228
+  },
+  "osv_scanner": {
+    "vulnerable_packages": 18,
+    "distinct_ids_incl_aliases": 416,
+    "vulns": 215
+  },
+  "package_overlap": {
+    "both": 15,
+    "grype_only": [],
+    "osv_only": [
+      [
+        "certifi",
+        "2026.7.22"
+      ],
+      [
+        "idna",
+        "2.9.0"
+      ],
+      [
+        "urllib3",
+        "1.26.9"
+      ]
+    ]
+  },
+  "id_overlap": {
+    "both": 228,
+    "grype_only": 0,
+    "osv_only": 188
+  },
+  "known_exploited": [
+    {
+      "package": "pillow@8.1.0",
+      "advisory": "GHSA-j7hp-h8jx-5ppr",
+      "cve": "CVE-2023-4863",
+      "kev_date_added": "2023-09-13",
+      "kev_product": "Google Chromium WebP",
+      "fix": [
+        "10.0.1"
+      ],
+      "in_live_kev": true
+    }
+  ]
+}

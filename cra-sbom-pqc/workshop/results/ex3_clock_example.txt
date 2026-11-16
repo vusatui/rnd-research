@@ -1,0 +1,4 @@
+now: 2026-11-17T10:00:00+00:00
+  early_warning  due 2026-11-17T09:00:00+00:00   OVERDUE      -0d 01h 00m
+  notification   due 2026-11-19T09:00:00+00:00   open         1d 23h 00m
+  final_report   due 2026-12-02T15:00:00+00:00   open         15d 05h 00m
