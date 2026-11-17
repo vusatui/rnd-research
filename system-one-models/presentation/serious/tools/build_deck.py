@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serious variant of the System One / Jev deck: 23 Excalidraw frames (2 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
+"""Serious variant of the System One / Jev deck: 24 Excalidraw frames (2 of them play recorded demo clips in present.html) (1600x900), hand-drawn style
 (Excalifont, roughness 1), restrained navy + one orange accent, no characters.
    python3 build_deck.py     -> ../presentation.excalidraw (+ ../qr.png)
 Reuses ../../tools/excal.py (the scene builder of the light deck)."""
@@ -384,12 +384,12 @@ s.text(100, 820, "data: free models · paid calls only for models under test", 2
 # Same 150 tickets: the numbers
 new_frame("Same 150 tickets")
 title("Same 150 tickets")
-cols = [("", 100, 420), ("confidence", 520, 260), ("accuracy", 780, 240), ("latency", 1020, 240), ("$ / 1k", 1260, 240)]
-rows_ = [("Jev", "computed", "93%", "0.16 s", "$0.025", True),
-         ("GPT-6 Sol", "written", "93%", "2.1 s", "$1.34", False),
-         ("Claude Sonnet", "written", "94%", "1.0 s", "$2.00", False),
-         ("Claude Haiku", "written", "92%", "0.8 s", "$0.10", False),
-         ("DeepSeek Flash", "written", "95%", "0.5 s", "$0.046", False)]
+cols = [("", 100, 500), ("accuracy", 600, 300), ("latency", 900, 300), ("$ / 1k", 1200, 300)]
+rows_ = [("Jev", "93%", "0.16 s", "$0.025", True),
+         ("GPT-6 Sol", "93%", "2.1 s", "$1.34", False),
+         ("Claude Sonnet", "94%", "1.0 s", "$2.00", False),
+         ("Claude Haiku", "92%", "0.8 s", "$0.10", False),
+         ("DeepSeek Flash", "95%", "0.5 s", "$0.046", False)]
 y0, rh = 215, 92
 for (t, x, w) in cols[1:]:
     s.label(x + w / 2, y0 + 40, t, 32, SLATE)
@@ -398,8 +398,8 @@ for r, row in enumerate(rows_):
     hi = row[-1]
     s.rect(100, y + 6, 1400, rh - 12, fill=ACC_L if hi else LIGHT, stroke=ACC if hi else MID, sw=3 if hi else 2)
     s.text(130, y + 22, row[0], 38, ACC if hi else NAVY)
-    for (t, x, w), v in zip(cols[1:], row[1:5]):
-        s.label(x + w / 2, y + rh / 2, v, 38, ACC if hi else (SLATE if t == "confidence" else NAVY))
+    for (t, x, w), v in zip(cols[1:], row[1:4]):
+        s.label(x + w / 2, y + rh / 2, v, 38, ACC if hi else NAVY)
 s.text(130, 800, "department question  ·  accuracy differences within noise", 26, SLATE)
 
 # What the numbers say
@@ -496,6 +496,22 @@ for i, (a, b) in enumerate(lim):
     s.text(x + 50, y + 55, a, 52, NAVY)
     s.text(x + 50, y + 130, b, 38, SLATE)
 
+# Your questions (asked at the rehearsal; facts as in Q&A 7, 10, 12, 13 of the speaker notes)
+new_frame("Your questions")
+title("Your questions")
+qa = [("Can we trust the API?", ["no training on your inputs", "US-hosted · SOC 2 Type II", "zero retention: enterprise only"]),
+      ("Can we host it ourselves?", ["Jev: no, weights not published", "open: Cloudflare Clef, Unsloth recipe", "small encoder: 83% on CPU"]),
+      ("Lighter than an LLM?", ["size not disclosed", "measured: 0.16 s · $0.025 / 1k"]),
+      ("What does a VPS cost?", ["CPU classifier: ~€30 / month", "8B on GPU (est.): €214 / month", "Jev: ≈ $25 per 1M tickets"])]
+for i, (q, ans) in enumerate(qa):
+    x, y = 100 + (i % 2) * 740, 215 + (i // 2) * 300
+    s.rect(x, y, 700, 270, fill=LIGHT, stroke=NAVY, sw=3)
+    s.line([(x + 28, y + 36), (x + 30, y + 130), (x + 27, y + 230)], stroke=ACC, sw=6)
+    s.text(x + 50, y + 26, q, 42, NAVY)
+    for k, a in enumerate(ans):
+        s.text(x + 50, y + 100 + k * 50, a, 32, SLATE)
+s.text(100, 835, "Hetzner list prices excl. VAT, checked Nov 16 · details in the Q&A", 26, SLATE)
+
 # 17 Takeaways
 new_frame("Three takeaways")
 title("Three takeaways")
@@ -511,9 +527,9 @@ new_frame("Try it yourself")
 title("Try it yourself")
 s.text(100, 250, REPO, 44, ACC)
 s.text(100, 315, "→ system-one-models/", 40, NAVY)
-for i, t in enumerate(["Run the workshop", "Compare the approaches", "Read the sources"]):
-    s.ellipse(110, 450 + i * 95 + 12, 26, 26, fill=ACC, stroke=ACC, sw=2)
-    s.text(165, 448 + i * 95, t, 48, NAVY)
+for i, t in enumerate(["Start: workshop-lite", "Go deeper: workshop"]):
+    s.ellipse(110, 470 + i * 95 + 12, 26, 26, fill=ACC, stroke=ACC, sw=2)
+    s.text(165, 468 + i * 95, t, 48, NAVY)
 qr_path = os.path.join(ROOT, "qr.png")  # made by make_qr.py (segno)
 s.rect(1030, 230, 460, 460, fill="#ffffff", stroke=NAVY, sw=3)
 s.image(qr_path, 1050, 250, 420, 420)

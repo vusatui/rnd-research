@@ -23,6 +23,12 @@ Open [`present.html`](present.html) in Chrome (double-click, works offline from 
 | K, Enter, `.`, B, or click the video | pause / play the clip |
 | R · `[` `]` | restart the clip · slower / faster (0.75×, 1×, 1.25×) |
 | N · F | speaker notes panel · fullscreen |
+| P | open the audience window (`present.html?view=audience`) |
+| A | ambient background sound on / off (off by default) |
+
+**Presenter + audience.** Open `present.html` (your view, with notes), press **P** (or the "audience window" button) and drag that window to the shared screen / Teams share, then **F** there; or open `present.html?view=audience` yourself. The two windows stay in sync (BroadcastChannel, `localStorage` fallback, works from `file://`): slides, build-ins, clip play / pause / seek, and clicking a timestamped note seeks the audience clip. The audience view has no notes, hints or player controls, and plays the sound; the presenter's clip becomes a muted mirror you use as a remote. Click or press a key once inside the audience window after opening it, so Chrome allows its audio.
+
+**Ambient sound.** [`audio/ambient.ogg`](audio/ambient.ogg) is a soft 60 s pad generated locally by [`tools/make_ambient.py`](tools/make_ambient.py) (pure sine partials, every partial loops on a whole cycle, so the loop is seamless; our own synthesis, no third-party audio, no licence terms). It plays at volume 0.15 in the audience window (or in this window if no audience window is linked), ducks to 0.04 while a demo clip plays, and is embedded in `present.html`.
 
 The clips rewind when you leave the slide. With notes open (N), the current timestamped comment is highlighted; click one to seek. Keep the folder structure (`export/`, `demo/videos/`) next to `present.html`.
 
