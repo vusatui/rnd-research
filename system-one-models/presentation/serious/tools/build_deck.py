@@ -496,21 +496,18 @@ for i, (a, b) in enumerate(lim):
     s.text(x + 50, y + 55, a, 52, NAVY)
     s.text(x + 50, y + 130, b, 38, SLATE)
 
-# Your questions (asked at the rehearsal; facts as in Q&A 7, 10, 12, 13 of the speaker notes)
+# Your questions (asked at the rehearsal; facts as in Q&A 7, 10, 12 of the speaker notes; VPS cost only in the Q&A)
 new_frame("Your questions")
 title("Your questions")
-qa = [("Can we trust the API?", ["no training on your inputs", "US-hosted · SOC 2 Type II", "zero retention: enterprise only"]),
-      ("Can we host it ourselves?", ["Jev: no, weights not published", "open: Cloudflare Clef, Unsloth recipe", "small encoder: 83% on CPU"]),
-      ("Lighter than an LLM?", ["size not disclosed", "measured: 0.16 s · $0.025 / 1k"]),
-      ("What does a VPS cost?", ["CPU classifier: ~€30 / month", "8B on GPU (est.): €214 / month", "Jev: ≈ $25 per 1M tickets"])]
-for i, (q, ans) in enumerate(qa):
-    x, y = 100 + (i % 2) * 740, 215 + (i // 2) * 300
-    s.rect(x, y, 700, 270, fill=LIGHT, stroke=NAVY, sw=3)
-    s.line([(x + 28, y + 36), (x + 30, y + 130), (x + 27, y + 230)], stroke=ACC, sw=6)
-    s.text(x + 50, y + 26, q, 42, NAVY)
-    for k, a in enumerate(ans):
-        s.text(x + 50, y + 100 + k * 50, a, 32, SLATE)
-s.text(100, 835, "Hetzner list prices excl. VAT, checked Nov 16 · details in the Q&A", 26, SLATE)
+qa = [("Can we trust the API?", "No training on your data · zero retention: enterprise only"),
+      ("Can we host it ourselves?", "Jev: no · open options: Cloudflare Clef, Unsloth recipe"),
+      ("Lighter than an LLM?", "Not disclosed")]
+for i, (q, a) in enumerate(qa):
+    y = 205 + i * 205
+    s.rect(100, y, 1400, 170, fill=LIGHT, stroke=NAVY, sw=3)
+    s.line([(128, y + 30), (130, y + 85), (127, y + 140)], stroke=ACC, sw=6)
+    s.text(155, y + 28, q, 44, NAVY)
+    s.text(155, y + 100, a, 34, SLATE)
 
 # 17 Takeaways
 new_frame("Three takeaways")

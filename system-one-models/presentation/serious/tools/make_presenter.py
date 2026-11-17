@@ -17,6 +17,9 @@ DEMOS = {"demo-1": "demo-1-one-call", "demo-2": "demo-2-same-tickets"}  # same n
 
 pngs = sorted(glob.glob(os.path.join(ROOT, "export", "slide-*.png")))
 notes_md = open(os.path.join(ROOT, "speaker-notes.md")).read()
+# sentence end = . ? ! (optionally followed by a closing quote/bracket) + space + a capital, digit, quote or stage direction;
+# decimals ("0.16 s") and "e.g." never match because they aren't followed by space + capital
+SENT = re.compile(r"(?<=[.?!])(?:(?<=[^A-Z]\.)|(?<=[?!]))\s+(?=[A-Z0-9\"“(&<])|(?<=</em>)\s+")
 notes = {}
 for m in re.finditer(r"^## Slide (\d+) · (.+?)\n(.*?)(?=^## |^---|\Z)", notes_md, re.S | re.M):
     body = html.escape(m.group(3).strip())
@@ -26,8 +29,9 @@ for m in re.finditer(r"^## Slide (\d+) · (.+?)\n(.*?)(?=^## |^---|\Z)", notes_m
         items = re.findall(r"^- \*\*(\d+):(\d+)\*\* — (.+)$", p, re.M)
         if items:  # timestamped demo comments: highlighted while the clip plays, click = seek
             parts.append("<ol class=ts>" + "".join(f'<li data-t="{int(a) * 60 + int(b)}"><b>{a}:{b}</b> {t}</li>' for a, b, t in items) + "</ol>")
-        else:
-            parts.append(f"<p>{p}</p>")
+        else:  # prose: one sentence per line, small gap between lines, bigger gap between paragraphs
+            sents = [x.strip() for x in SENT.split(" ".join(p.split())) if x.strip()]
+            parts.append("<ul class=ph>" + "".join(f"<li>{x}</li>" for x in sents) + "</ul>")
     notes[int(m.group(1))] = f"<h3>Slide {m.group(1)} · {html.escape(m.group(2))}</h3>" + "".join(parts)
 
 slides = []
@@ -59,6 +63,7 @@ html,body{margin:0;height:100%;background:#0e1628;overflow:hidden;font-family:sy
 body:hover #hud{opacity:.8}
 #notes{position:fixed;left:0;right:0;bottom:0;max-height:38vh;overflow:auto;background:rgba(14,22,40,.96);color:#e8edf4;
   font:20px/1.5 Georgia,serif;padding:12px 28px;display:none;border-top:3px solid #e8590c}
+#notes ul.ph{list-style:none;padding:0;margin:0 0 18px}#notes ul.ph li{margin:0 0 8px;padding-left:10px;border-left:3px solid rgba(139,156,181,.35)}
 #notes h3{font:600 15px system-ui;color:#e8590c;margin:6px 0}
 #aud{position:fixed;right:14px;top:10px;font:13px system-ui;color:#e8edf4;background:#e8590c;border:0;border-radius:6px;padding:6px 10px;cursor:pointer;opacity:.25;transition:opacity .3s}
 #aud:hover,#amb:hover{opacity:1}

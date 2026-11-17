@@ -1,8 +1,8 @@
-# Speaker notes for "System One models", serious variant (about 27 minutes)
+# Speaker notes for "System One models", serious variant (about 26 minutes)
 
 Read aloud at about 130 words per minute. Each heading gives the slide number, title and time. Lines in italic brackets are stage directions and aren't spoken. Facts come from `../../research.md`, the Jev documentation at docs.typesafe.ai, and our own measurement in `../../workshop/METHODOLOGY.md` (150 held-out synthetic support tickets, 2026-11-15). The questions at the end aren't part of the talk time.
 
-The timing adds up to about 27 minutes, including two minutes of questions. Slides 11 to 15 answer why not structured output with a confidence score. The demo is slides 16 to 18. Slides 17 and 18 each play a recorded clip at half speed (no audio) in `present.html`, with timestamped comments to read over it. Press K to pause a clip if you need more time. Slide 21 answers the four questions from the rehearsal.
+The timing adds up to about 26 minutes, including two minutes of questions. Slides 11 to 15 answer why not structured output with a confidence score. The demo is slides 16 to 18. Slides 17 and 18 each play a recorded clip at half speed (no audio) in `present.html`, with timestamped comments to read over it. Press K to pause a clip if you need more time. Slide 21 answers three questions from the rehearsal (the VPS cost is in the Q&A below).
 
 ---
 
@@ -152,17 +152,15 @@ So when should you use it? Sorting, yes-or-no checks, high volume, and anything 
 
 Now a few honest limits. Jev reads text and images, but not audio or video. English works best, and the docs say other languages are weaker. Test on your own data. Our tickets were synthetic and labelled by language models, which gives chat models a home advantage, and a hundred and fifty tickets is a small sample. And most speed and quality numbers you'll see come from vendors, so treat them as claims. None of this means you should avoid it. It just means you should try it on a small sample first.
 
-## Slide 21 · Your questions · 1.25 min
+## Slide 21 · Your questions · 0.75 min
 
-At the rehearsal, Denis asked four great questions, so here are the short answers.
+At the rehearsal, Denis asked some great questions, so here are the short answers.
 
-Can we trust the API? TypeSafe's privacy policy says they don't train on your inputs. The service is hosted in the US, and their trust center lists a SOC 2 Type Two report. Zero data retention is only for enterprise customers, though. So send only what the decision needs.
+Can we trust the API? TypeSafe's privacy policy says they don't train on your data. Zero data retention is only for enterprise customers, though. So send only what the decision needs.
 
-Can we host it ourselves? Not Jev. The weights aren't published. But there are open options. Cloudflare's Clef, the Unsloth recipe, or a small classic encoder. A tiny one we trained on our hundred training tickets got eighty-three percent on a plain CPU.
+Can we host it ourselves? Not Jev. The weights aren't published. But if you need to, there are open options, like Cloudflare's Clef or the Unsloth recipe.
 
-Is it lighter than an LLM? We don't know. The size isn't disclosed. What we measured is a hundred and sixty milliseconds and two and a half cents per thousand tickets.
-
-And what does a VPS cost? A small classifier runs on a CPU server for about thirty euros a month. An eight billion parameter model needs a GPU. A Hetzner GPU server that should fit it costs about two hundred and fourteen euros a month, but that's my estimate, I haven't benchmarked it. For comparison, a million tickets through Jev cost about twenty-five dollars.
+Is it lighter than an LLM? We don't know. The size isn't disclosed.
 
 ## Slide 22 · Three takeaways · 0.75 min
 

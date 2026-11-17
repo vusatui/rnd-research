@@ -8,7 +8,7 @@ Second variant of the light talk in [`../`](../README.md): same content base, **
 | Deck (Excalidraw, 23 frames) | [`presentation.excalidraw`](presentation.excalidraw) |
 | Recorded demo clips (2 × mp4, 2560×1440, no audio, slowed to half speed; plan in [`demo/STORYBOARD.md`](demo/STORYBOARD.md)) and their reproducible source | [`demo/`](demo/README.md) |
 | PDF / PNG / SVG per slide / overview | [`presentation.pdf`](presentation.pdf), [`export/`](export/), [`contact-sheet.png`](contact-sheet.png) |
-| Read-aloud script (full sentences, about 130 words per minute, ~27 min incl. 2 min questions) with slide times, stage directions in italic brackets, timestamped comments for the demo clips, and 11 spoken Q&As with our measured numbers | [`speaker-notes.md`](speaker-notes.md) |
+| Read-aloud script (full sentences, about 130 words per minute, ~26 min incl. 2 min questions) with slide times, stage directions in italic brackets, timestamped comments for the demo clips, and 11 spoken Q&As with our measured numbers | [`speaker-notes.md`](speaker-notes.md) |
 | Demo code (request → response) | [`../workshop-lite/`](../workshop-lite/README.md) |
 | Generator and export tooling | [`tools/`](tools/) (reuses [`../tools/`](../tools/README.md) for `excal.py`, the Excalidraw bundle and `node_modules`) |
 
